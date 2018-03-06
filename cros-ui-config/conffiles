@@ -1,0 +1,4 @@
+/etc/dconf/profile/user
+/etc/dconf/db/local.d/01-cros-ui
+/etc/gtk-2.0/gtkrc
+/etc/gtk-3.0/settings.ini

@@ -1,0 +1,3 @@
+Chromium OS Garcon Bridge.
+This package provides the systemd unit files for Garcon,
+the bridge to Chromium OS.

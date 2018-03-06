@@ -1,0 +1,1 @@
+KERNEL=="wl*", MODE="0666"

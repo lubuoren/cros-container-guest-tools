@@ -1,0 +1,9 @@
+[Unit]
+Description=Chromium OS Garcon Bridge
+
+[Service]
+Type=simple
+ExecStart=/opt/google/garcon/bin/garcon
+
+[Install]
+WantedBy=default.target

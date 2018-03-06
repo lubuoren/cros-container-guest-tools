@@ -1,0 +1,12 @@
+[Unit]
+Description=Wayland for Chromium OS
+
+[Service]
+Type=simple
+ExecStartPre=/bin/ln -s /dev/.wayland-0 ${XDG_RUNTIME_DIR}/wayland-0
+ExecStart=/usr/bin/cros-wayland-lock
+ExecStopPost=/bin/rm -f ${XDG_RUNTIME_DIR}/wayland-0 \
+                        ${XDG_RUNTIME_DIR}/wayland-0.lock
+
+[Install]
+WantedBy=default.target

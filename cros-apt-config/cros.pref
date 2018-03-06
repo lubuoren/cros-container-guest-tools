@@ -1,0 +1,34 @@
+Package: *
+Pin: release l=cros-containers
+Pin-Priority: 995
+Explanation: Prioritize cros-containers packages
+
+Package: libegl1-mesa
+Pin: release l=cros-containers
+Pin-Priority: 1500
+Explanation: virtwl-patched package
+
+Package: libgtk-3-0
+Pin: release l=cros-containers
+Pin-Priority: 1500
+Explanation: virtwl-patched package
+
+Package: libqt5waylandclient5
+Pin: release l=cros-containers
+Pin-Priority: 1500
+Explanation: virtwl-patched package
+
+Package: libwayland-cursor0
+Pin: release l=cros-containers
+Pin-Priority: 1500
+Explanation: virtwl-patched package
+
+Package: weston
+Pin: release l=cros-containers
+Pin-Priority: 1500
+Explanation: virtwl-patched package
+
+Package: xwayland
+Pin: release l=cros-containers
+Pin-Priority: 1500
+Explanation: virtwl-patched package

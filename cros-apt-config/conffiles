@@ -1,0 +1,4 @@
+/etc/apt/preferences.d/cros.pref
+/etc/apt/sources.list.d/cros.list
+/etc/apt/trusted.gpg.d/cros.gpg
+

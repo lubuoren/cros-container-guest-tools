@@ -1,0 +1,3 @@
+Metapackage for Chromium OS integration.
+This package has dependencies on all other packages necessary for
+Chromium OS integration.

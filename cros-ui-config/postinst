@@ -1,0 +1,5 @@
+#!/bin/sh
+
+if hash dconf 2>/dev/null; then
+    dconf update
+fi
