@@ -18,6 +18,7 @@ main() {
     bazel build //...
 
     # Copy resulting debs to results directory.
+    chmod 644 bazel-bin/*/*.deb
     cp bazel-bin/*/*.deb "${result_dir}"
 }
 
