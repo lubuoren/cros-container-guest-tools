@@ -5,9 +5,11 @@ genrule(
     srcs = ["cros.pubkey"],
     outs = ["cros.gpg"],
     cmd = """gpg --no-default-keyring \
+                 --lock-never \
                  --keyring ./crostini.keyring \
                  --import $(location cros.pubkey) && \
              gpg --no-default-keyring \
+                 --lock-never \
                  --keyring ./crostini.keyring \
                  --export > $@""",
 )
