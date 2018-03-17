@@ -1,1 +1,1 @@
-deb https://storage.googleapis.com/chromeos-localmirror/crostini/apt stretch main
+deb https://storage.googleapis.com/cros-packages stretch main
