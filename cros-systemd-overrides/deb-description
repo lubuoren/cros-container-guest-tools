@@ -1,0 +1,3 @@
+systemd overrides for running under Chromium OS.
+This package overrides the default behavior of some core
+systemd units.
