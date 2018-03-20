@@ -64,7 +64,7 @@ pkg_deb(
     homepage = "https://chromium.org",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-wayland",
-    version = "0.7",
+    version = "0.8",
     section = "x11",
     conffiles_file = "conffiles",
     depends = ["libc6 (>= 2.4)",
