@@ -3,7 +3,7 @@ Description=Chromium OS Garcon Bridge
 
 [Service]
 Type=simple
-ExecStart=/opt/google/garcon/bin/garcon
+ExecStart=/opt/google/garcon/bin/garcon --server
 
 [Install]
 WantedBy=default.target

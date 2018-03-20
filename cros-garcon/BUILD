@@ -1,6 +1,14 @@
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar", "pkg_deb")
 
 pkg_tar(
+    name = "cros-garcon-shutdown",
+    strip_prefix = "/cros-garcon",
+    package_dir = "/lib/systemd/system-shutdown",
+    srcs = ["garcon-shutdown.sh"],
+    mode = "0755",
+)
+
+pkg_tar(
     name = "cros-garcon-systemd",
     strip_prefix = "/cros-garcon",
     package_dir = "/usr/lib/systemd/user",
@@ -13,6 +21,7 @@ pkg_tar(
     name = "debian-data",
     extension = "tar.gz",
     deps = [
+        ":cros-garcon-shutdown",
         ":cros-garcon-systemd",
     ],
 )
