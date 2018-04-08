@@ -7,12 +7,12 @@ genrule(
     cmd = """gpg --homedir /tmp \
                  --no-default-keyring \
                  --lock-never \
-                 --keyring ./crostini.keyring \
+                 --keyring ./tmp.keyring \
                  --import $(location cros.pubkey) && \
              gpg --homedir /tmp \
                  --no-default-keyring \
                  --lock-never \
-                 --keyring ./crostini.keyring \
+                 --keyring ./tmp.keyring \
                  --export > $@""",
 )
 
