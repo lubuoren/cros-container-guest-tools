@@ -1,0 +1,14 @@
+[Unit]
+Description=Master sommelier listening on socket wayland-%i
+
+[Service]
+Type=notify
+ExecStart=/usr/bin/sommelier \
+              --master \
+              --sd-notify="READY=1" \
+              --socket=wayland-%i
+Restart=always
+
+[Install]
+WantedBy=default.target
+DefaultInstance=0

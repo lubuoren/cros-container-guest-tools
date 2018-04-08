@@ -1,0 +1,4 @@
+#!/bin/sh
+rm -f /etc/systemd/user/default.target.wants/sommelier@0.service
+rm -f /etc/systemd/user/default.target.wants/sommelier-x@0.service
+update-alternatives --remove sommelier /opt/google/cros-containers/bin/sommelier

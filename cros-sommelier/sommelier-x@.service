@@ -1,0 +1,15 @@
+[Unit]
+Description=X11 sommelier at display %i
+
+[Service]
+Type=notify
+ExecStart=/usr/bin/sommelier \
+              -X \
+              --x-display=%i \
+              --sd-notify="READY=1" \
+              --no-exit-with-child /bin/sh -c "systemctl --user import-environment DISPLAY XCURSOR_SIZE SOMMELIER_VERSION; /etc/sommelierrc"
+Restart=always
+
+[Install]
+WantedBy=default.target
+DefaultInstance=0

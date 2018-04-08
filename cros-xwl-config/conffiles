@@ -1,3 +1,0 @@
-/etc/systemd/user/xwl@0.service.d/cros-xwl-override.conf
-/etc/systemd/user/default.target.wants/xwl@0.service
-

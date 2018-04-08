@@ -1,0 +1,3 @@
+sommelier config for Chromium OS integration.
+This package installs default configuration for sommelier.
+that is ideal for integration with Chromium OS.

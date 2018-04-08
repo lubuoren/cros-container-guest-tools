@@ -1,2 +1,0 @@
-#!/bin/sh
-rm -f /etc/systemd/user/default.target.wants/xwl@0.service

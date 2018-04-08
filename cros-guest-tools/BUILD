@@ -12,17 +12,21 @@ pkg_deb(
     homepage = "https://chromium.org",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-guest-tools",
-    version = "0.8",
+    version = "0.9",
     section = "misc",
-    depends = ["cros-garcon"],
-    recommends = ["bash-completion",
-                  "cros-apt-config",
-                  "cros-garcon",
-                  "cros-sudo-config",
-                  "cros-systemd-overrides",
-                  "cros-ui-config",
-                  "cros-unattended-upgrades",
-                  "cros-wayland",
-                  "cros-xwl-config",
-                  "xwl"],
+    depends = [
+        "cros-garcon",
+        "cros-sommelier"
+    ],
+    recommends = [
+        "bash-completion",
+        "cros-apt-config",
+        "cros-sommelier-config",
+        "cros-sudo-config",
+        "cros-systemd-overrides",
+        "cros-ui-config",
+        "cros-unattended-upgrades",
+        "cros-wayland",
+        "pulseaudio"
+    ],
 )

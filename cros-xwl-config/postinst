@@ -1,4 +1,0 @@
-#!/bin/sh
-mkdir -p /etc/systemd/user/default.target.wants
-ln -s /usr/lib/systemd/user/xwl@.service \
-      /etc/systemd/user/default.target.wants/xwl@0.service

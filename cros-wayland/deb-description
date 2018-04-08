@@ -1,5 +1,3 @@
-Wayland support in Chromium OS.
-This package provides systemd units, config files, and
-sets hard dependencies on the virtwl-patched versions
-of UI toolkit libraries to allow Wayland support in
-a container running in crosvm.
+Wayland extras for virtwl in Chromium OS.
+This package provides config files and udev rules to
+improve the Wayland experience under CrOS.
