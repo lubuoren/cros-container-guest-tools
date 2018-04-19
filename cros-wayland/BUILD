@@ -40,7 +40,7 @@ pkg_deb(
     homepage = "https://chromium.org",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-wayland",
-    version = "0.9",
+    version = "0.10",
     section = "x11",
     conffiles_file = "conffiles",
 )

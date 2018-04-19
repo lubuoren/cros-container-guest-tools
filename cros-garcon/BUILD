@@ -44,7 +44,7 @@ pkg_deb(
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-garcon",
     depends = ["xdg-utils"],
-    version = "0.9",
+    version = "0.10",
     section = "misc",
     postinst = "postinst",
     prerm = "prerm",
