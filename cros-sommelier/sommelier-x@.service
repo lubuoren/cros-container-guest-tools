@@ -7,7 +7,7 @@ ExecStart=/usr/bin/sommelier \
               -X \
               --x-display=%i \
               --sd-notify="READY=1" \
-              --no-exit-with-child /bin/sh -c "systemctl --user import-environment DISPLAY XCURSOR_SIZE SOMMELIER_VERSION; /etc/sommelierrc"
+              --no-exit-with-child /bin/sh -c "systemctl --user import-environment DISPLAY XCURSOR_SIZE SOMMELIER_VERSION; . /etc/sommelierrc"
 Restart=always
 
 [Install]
