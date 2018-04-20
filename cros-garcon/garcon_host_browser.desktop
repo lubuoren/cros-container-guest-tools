@@ -3,4 +3,5 @@ Name=Chrome OS Host Browser
 Exec=/opt/google/cros-containers/bin/garcon --client --url %U
 MimeType=x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;x-scheme-handler/mailto;
 Type=Application
-Hidden=true
+NoDisplay=true
+OnlyShowIn=Never
