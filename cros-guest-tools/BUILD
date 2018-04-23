@@ -8,16 +8,14 @@ pkg_deb(
     name = "cros-guest-tools-deb",
     architecture = "all",
     data = ":debian-data",
+    depends = [
+        "cros-garcon",
+        "cros-sommelier",
+    ],
     description_file = "deb-description",
     homepage = "https://chromium.org",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-guest-tools",
-    version = "0.11",
-    section = "misc",
-    depends = [
-        "cros-garcon",
-        "cros-sommelier"
-    ],
     recommends = [
         "bash-completion",
         "cros-apt-config",
@@ -27,7 +25,10 @@ pkg_deb(
         "cros-ui-config",
         "cros-unattended-upgrades",
         "cros-wayland",
+        "dbus-x11",
         "pulseaudio",
-        "vim"
+        "vim",
     ],
+    section = "misc",
+    version = "0.11",
 )
