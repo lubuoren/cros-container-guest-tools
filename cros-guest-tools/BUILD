@@ -12,7 +12,7 @@ pkg_deb(
     homepage = "https://chromium.org",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-guest-tools",
-    version = "0.10",
+    version = "0.11",
     section = "misc",
     depends = [
         "cros-garcon",
@@ -27,6 +27,7 @@ pkg_deb(
         "cros-ui-config",
         "cros-unattended-upgrades",
         "cros-wayland",
-        "pulseaudio"
+        "pulseaudio",
+        "vim"
     ],
 )
