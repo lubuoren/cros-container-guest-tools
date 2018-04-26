@@ -60,6 +60,5 @@ pkg_deb(
     package = "cros-apt-config",
     version = "0.11",
     section = "misc",
-    conffiles_file = "conffiles",
     depends = ["apt-transport-https"],
 )
