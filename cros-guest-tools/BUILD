@@ -25,10 +25,12 @@ pkg_deb(
         "cros-ui-config",
         "cros-unattended-upgrades",
         "cros-wayland",
+        "curl",
         "dbus-x11",
         "pulseaudio",
+        "unzip",
         "vim",
     ],
     section = "misc",
-    version = "0.11",
+    version = "0.12",
 )
