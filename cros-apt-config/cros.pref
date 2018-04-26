@@ -1,5 +1,70 @@
 Package: *
 Pin: release l=cros-containers
-Pin-Priority: 100
-Explanation: De-prioritize cros-containers packages
+Pin-Priority: 995
+Explanation: Prioritize cros-containers packages
+
+Package: gtk-update-icon-cache
+Pin: release o=Debian
+Pin-Priority: 1500
+Explanation: Remove virtwl-patched packages
+
+Package: libegl1-mesa
+Pin: release o=Debian
+Pin-Priority: 1500
+Explanation: Remove virtwl-patched packages
+
+Package: libgtk-3-0
+Pin: release o=Debian
+Pin-Priority: 1500
+Explanation: Remove virtwl-patched packages
+
+Package: libgtk-3-bin
+Pin: release o=Debian
+Pin-Priority: 1500
+Explanation: Remove virtwl-patched packages
+
+Package: libgtk-3-common
+Pin: release o=Debian
+Pin-Priority: 1500
+Explanation: Remove virtwl-patched packages
+
+Package: libqt5waylandclient5
+Pin: release o=Debian
+Pin-Priority: 1500
+Explanation: Remove virtwl-patched packages
+
+Package: libwayland-client0
+Pin: release o=Debian
+Pin-Priority: 1500
+Explanation: Remove virtwl-patched packages
+
+Package: libwayland-cursor0
+Pin: release o=Debian
+Pin-Priority: 1500
+Explanation: Remove virtwl-patched packages
+
+Package: libwayland-server0
+Pin: release o=Debian
+Pin-Priority: 1500
+Explanation: Remove virtwl-patched packages
+
+Package: libweston-1-0
+Pin: release o=Debian
+Pin-Priority: 1500
+Explanation: Remove virtwl-patched packages
+
+Package: weston
+Pin: release o=Debian
+Pin-Priority: 1500
+Explanation: Remove virtwl-patched packages
+
+Package: xserver-common
+Pin: release o=Debian
+Pin-Priority: 1500
+Explanation: Remove virtwl-patched packages
+
+Package: xwayland
+Pin: release o=Debian
+Pin-Priority: 1500
+Explanation: Remove virtwl-patched packages
 
