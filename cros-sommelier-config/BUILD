@@ -33,7 +33,7 @@ pkg_deb(
     homepage = "https://chromium.org",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-sommelier-config",
-    version = "0.10",
+    version = "0.11",
     section = "misc",
     conffiles_file = "conffiles",
     postinst = "postinst",

@@ -1,0 +1,3 @@
+Chromium OS GTK Theme
+This package provides symlinks which link the bind-mounted theme into the
+correct location in the container.
