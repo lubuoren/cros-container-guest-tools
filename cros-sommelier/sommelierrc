@@ -2,6 +2,12 @@
 
 set -e
 
+# Set Xft.dpi. Some applications (e.g. Chrome) use this to detect HiDPI.
+if which xdpyinfo xrdb > /dev/null 2>&1; then
+  DPI=`xdpyinfo | grep "dots per inch" | sed "s|^.* \([0-9]\+\)x.*$|\1|g"`
+  echo Xft.dpi: $DPI | xrdb -merge
+fi
+
 if which xsetroot > /dev/null 2>&1; then
   xsetroot -cursor_name left_ptr
 fi

@@ -49,4 +49,8 @@ pkg_deb(
     section = "misc",
     conffiles_file = "conffiles",
     depends = ["libpam-systemd"],
+    recommends = [
+        "x11-utils",
+        "x11-xserver-utils",
+    ],
 )
