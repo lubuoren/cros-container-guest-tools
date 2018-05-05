@@ -24,4 +24,8 @@ pkg_deb(
     package = "cros-adapta",
     version = "0.1",
     section = "misc",
+    recommends = [
+        "libgtk2.0-0",
+        "libgtk-3-0",
+    ],
 )
