@@ -34,7 +34,7 @@ pkg_tar(
 
 pkg_deb(
     name = "cros-wayland-deb",
-    architecture = "amd64",
+    architecture = "all",
     data = ":debian-data",
     description_file = "deb-description",
     homepage = "https://chromium.org",
