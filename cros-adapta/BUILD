@@ -22,9 +22,11 @@ pkg_deb(
     homepage = "https://chromium.googlesource.com/chromiumos/third_party/cros-adapta/",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-adapta",
-    version = "0.1",
+    version = "0.2",
     section = "misc",
-    recommends = [
+    depends = [
+        "gtk2-engines-murrine",
+        "gtk2-engines-pixbuf",
         "libgtk2.0-0",
         "libgtk-3-0",
     ],
