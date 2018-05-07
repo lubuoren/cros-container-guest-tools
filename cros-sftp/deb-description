@@ -1,0 +1,4 @@
+SFTP service files for CrOS integration
+This package installs unitfiles and support
+scripts for enabling SFTP integration with
+Chromium OS.
