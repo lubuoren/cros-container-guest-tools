@@ -17,6 +17,14 @@ pkg_tar(
 )
 
 pkg_tar(
+    name = "qt4-config",
+    strip_prefix = "/cros-ui-config",
+    package_dir = "/etc/xdg/",
+    srcs = ["Trolltech.conf"],
+    mode = "0644",
+)
+
+pkg_tar(
     name = "dconf-config",
     strip_prefix = "/cros-ui-config",
     package_dir = "/etc/dconf/db/local.d/",
@@ -36,10 +44,11 @@ pkg_tar(
     name = "debian-data",
     extension = "tar.gz",
     deps = [
+        ":dconf-config",
+        ":dconf-profile",
         ":gtk2-config",
         ":gtk3-config",
-        ":dconf-config",
-        ":dconf-profile"
+        ":qt4-config",
     ],
 )
 
@@ -51,7 +60,7 @@ pkg_deb(
     homepage = "https://chromium.org",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-ui-config",
-    version = "0.11",
+    version = "0.12",
     section = "misc",
     conffiles_file = "conffiles",
     postinst = "postinst",

@@ -53,7 +53,7 @@ pkg_deb(
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-garcon",
     depends = ["desktop-file-utils","xdg-utils"],
-    version = "0.11",
+    version = "0.12",
     section = "misc",
     conffiles_file = "conffiles",
     postinst = "postinst",
