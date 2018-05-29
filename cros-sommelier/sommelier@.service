@@ -6,7 +6,8 @@ Type=notify
 ExecStart=/usr/bin/sommelier \
               --master \
               --sd-notify="READY=1" \
-              --socket=wayland-%i
+              --socket=wayland-%i \
+              /bin/sh -c "systemctl --user import-environment WAYLAND_DISPLAY"
 Restart=always
 
 [Install]
