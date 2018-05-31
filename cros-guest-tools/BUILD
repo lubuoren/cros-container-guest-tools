@@ -19,6 +19,7 @@ pkg_deb(
     package = "cros-guest-tools",
     recommends = [
         "bash-completion",
+        "bzip2",
         "cros-apt-config",
         "cros-sommelier-config",
         "cros-sudo-config",
@@ -28,10 +29,13 @@ pkg_deb(
         "cros-wayland",
         "curl",
         "dbus-x11",
+        "git",
+        "less",
+        "libxss1",
         "pulseaudio",
         "unzip",
         "vim",
     ],
     section = "misc",
-    version = "0.13",
+    version = "0.14",
 )
