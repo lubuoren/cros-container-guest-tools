@@ -26,10 +26,18 @@ pkg_tar(
 )
 
 pkg_tar(
-    name= "cros-garcon-config",
+    name = "cros-garcon-config",
     strip_prefix = "/cros-garcon",
     package_dir = "/etc/systemd/user/cros-garcon.service.d",
     srcs = ["cros-garcon-override.conf"],
+    mode = "0644",
+)
+
+pkg_tar(
+    name = "cros-garcon-polkit",
+    strip_prefix = "/cros-garcon",
+    package_dir = "/var/lib/polkit-1/localauthority/50-local.d",
+    srcs = ["garcon-packagekit.pkla"],
     mode = "0644",
 )
 
@@ -52,8 +60,8 @@ pkg_deb(
     homepage = "https://chromium.org",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-garcon",
-    depends = ["desktop-file-utils","xdg-utils"],
-    version = "0.12",
+    depends = ["desktop-file-utils","packagekit","xdg-utils"],
+    version = "0.13",
     section = "misc",
     conffiles_file = "conffiles",
     postinst = "postinst",
