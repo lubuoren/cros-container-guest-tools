@@ -1,4 +1,4 @@
 [Allow sudo users to do package installs/removals]
 Identity=unix-group:sudo
-Action=org.freedesktop.packagekit.package-install-untrusted;org.freedesktop.packagekit.package-install;org.freedesktop.packagekit.package-remove
+Action=org.freedesktop.packagekit.package-install-untrusted;org.freedesktop.packagekit.package-install;org.freedesktop.packagekit.package-remove;org.freedesktop.packagekit.system-sources-refresh
 ResultAny=yes
