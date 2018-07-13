@@ -47,6 +47,7 @@ pkg_tar(
     deps = [
         ":cros-garcon-config",
         ":cros-garcon-desktop",
+        ":cros-garcon-polkit",
         ":cros-garcon-systemd",
         ":cros-garcon-url-handler",
     ],
@@ -61,7 +62,7 @@ pkg_deb(
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-garcon",
     depends = ["desktop-file-utils","packagekit","xdg-utils"],
-    version = "0.14",
+    version = "0.15",
     section = "misc",
     conffiles_file = "conffiles",
     postinst = "postinst",
