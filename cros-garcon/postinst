@@ -2,3 +2,4 @@
 update-alternatives --install /usr/bin/x-www-browser x-www-browser /usr/bin/garcon-url-handler 200
 update-alternatives --install /usr/bin/www-browser www-browser /usr/bin/garcon-url-handler 200
 update-alternatives --install /usr/bin/gnome-www-browser gnome-www-browser /usr/bin/garcon-url-handler 200
+update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator /usr/bin/garcon-terminal-handler 200

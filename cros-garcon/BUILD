@@ -18,6 +18,14 @@ pkg_tar(
 )
 
 pkg_tar(
+    name = "cros-garcon-terminal-handler",
+    strip_prefix = "/cros-garcon",
+    package_dir = "/usr/bin",
+    srcs = ["garcon-terminal-handler"],
+    mode = "0755",
+)
+
+pkg_tar(
     name = "cros-garcon-url-handler",
     strip_prefix = "/cros-garcon",
     package_dir = "/usr/bin",
@@ -49,6 +57,7 @@ pkg_tar(
         ":cros-garcon-desktop",
         ":cros-garcon-polkit",
         ":cros-garcon-systemd",
+        ":cros-garcon-terminal-handler",
         ":cros-garcon-url-handler",
     ],
 )
@@ -62,7 +71,7 @@ pkg_deb(
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-garcon",
     depends = ["desktop-file-utils","packagekit","xdg-utils"],
-    version = "0.15",
+    version = "0.16",
     section = "misc",
     conffiles_file = "conffiles",
     postinst = "postinst",

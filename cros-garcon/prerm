@@ -1,4 +1,5 @@
 #!/bin/sh
+update-alternatives --remove x-terminal-emulator /usr/bin/garcon-terminal-handler
 update-alternatives --remove gnome-www-browser /usr/bin/garcon-url-handler
 update-alternatives --remove www-browser /usr/bin/garcon-url-handler
 update-alternatives --remove x-www-browser /usr/bin/garcon-url-handler
