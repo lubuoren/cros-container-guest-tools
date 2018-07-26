@@ -1,10 +1,25 @@
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar", "pkg_deb")
 
+genrule(
+    name = "skel-config",
+    srcs = ["skel.cros-garcon.conf"],
+    outs = [".config/cros-garcon.conf"],
+    cmd = "mv $(location skel.cros-garcon.conf) $@",
+)
+
 pkg_tar(
     name = "cros-garcon-desktop",
     strip_prefix= "/cros-garcon",
     package_dir = "/usr/share/applications",
     srcs = ["garcon_host_browser.desktop"],
+    mode = "0644",
+)
+
+pkg_tar(
+    name = "cros-garcon-etc-skel",
+    strip_prefix = "/cros-garcon",
+    package_dir = "/etc/skel",
+    srcs = [":skel-config"],
     mode = "0644",
 )
 
@@ -55,6 +70,7 @@ pkg_tar(
     deps = [
         ":cros-garcon-config",
         ":cros-garcon-desktop",
+        ":cros-garcon-etc-skel",
         ":cros-garcon-polkit",
         ":cros-garcon-systemd",
         ":cros-garcon-terminal-handler",
@@ -71,7 +87,7 @@ pkg_deb(
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-garcon",
     depends = ["desktop-file-utils","packagekit","xdg-utils"],
-    version = "0.16",
+    version = "0.17",
     section = "misc",
     conffiles_file = "conffiles",
     postinst = "postinst",
