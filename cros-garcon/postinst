@@ -23,3 +23,5 @@ for dir in /home/*/ ; do
     fi
   fi
 done
+# Make xdg-desktop-menu happy when installing system desktop files.
+mkdir -p /usr/share/desktop-directories
