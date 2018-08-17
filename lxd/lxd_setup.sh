@@ -17,7 +17,8 @@ EOF
 
     apt-get update
     # unattended-upgrades recommends a mail agent; don't install that.
-    apt-get -q -y --no-install-recommends install cros-unattended-upgrades
+    apt-get -q -y --no-install-recommends --allow-unauthenticated \
+        install cros-unattended-upgrades
     apt-get -q -y --allow-unauthenticated install cros-guest-tools
     apt-get -q -y install less
 
