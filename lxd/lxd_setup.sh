@@ -8,7 +8,6 @@
 set -eux
 
 main() {
-    milestone=$1
     apt-get update
     apt-get -q -y install apt-transport-https
 
