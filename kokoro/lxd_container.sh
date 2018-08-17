@@ -61,7 +61,7 @@ main() {
         exit 1
     fi
 
-    local src_root="${KOKORO_ARTIFACTS_DIR}"/git/lxd
+    local src_root="${KOKORO_ARTIFACTS_DIR}"/git/cros-container-guest-tools
     local result_dir="${src_root}"/lxd
     mkdir -p "${result_dir}"
 
