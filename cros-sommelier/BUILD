@@ -1,6 +1,13 @@
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar", "pkg_deb")
 
 pkg_tar(
+    name = "cros-sommelier-elf",
+    strip_prefix = "/cros-sommelier",
+    package_dir = "/usr/bin",
+    symlinks = { "./usr/bin/sommelier.elf": "/opt/google/cros-containers/bin/sommelier.elf" },
+)
+
+pkg_tar(
     name = "cros-sommelier-unitfiles",
     strip_prefix = "/cros-sommelier",
     package_dir = "/usr/lib/systemd/user/",
@@ -31,6 +38,7 @@ pkg_tar(
     name = "debian-data",
     extension = "tar.gz",
     deps = [
+        ":cros-sommelier-elf",
         ":cros-sommelier-unitfiles",
         ":cros-sommelierrc",
         ":cros-sommelier-profiled",
@@ -45,7 +53,7 @@ pkg_deb(
     homepage = "https://chromium.org",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-sommelier",
-    version = "0.14",
+    version = "0.15",
     section = "misc",
     conffiles_file = "conffiles",
     depends = ["libpam-systemd"],
