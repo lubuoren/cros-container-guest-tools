@@ -39,7 +39,7 @@ build_container() {
     mount -t tmpfs tmpfs "${rootfs}/run"
     mount -t tmpfs tmpfs "${rootfs}/tmp"
 
-    cp "${setup_script}" "${rootfs}/run/"
+    cp "${setup_script}" "${setup_test_script}" "${rootfs}/run/"
     mkdir "${rootfs}/run/apt"
     cp -r "${apt_dir}"/* "${rootfs}/run/apt"
 
