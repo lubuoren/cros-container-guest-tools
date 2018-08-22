@@ -73,7 +73,7 @@ build_container() {
     mkdir -p "${result_dir}"
 
     cp "${tempdir}/image" "${result_dir}/lxd.tar.xz"
-    tar capf "${result_dir}/rootfs.tar.xz" -C "${rootfs}" .
+    tar -Ipixz -cpf "${result_dir}/rootfs.tar.xz" -C "${rootfs}" .
     mksquashfs "${rootfs}"/* "${result_dir}/rootfs.squashfs"
 
     rm -rf "${tempdir}"
