@@ -78,6 +78,7 @@ main() {
 
     sudo "${src_root}/lxd/build_debian_container.sh" "${result_dir}" \
                                                      "${src_root}/lxd/lxd_setup.sh" \
+                                                     "${src_root}/lxd/lxd_test_setup.sh" \
                                                      "${apt_dir}"
 }
 
