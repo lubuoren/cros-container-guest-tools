@@ -114,8 +114,8 @@ main() {
     # Build the normal and test images for each arch.
     build_container "amd64" "${results_dir}" "${setup_script}" "${setup_test_script}" "${apt_dir}" false
     build_container "amd64" "${results_dir}" "${setup_script}" "${setup_test_script}" "${apt_dir}" true
-    #build_container "arm64" "${results_dir}" "${setup_script}" "${setup_test_script}" "${apt_dir}" false
-    #build_container "arm64" "${results_dir}" "${setup_script}" "${setup_test_script}" "${apt_dir}" true
+    build_container "arm64" "${results_dir}" "${setup_script}" "${setup_test_script}" "${apt_dir}" false
+    build_container "arm64" "${results_dir}" "${setup_script}" "${setup_test_script}" "${apt_dir}" true
 }
 
 main "$@"
