@@ -107,7 +107,7 @@ def main():
     args = parser.parse_args()
 
     try:
-        os.mkdir(args.out_dir)
+        os.makedirs(args.out_dir)
     except:
         print('Failed to create out directory')
         sys.exit(1)
