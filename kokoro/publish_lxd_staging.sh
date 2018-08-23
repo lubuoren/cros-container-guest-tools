@@ -5,7 +5,7 @@
 
 set -ex
 
-. "common.sh" || exit 1
+. "$(dirname "$0")/common.sh" || exit 1
 
 main() {
     if [ -z "${KOKORO_ARTIFACTS_DIR}" ]; then
