@@ -80,13 +80,15 @@ def create_product(distro, arch, os_desc, release, image_type, version, rootfs_t
     }
 
     product = {
-         'aliases': '{0}/{1}/default,{0}/{1}/default/{2},{0}/{1},{0}/{1}/{2}'.format(distro, release, arch),
+         'aliases': '{0}/{1}/{2},{0}/{1}/{2}/{3}'.format(distro, release, image_type, arch),
          'arch': arch,
          'os': os_desc,
          'release_title': release,
          'release': release,
          'versions': {}
     }
+    if image_type == 'default':
+        product['aliases'] += ',{0}/{1},{0}/{1}/{2}'.format(distro, release, arch)
 
     product['versions'][version] = {
         'items': {
