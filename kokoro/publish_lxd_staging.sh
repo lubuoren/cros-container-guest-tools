@@ -20,7 +20,7 @@ main() {
 
     local src_root="${KOKORO_ARTIFACTS_DIR}"/git/cros-container-guest-tools
     local result_dir="${src_root}"/simplestreams
-    if [ "${CROS_MILESTONE}" -ge 70 ]; then
+    if [ "${CROS_MILESTONE}" -ne 69 ]; then
         result_dir="${result_dir}/${CROS_MILESTONE}"
     fi
 

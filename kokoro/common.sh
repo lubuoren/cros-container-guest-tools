@@ -3,5 +3,5 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-# Increment this version number after branch.
-CROS_MILESTONE=70
+# This is determined by the branch on kokoro.
+CROS_MILESTONE="$(echo "${KOKORO_JOB_NAME}" | cut -d'/' -f 3 -)"
