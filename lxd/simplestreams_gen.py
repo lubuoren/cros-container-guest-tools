@@ -136,7 +136,7 @@ def main():
         rootfs_squash_source_path = os.path.join(root, 'rootfs.squashfs')
         lxd_source_path = os.path.join(root, 'lxd.tar.xz')
 
-        product_name = '{}:{}:{}:default'.format(distro, release, arch)
+        product_name = '{}:{}:{}:{}'.format(distro, release, arch, image_type)
         index['index']['images']['products'].append(product_name)
 
         product = create_product(distro,
