@@ -168,7 +168,7 @@ if __name__ == '__main__':
   LxdTestCase.ROOTFS_TARBALL = sys.argv.pop()
   LxdTestCase.METADATA_TARBALL = sys.argv.pop()
 
-  with open('sponge.xml', 'wb') as output:
+  with open('sponge_log.xml', 'wb') as output:
     unittest.main(
         testRunner=xmlrunner.XMLTestRunner(output=output),
         failfast=False,
