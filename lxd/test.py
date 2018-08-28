@@ -161,14 +161,15 @@ class LxdTestCase(unittest.TestCase):
 
 
 if __name__ == '__main__':
-  if len(sys.argv) != 3:
-    print("usage: test.py metadata_tarball rootfs_tarball")
+  if len(sys.argv) != 4:
+    print("usage: test.py result_dir metadata_tarball rootfs_tarball")
     sys.exit(1)
 
   LxdTestCase.ROOTFS_TARBALL = sys.argv.pop()
   LxdTestCase.METADATA_TARBALL = sys.argv.pop()
+  result_dir = sys.argv.pop()
 
-  with open('sponge_log.xml', 'wb') as output:
+  with open(os.path.join(result_dir, 'sponge_log.xml'), 'wb') as output:
     unittest.main(
         testRunner=xmlrunner.XMLTestRunner(output=output),
         failfast=False,

@@ -81,7 +81,9 @@ build_container() {
     mksquashfs "${rootfs}"/* "${result_dir}/rootfs.squashfs"
 
     if [ "${arch}" = "amd64" ] && [ "${test_image}" != true ]; then
-        "${src_root}"/lxd/test.py "${metadata_tarball}" "${rootfs_tarball}"
+        "${src_root}"/lxd/test.py "${results_dir}" \
+                                  "${metadata_tarball}" \
+                                  "${rootfs_tarball}"
     fi
 
     rm -rf "${tempdir}"
