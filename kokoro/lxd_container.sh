@@ -24,6 +24,7 @@ install_deps() {
 
     # Install python dependencies for testing.
     sudo pip3 install unittest-xml-reporting
+    sudo pip3 install pylxd
 
     # TODO(smbarber): Install via pip once container.execute's regression is
     # fixed. https://github.com/lxc/pylxd/pull/321
