@@ -120,6 +120,16 @@ main() {
     touch "${dummy_path}"/bin/sommelier
     touch "${dummy_path}"/lib/swrast_dri.so
 
+    # If doing presubmit, only run tests.
+    if [ ! -d "${KOKORO_GFILE_DIR}/apt_signed" ]; then
+        build_container "amd64" \
+                        "${src_root}" \
+                        "${results_dir}" \
+                        "${apt_dir}" \
+                        false
+        exit 0
+    fi
+
     # Build the normal and test images for each arch.
     build_container "amd64" "${src_root}" "${results_dir}" "${apt_dir}" false
     build_container "amd64" "${src_root}" "${results_dir}" "${apt_dir}" true
