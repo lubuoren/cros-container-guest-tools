@@ -14,11 +14,13 @@ SRC_IMAGE="images:debian/${RELEASE}"
 
 build_container() {
     local arch=$1
-    local results_dir=$2
-    local setup_script=$3
-    local setup_test_script=$4
-    local apt_dir=$5
-    local test_image=$6
+    local src_root=$2
+    local results_dir=$3
+    local apt_dir=$4
+    local test_image=$5
+
+    local setup_script="${src_root}"/lxd/lxd_setup.sh
+    local setup_test_script="${src_root}"/lxd/lxd_test_setup.sh
 
     local base_image="${SRC_IMAGE}/${arch}"
     local tempdir="$(mktemp -d /tmp/lxd-image.XXXXXX)"
@@ -72,26 +74,31 @@ build_container() {
     fi
     mkdir -p "${result_dir}"
 
-    cp "${tempdir}/image" "${result_dir}/lxd.tar.xz"
-    tar -Ipixz -cpf "${result_dir}/rootfs.tar.xz" -C "${rootfs}" .
+    local metadata_tarball="${result_dir}/lxd.tar.xz"
+    local rootfs_tarball="${result_dir}/rootfs.tar.xz"
+    cp "${tempdir}/image" "${metadata_tarball}"
+    tar -Ipixz -cpf "${rootfs_tarball}" -C "${rootfs}" .
     mksquashfs "${rootfs}"/* "${result_dir}/rootfs.squashfs"
+
+    if [ "${arch}" = "amd64" ] && [ "${test_image}" != true ]; then
+        "${src_root}"/lxd/test.py "${metadata_tarball}" "${rootfs_tarball}"
+    fi
 
     rm -rf "${tempdir}"
 }
 
 main() {
-    local results_dir=$1
-    local setup_script=$2
-    local setup_test_script=$3
-    local apt_dir=$4
+    local src_root=$1
+    local results_dir=$2
+    local apt_dir=$3
 
     if [ -z "${results_dir}" -o ! -d "${results_dir}" ]; then
         echo "Results directory '${results_dir}' doesn't exist."
         return 1
     fi
 
-    if [ ! -f "${setup_script}" ]; then
-        echo "Setup script '${setup_script}' doesn't exist."
+    if [ ! -d "${src_root}" ]; then
+        echo "Source root '${src_root}' doesn't exist."
         return 1
     fi
 
@@ -112,10 +119,10 @@ main() {
     touch "${dummy_path}"/lib/swrast_dri.so
 
     # Build the normal and test images for each arch.
-    build_container "amd64" "${results_dir}" "${setup_script}" "${setup_test_script}" "${apt_dir}" false
-    build_container "amd64" "${results_dir}" "${setup_script}" "${setup_test_script}" "${apt_dir}" true
-    build_container "arm64" "${results_dir}" "${setup_script}" "${setup_test_script}" "${apt_dir}" false
-    build_container "arm64" "${results_dir}" "${setup_script}" "${setup_test_script}" "${apt_dir}" true
+    build_container "amd64" "${src_root}" "${results_dir}" "${apt_dir}" false
+    build_container "amd64" "${src_root}" "${results_dir}" "${apt_dir}" true
+    build_container "arm64" "${src_root}" "${results_dir}" "${apt_dir}" false
+    build_container "arm64" "${src_root}" "${results_dir}" "${apt_dir}" true
 }
 
 main "$@"

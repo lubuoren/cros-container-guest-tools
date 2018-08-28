@@ -19,7 +19,22 @@ install_deps() {
     sudo cp "${KOKORO_GFILE_DIR}"/qemu-aarch64-static /usr/bin/qemu-aarch64-static
     sudo chmod 0755 /usr/bin/qemu-aarch64-static
 
+    # pixz improves compression time for the rootfs significantly.
     sudo apt-get install -q -y pixz
+
+    # Install python dependencies for testing.
+    sudo pip3 install unittest-xml-reporting
+
+    # TODO(smbarber): Install via pip once container.execute's regression is
+    # fixed. https://github.com/lxc/pylxd/pull/321
+    pushd /tmp
+
+    git clone https://github.com/lxc/pylxd.git
+    cd pylxd
+    git checkout 23cef05b0e0b0c8605deb92c070139cd8246a416
+    sudo python3 setup.py install
+
+    popd
 }
 
 do_preseed() {
@@ -78,9 +93,8 @@ main() {
         apt_dir="${KOKORO_GFILE_DIR}/apt_unsigned"
     fi
 
-    sudo "${src_root}/lxd/build_debian_container.sh" "${result_dir}" \
-                                                     "${src_root}/lxd/lxd_setup.sh" \
-                                                     "${src_root}/lxd/lxd_test_setup.sh" \
+    sudo "${src_root}/lxd/build_debian_container.sh" "${src_root}" \
+                                                     "${result_dir}" \
                                                      "${apt_dir}"
 }
 
