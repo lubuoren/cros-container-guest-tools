@@ -1,0 +1,19 @@
+Protocol 2
+Port 2222
+HostKey /dev/.ssh/ssh_host_key
+AuthorizedKeysFile /dev/.ssh/ssh_authorized_keys
+Subsystem sftp internal-sftp
+
+# Allow only SFTP from this server.
+ForceCommand internal-sftp
+PermitTunnel no
+AllowAgentForwarding no
+AllowTcpForwarding yes
+X11Forwarding no
+PasswordAuthentication no
+UsePAM yes
+
+# The authorized keys file is not actually writable in the guest, since the uid
+# of the owner isn't mapped. But since the owner of the file isn't the user
+# who's logging in, we can't use strict modes checking.
+StrictModes no
