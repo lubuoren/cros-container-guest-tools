@@ -97,6 +97,7 @@ main() {
     local src_root=$1
     local results_dir=$2
     local apt_dir=$3
+    local job_name=$4
 
     if [ -z "${results_dir}" -o ! -d "${results_dir}" ]; then
         echo "Results directory '${results_dir}' doesn't exist."
@@ -113,6 +114,11 @@ main() {
         return 1
     fi
 
+    if [ -z "${job_name}" ]; then
+        echo "Job name should be specified"
+        return 1
+    fi
+
     if [ "$(id -u)" -ne 0 ]; then
         echo "This script must be run as root to repack rootfs tarballs."
         return 1
@@ -125,7 +131,7 @@ main() {
     touch "${dummy_path}"/lib/swrast_dri.so
 
     # If doing presubmit, only run tests.
-    if [ ! -d "${KOKORO_GFILE_DIR}/apt_signed" ]; then
+    if [[ $job_name = *"presubmit"* ]]; then
         build_container "amd64" \
                         "${src_root}" \
                         "${results_dir}" \

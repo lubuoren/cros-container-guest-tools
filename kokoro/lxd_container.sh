@@ -96,7 +96,8 @@ main() {
 
     sudo "${src_root}/lxd/build_debian_container.sh" "${src_root}" \
                                                      "${result_dir}" \
-                                                     "${apt_dir}"
+                                                     "${apt_dir}" \
+                                                     "${KOKORO_JOB_NAME}"
 }
 
 main "$@"
