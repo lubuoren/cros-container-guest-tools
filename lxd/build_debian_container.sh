@@ -81,9 +81,13 @@ build_container() {
     mksquashfs "${rootfs}"/* "${result_dir}/rootfs.squashfs"
 
     if [ "${arch}" = "amd64" ] && [ "${test_image}" != true ]; then
+        # Workaround the "Invalid multipart image" flake by generating a
+        # single tarball.
+        tar xvf "${tempdir}/image" -C "${tempdir}"
+        tar -Ipixz -cpf "${tempdir}/unified.tar.xz" \
+            -C "${tempdir}" rootfs metadata.yaml templates
         "${src_root}"/lxd/test.py "${results_dir}" \
-                                  "${metadata_tarball}" \
-                                  "${rootfs_tarball}"
+                                  "${tempdir}/unified.tar.xz"
     fi
 
     rm -rf "${tempdir}"

@@ -18,11 +18,9 @@ import xmlrunner
 STOPPED = 102
 RUNNING = 103
 
-
 class LxdTestCase(unittest.TestCase):
   """LxdTestCase includes all test cases for CrOS LXD containers."""
-  METADATA_TARBALL = 'lxd.tar.xz'
-  ROOTFS_TARBALL = 'rootfs.tar.xz'
+  UNIFIED_TARBALL = 'unified.tar.xz'
   IMAGE_ALIAS = 'lxd_test_image'
   CONTAINER_NAME = 'lxd-test'
   TEST_PROFILE = 'test-profile'
@@ -35,12 +33,10 @@ class LxdTestCase(unittest.TestCase):
     if cls.client.images.exists(cls.IMAGE_ALIAS, alias=True):
       cls.image = cls.client.images.get_by_alias(cls.IMAGE_ALIAS)
     else:
-      with open(cls.METADATA_TARBALL, 'rb') as image_metadata:
-        with open(cls.ROOTFS_TARBALL, 'rb') as image_rootfs:
-          cls.image = cls.client.images.create(
-              image_rootfs, metadata=image_metadata)
-          cls.image.add_alias(cls.IMAGE_ALIAS, 'lxd test image')
-          cls.image.save(wait=True)
+      with open(cls.UNIFIED_TARBALL, 'rb') as unified_tarball:
+        cls.image = cls.client.images.create(unified_tarball)
+        cls.image.add_alias(cls.IMAGE_ALIAS, 'lxd test image')
+        cls.image.save(wait=True)
 
     # Profile setup + mocks to bind-mount in.
     cls.profile = None
@@ -161,12 +157,11 @@ class LxdTestCase(unittest.TestCase):
 
 
 if __name__ == '__main__':
-  if len(sys.argv) != 4:
-    print("usage: test.py result_dir metadata_tarball rootfs_tarball")
+  if len(sys.argv) != 3:
+    print("usage: test.py result_dir unified_tarball")
     sys.exit(1)
 
-  LxdTestCase.ROOTFS_TARBALL = sys.argv.pop()
-  LxdTestCase.METADATA_TARBALL = sys.argv.pop()
+  LxdTestCase.UNIFIED_TARBALL = sys.argv.pop()
   result_dir = sys.argv.pop()
 
   with open(os.path.join(result_dir, 'sponge_log.xml'), 'wb') as output:
