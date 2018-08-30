@@ -45,17 +45,10 @@ build_container() {
     mkdir "${rootfs}/run/apt"
     cp -r "${apt_dir}"/* "${rootfs}/run/apt"
 
-    # Some mirrors are unreliable. Use the primary US mirrors.
-    sed -i 's|deb.debian.org|ftp.us.debian.org|g' \
-        "${rootfs}"/etc/apt/sources.list
-
     chroot "${rootfs}" /run/"$(basename ${setup_script})"
     if [ "${test_image}" = true ]; then
         chroot "${rootfs}" /run/"$(basename ${setup_test_script})"
     fi
-
-    sed -i 's|ftp.us.debian.org|deb.debian.org|g' \
-        "${rootfs}"/etc/apt/sources.list
 
     umount "${rootfs}/tmp"
     umount "${rootfs}/run"
