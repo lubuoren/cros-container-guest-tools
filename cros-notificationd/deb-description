@@ -1,0 +1,2 @@
+Chromium OS Notification Bridge.
+This package installs D-Bus on-demand service specification for notificationd.

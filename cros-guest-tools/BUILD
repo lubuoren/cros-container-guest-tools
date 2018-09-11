@@ -10,6 +10,7 @@ pkg_deb(
     data = ":debian-data",
     depends = [
         "cros-garcon",
+        "cros-notificationd",
         "cros-sftp",
         "cros-sommelier",
     ],
@@ -37,5 +38,5 @@ pkg_deb(
         "vim",
     ],
     section = "misc",
-    version = "0.14",
+    version = "0.15",
 )
