@@ -1,0 +1,4 @@
+[Desktop Entry]
+Name=Wayland Demo Application
+Exec=/opt/google/cros-containers/bin/wayland_demo 0x3388dd
+Type=Application
