@@ -2,12 +2,16 @@
 Description=Master sommelier listening on socket wayland-%i
 
 [Service]
+Environment="WAYLAND_DISPLAY_VAR=WAYLAND_DISPLAY"
+Environment="SOMMELIER_SCALE=1.0"
 Type=notify
 ExecStart=/usr/bin/sommelier \
               --master \
               --sd-notify="READY=1" \
               --socket=wayland-%i \
-              /bin/sh -c "systemctl --user import-environment WAYLAND_DISPLAY SOMMELIER_VERSION"
+              /bin/sh -c \
+                  "systemctl --user set-environment ${WAYLAND_DISPLAY_VAR}=$${WAYLAND_DISPLAY}; \
+                   systemctl --user import-environment SOMMELIER_VERSION"
 Restart=always
 
 [Install]

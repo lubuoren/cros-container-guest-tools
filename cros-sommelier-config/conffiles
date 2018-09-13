@@ -2,3 +2,9 @@
 /etc/systemd/user/default.target.wants/sommelier@0.service
 /etc/systemd/user/sommelier-x@0.service.d/cros-sommelier-x-override.conf
 /etc/systemd/user/default.target.wants/sommelier-x@0.service
+/etc/systemd/user/sommelier@1.service.d/cros-sommelier-override.conf
+/etc/systemd/user/sommelier@1.service.d/cros-sommelier-low-density-override.conf
+/etc/systemd/user/default.target.wants/sommelier@1.service
+/etc/systemd/user/sommelier-x@1.service.d/cros-sommelier-x-override.conf
+/etc/systemd/user/sommelier-x@1.service.d/cros-sommelier-low-density-override.conf
+/etc/systemd/user/default.target.wants/sommelier-x@1.service
