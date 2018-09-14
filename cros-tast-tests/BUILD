@@ -9,9 +9,20 @@ pkg_tar(
 )
 
 pkg_tar(
+    name = "cros-tast-tests-icon",
+    strip_prefix= "/cros-tast-tests",
+    package_dir = "/usr/share/icons/hicolor/32x32/apps",
+    srcs = ["x11_demo.png", "wayland_demo.png"],
+    mode = "0644",
+)
+
+pkg_tar(
     name = "debian-data",
     extension = "tar.gz",
-    deps = [":cros-tast-tests-desktop"],
+    deps = [
+        ":cros-tast-tests-desktop",
+        ":cros-tast-tests-icon",
+    ],
 )
 
 pkg_deb(
@@ -22,6 +33,6 @@ pkg_deb(
     homepage = "https://chromium.org",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-tast-tests",
-    version = "0.1",
+    version = "0.2",
     section = "misc",
 )
