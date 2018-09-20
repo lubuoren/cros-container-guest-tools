@@ -11,9 +11,6 @@ set -eux
 main() {
     apt-get update
 
-    # For X11 and wayland testing.
-    apt-get -q -y --no-install-recommends install gnome-mahjongg gimp
-
     # For webserver testing.
     apt-get -q -y install python2.7
 }
