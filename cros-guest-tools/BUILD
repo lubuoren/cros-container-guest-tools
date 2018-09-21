@@ -31,6 +31,7 @@ pkg_deb(
         "curl",
         "dbus-x11",
         "git",
+        "gnupg",
         "less",
         "libxss1",
         "pulseaudio",
@@ -38,5 +39,5 @@ pkg_deb(
         "vim",
     ],
     section = "misc",
-    version = "0.15",
+    version = "0.16",
 )
