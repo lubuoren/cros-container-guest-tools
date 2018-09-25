@@ -26,7 +26,6 @@ pkg_deb(
         "cros-sudo-config",
         "cros-systemd-overrides",
         "cros-ui-config",
-        "cros-unattended-upgrades",
         "cros-wayland",
         "curl",
         "dbus-x11",
@@ -39,5 +38,5 @@ pkg_deb(
         "vim",
     ],
     section = "misc",
-    version = "0.16",
+    version = "0.17",
 )

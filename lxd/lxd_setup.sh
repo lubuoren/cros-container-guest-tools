@@ -16,9 +16,8 @@ deb file:///run/apt stretch main
 EOF
 
     apt-get update
-    # unattended-upgrades recommends a mail agent; don't install that.
-    apt-get -q -y --no-install-recommends --allow-unauthenticated \
-        install cros-unattended-upgrades
+    # python3 is used for integration testing.
+    apt-get -q -y --no-install-recommends install python3
     apt-get -q -y --allow-unauthenticated install cros-guest-tools
     apt-get -q -y install less
 
