@@ -3,6 +3,7 @@ Description=X11 sommelier at display %i
 
 [Service]
 Environment="DISPLAY_VAR=DISPLAY"
+Environment="XCURSOR_SIZE_VAR=XCURSOR_SIZE"
 Environment="SOMMELIER_SCALE=1.0"
 Type=notify
 ExecStart=/usr/bin/sommelier \
@@ -12,7 +13,8 @@ ExecStart=/usr/bin/sommelier \
               --no-exit-with-child \
               /bin/sh -c \
                   "systemctl --user set-environment ${DISPLAY_VAR}=$${DISPLAY}; \
-                   systemctl --user import-environment XCURSOR_SIZE SOMMELIER_VERSION; \
+                   systemctl --user set-environment ${XCURSOR_SIZE_VAR}=$${XCURSOR_SIZE}; \
+                   systemctl --user import-environment SOMMELIER_VERSION; \
                    . /etc/sommelierrc"
 Restart=always
 
