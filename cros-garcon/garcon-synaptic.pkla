@@ -1,0 +1,4 @@
+[Allow sudo users to use synaptic]
+Identity=unix-group:sudo
+Action=com.ubuntu.pkexec.synaptic
+ResultAny=yes

@@ -24,10 +24,13 @@ ExecStart=/usr/bin/sommelier \
               --x-display=%i \
               --sd-notify="READY=1" \
               --no-exit-with-child \
+              --x-auth=${HOME}/.Xauthority \
               /bin/sh -c \
                   "systemctl --user set-environment ${DISPLAY_VAR}=$${DISPLAY}; \
                    systemctl --user set-environment ${XCURSOR_SIZE_VAR}=$${XCURSOR_SIZE}; \
                    systemctl --user import-environment SOMMELIER_VERSION; \
+                   >${HOME}/.Xauthority; \
+                   xauth -f ${HOME}/.Xauthority add ${HOST}:%i . $(xxd -l 16 -p /dev/urandom); \
                    . /etc/sommelierrc"
 Restart=always
 

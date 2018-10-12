@@ -60,7 +60,10 @@ pkg_tar(
     name = "cros-garcon-polkit",
     strip_prefix = "/cros-garcon",
     package_dir = "/var/lib/polkit-1/localauthority/50-local.d",
-    srcs = ["garcon-packagekit.pkla"],
+    srcs = [
+        "garcon-packagekit.pkla",
+        "garcon-synaptic.pkla"
+    ],
     mode = "0644",
 )
 
@@ -87,7 +90,7 @@ pkg_deb(
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-garcon",
     depends = ["desktop-file-utils","packagekit","xdg-utils"],
-    version = "0.19",
+    version = "0.20",
     section = "misc",
     conffiles_file = "conffiles",
     postinst = "postinst",
