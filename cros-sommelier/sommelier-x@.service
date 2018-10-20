@@ -5,6 +5,19 @@ Description=X11 sommelier at display %i
 Environment="DISPLAY_VAR=DISPLAY"
 Environment="XCURSOR_SIZE_VAR=XCURSOR_SIZE"
 Environment="SOMMELIER_SCALE=1.0"
+# For Xwayland, the font paths are normally built into the Xwayland binary
+# at build time. These paths are lifted from the xorg-server source package
+# on Debian stretch. This is the value of the --with-default-font-path argument
+# to the configure script.
+# TODO(smbarber): Factor this out for different distros.
+Environment="SOMMELIER_XFONT_PATH=/usr/share/fonts/X11/misc,\
+/usr/share/fonts/X11/cyrillic,\
+/usr/share/fonts/X11/100dpi/:unscaled,\
+/usr/share/fonts/X11/75dpi/:unscaled,\
+/usr/share/fonts/X11/Type1,\
+/usr/share/fonts/X11/100dpi,\
+/usr/share/fonts/X11/75dpi,\
+built-ins"
 Type=notify
 ExecStart=/usr/bin/sommelier \
               -X \
