@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=X11 Demo Application
-Exec=/opt/google/cros-containers/bin/x11_demo 0x99ee44
+Exec=/opt/google/cros-containers/bin/x11_demo --bgcolor=0x99ee44
 Type=Application
 StartupWMClass=x11_demo
 Icon=x11_demo

@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Wayland Demo Application
-Exec=/opt/google/cros-containers/bin/wayland_demo 0x3388dd
+Exec=/opt/google/cros-containers/bin/wayland_demo --bgcolor=0x3388dd
 Type=Application
 StartupWMClass=wayland_demo
 Icon=wayland_demo

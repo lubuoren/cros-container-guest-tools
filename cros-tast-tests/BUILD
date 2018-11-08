@@ -33,6 +33,6 @@ pkg_deb(
     homepage = "https://chromium.org",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-tast-tests",
-    version = "0.2",
+    version = "0.3",
     section = "misc",
 )
