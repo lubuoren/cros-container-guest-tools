@@ -11,6 +11,11 @@ main() {
     apt-get update
     apt-get -q -y install apt-transport-https
 
+    # Use HTTPS repos.
+    sed -i 's|http|https|g' /etc/apt/sources.list
+    # Use deb.debian.org redirection; security.debian.org doesn't handle HTTPS.
+    sed -i 's|security.debian.org|deb.debian.org|g' /etc/apt/sources.list
+
     cat >/etc/apt/sources.list.d/cros-staging.list <<EOF
 deb file:///run/apt stretch main
 EOF
