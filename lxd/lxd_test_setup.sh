@@ -13,6 +13,9 @@ main() {
 
     # For webserver testing.
     apt-get -q -y install python2.7
+
+    # For vm.CrostiniNetworkPerf.
+    apt-get -q -y install iperf3 iputils-ping
 }
 
 main "$@"
