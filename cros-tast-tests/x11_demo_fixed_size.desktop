@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=X11 Demo Fixed Window Size Application
+Exec=/opt/google/cros-containers/bin/x11_demo --bgcolor=0x99ee44 --width=100 --height=100
+Type=Application
+StartupWMClass=x11_demo
+Icon=x11_demo

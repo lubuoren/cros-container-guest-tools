@@ -4,7 +4,12 @@ pkg_tar(
     name = "cros-tast-tests-desktop",
     strip_prefix= "/cros-tast-tests",
     package_dir = "/usr/share/applications",
-    srcs = ["x11_demo.desktop", "wayland_demo.desktop"],
+    srcs = [
+        "x11_demo.desktop",
+        "x11_demo_fixed_size.desktop",
+        "wayland_demo.desktop",
+        "wayland_demo_fixed_size.desktop",
+    ],
     mode = "0644",
 )
 
@@ -33,6 +38,6 @@ pkg_deb(
     homepage = "https://chromium.org",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-tast-tests",
-    version = "0.3",
+    version = "0.4",
     section = "misc",
 )
