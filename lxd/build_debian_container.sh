@@ -23,7 +23,7 @@ build_container() {
     local setup_test_script="${src_root}"/lxd/lxd_test_setup.sh
 
     local base_image="${SRC_IMAGE}/${arch}"
-    local tempdir="$(mktemp -d /tmp/lxd-image.XXXXXX)"
+    local tempdir="$(mktemp -d)"
     ${LXC} image export "${base_image}" "${tempdir}/image"
 
     local rootfs="${tempdir}/rootfs"
