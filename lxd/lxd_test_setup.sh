@@ -9,13 +9,22 @@
 set -eux
 
 main() {
+    # Add non-free repository to apt sources.list.
+    sed -E -i 's|^(deb.*main)$|\1 non-free|g' /etc/apt/sources.list
+
     apt-get update
 
     # For webserver testing.
     apt-get -q -y install python2.7
 
+    # For vm.CrostiniDiskIOPerf.
+    apt-get -q -y install fio
+
     # For vm.CrostiniNetworkPerf.
     apt-get -q -y install iperf3 iputils-ping
+
+    # For vm.CrostiniCpuPerf.
+    apt-get -q -y install lmbench
 }
 
 main "$@"
