@@ -137,6 +137,11 @@ main() {
                         "${results_dir}" \
                         "${apt_dir}" \
                         false
+        build_container "amd64" \
+                        "${src_root}" \
+                        "${results_dir}" \
+                        "${apt_dir}" \
+                        true
         exit 0
     fi
 
