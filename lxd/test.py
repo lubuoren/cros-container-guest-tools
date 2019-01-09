@@ -117,7 +117,7 @@ class LxdTestCase(unittest.TestCase):
         ['systemctl', 'is-active', 'cros-sftp.service'])
     self.assertEqual(ret, 0)
 
-  def test_user_services(self):
+  def test_user_services_no_gpu(self):
     self.container.start(wait=True)
     time.sleep(10)
     self.assertEqual(self.container.status_code, RUNNING)
@@ -151,6 +151,78 @@ class LxdTestCase(unittest.TestCase):
     self.assertEqual(ret, 0)
     ret, _, _ = self.container.execute([
         'su', '-c', 'systemctl --user is-active sommelier-x@0.service',
+        self.TEST_USER
+    ])
+    self.assertEqual(ret, 0)
+    ret, _, _ = self.container.execute([
+        'su', '-c',
+        'systemctl --user show-environment | grep -q SOMMELIER_GLAMOR',
+        self.TEST_USER
+    ])
+    self.assertEqual(ret, 1)
+    ret, _, _ = self.container.execute([
+        'su', '-c',
+        'systemctl --user show-environment | grep -q SOMMELIER_DRM_DEVICE',
+        self.TEST_USER
+    ])
+    self.assertEqual(ret, 1)
+
+  def test_user_services_gpu(self):
+    self.container.start(wait=True)
+    self.container.devices.update({
+          'renderD128': {
+              'major': '226',
+              'minor': '128',
+              'mode': '0666',
+              'path': '/dev/dri/renderD128',
+              'type': 'unix-char',
+          },
+      })
+    self.container.save()
+    time.sleep(10)
+    self.assertEqual(self.container.status_code, RUNNING)
+    ret, _, _ = self.container.execute(
+        ['useradd', '-u', '1000', '-s', '/bin/bash', '-m', self.TEST_USER])
+    self.assertEqual(ret, 0)
+
+    groups = [
+        'audio', 'cdrom', 'dialout', 'floppy', 'plugdev', 'sudo', 'users',
+        'video'
+    ]
+    for group in groups:
+      ret, _, _ = self.container.execute(
+          ['usermod', '-aG', group, self.TEST_USER])
+      self.assertEqual(ret, 0)
+
+    ret, _, _ = self.container.execute(
+        ['loginctl', 'enable-linger', self.TEST_USER])
+    self.assertEqual(ret, 0)
+    time.sleep(10)
+
+    ret, _, _ = self.container.execute([
+        'su', '-c', 'systemctl --user is-active cros-garcon.service',
+        self.TEST_USER
+    ])
+    self.assertEqual(ret, 0)
+    ret, _, _ = self.container.execute([
+        'su', '-c', 'systemctl --user is-active sommelier@0.service',
+        self.TEST_USER
+    ])
+    self.assertEqual(ret, 0)
+    ret, _, _ = self.container.execute([
+        'su', '-c', 'systemctl --user is-active sommelier-x@0.service',
+        self.TEST_USER
+    ])
+    self.assertEqual(ret, 0)
+    ret, _, _ = self.container.execute([
+        'su', '-c',
+        'systemctl --user show-environment | grep -q SOMMELIER_GLAMOR',
+        self.TEST_USER
+    ])
+    self.assertEqual(ret, 0)
+    ret, _, _ = self.container.execute([
+        'su', '-c',
+        'systemctl --user show-environment | grep -q SOMMELIER_DRM_DEVICE',
         self.TEST_USER
     ])
     self.assertEqual(ret, 0)
