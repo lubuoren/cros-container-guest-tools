@@ -27,14 +27,6 @@ pkg_tar(
 )
 
 pkg_tar(
-    name = "cros-sources-list",
-    strip_prefix = "/cros-apt-config",
-    package_dir = "/etc/apt/sources.list.d",
-    srcs = ["cros.list"],
-    mode = "0644",
-)
-
-pkg_tar(
     name = "cros-apt-prefs",
     strip_prefix = "/cros-apt-config",
     package_dir = "/etc/apt/preferences.d",
@@ -48,7 +40,6 @@ pkg_tar(
     deps = [
         ":cros-apt-prefs",
         ":cros-keyring",
-        ":cros-sources-list",
     ],
 )
 
@@ -60,7 +51,7 @@ pkg_deb(
     homepage = "https://chromium.org",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-apt-config",
-    version = "0.18",
+    version = "0.19",
     section = "misc",
     depends = ["apt-transport-https"],
 )

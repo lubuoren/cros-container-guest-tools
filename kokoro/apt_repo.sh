@@ -5,8 +5,6 @@
 
 set -ex
 
-RELEASE=stretch
-
 main() {
     if [ -z "${KOKORO_ARTIFACTS_DIR}" ]; then
         echo "This script must be run in kokoro"
@@ -17,20 +15,23 @@ main() {
     local repo_dir="${src_root}"/apt_unsigned
     mkdir -p "${repo_dir}"/{,conf}
 
-    cat > "${repo_dir}/conf/distributions" <<EOF
+    for release in stretch buster; do
+        local distributions="
 Origin: Google
 Label: cros-containers
-Suite: stable
-Codename: stretch
+Codename: ${release}
 Version: 1.0
 Architectures: amd64 arm64 armhf i386
 Components: main
 Description: CrOS containers guest tools
-EOF
+"
 
-    local deb
-    for deb in ""${KOKORO_GFILE_DIR}/guest_debs/*.deb; do
-        reprepro -b "${repo_dir}" includedeb "${RELEASE}" "${deb}"
+        echo "${distributions}" >> "${repo_dir}/conf/distributions"
+
+        local deb
+        for deb in "${KOKORO_GFILE_DIR}"/guest_debs/*.deb; do
+            reprepro -b "${repo_dir}" includedeb "${release}" "${deb}"
+        done
     done
 }
 

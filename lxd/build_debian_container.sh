@@ -8,21 +8,18 @@ set -ex
 LXD="/snap/bin/lxd"
 LXC="/snap/bin/lxc"
 
-DISTRO="debian"
-RELEASE="stretch"
-SRC_IMAGE="images:debian/${RELEASE}"
-
 build_container() {
     local arch=$1
     local src_root=$2
     local results_dir=$3
     local apt_dir=$4
     local test_image=$5
+    local release=$6
 
     local setup_script="${src_root}"/lxd/lxd_setup.sh
     local setup_test_script="${src_root}"/lxd/lxd_test_setup.sh
 
-    local base_image="${SRC_IMAGE}/${arch}"
+    local base_image="images:debian/${release}/${arch}"
     local tempdir="$(mktemp -d)"
     ${LXC} image export "${base_image}" "${tempdir}/image"
 
@@ -45,7 +42,8 @@ build_container() {
     mkdir "${rootfs}/run/apt"
     cp -r "${apt_dir}"/* "${rootfs}/run/apt"
 
-    chroot "${rootfs}" /run/"$(basename ${setup_script})"
+    chroot "${rootfs}" /run/"$(basename ${setup_script})" "${release}"
+
     if [ "${test_image}" = true ]; then
         chroot "${rootfs}" /run/"$(basename ${setup_test_script})"
     fi
@@ -66,7 +64,7 @@ build_container() {
     # rootfs.tar.xz is raw rootfs tar'd up.
     # rootfs.squashfs is raw rootfs squash'd.
     # lxd.tar.xz is metadata.yaml and templates dir.
-    local result_dir="${results_dir}/${DISTRO}/${RELEASE}/${arch}"
+    local result_dir="${results_dir}/debian/${release}/${arch}"
     if [ "${test_image}" = true ]; then
         result_dir="${result_dir}/test"
     else
@@ -136,20 +134,36 @@ main() {
                         "${src_root}" \
                         "${results_dir}" \
                         "${apt_dir}" \
-                        false
+                        false \
+                        stretch
         build_container "amd64" \
                         "${src_root}" \
                         "${results_dir}" \
                         "${apt_dir}" \
-                        true
+                        true \
+                        stretch
+        build_container "amd64" \
+                        "${src_root}" \
+                        "${results_dir}" \
+                        "${apt_dir}" \
+                        true \
+                        buster
         exit 0
     fi
 
     # Build the normal and test images for each arch.
-    build_container "amd64" "${src_root}" "${results_dir}" "${apt_dir}" false
-    build_container "amd64" "${src_root}" "${results_dir}" "${apt_dir}" true
-    build_container "arm64" "${src_root}" "${results_dir}" "${apt_dir}" false
-    build_container "arm64" "${src_root}" "${results_dir}" "${apt_dir}" true
+    for arch in amd64 arm64; do
+        for release in stretch buster; do
+            for test_image in false true; do
+                build_container "${arch}" \
+                                "${src_root}" \
+                                "${results_dir}" \
+                                "${apt_dir}" \
+                                "${test_image}" \
+                                "${release}"
+            done
+        done
+    done
 }
 
 main "$@"

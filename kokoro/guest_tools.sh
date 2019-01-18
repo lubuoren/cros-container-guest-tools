@@ -5,6 +5,8 @@
 
 set -ex
 
+. "$(dirname "$0")/common.sh" || exit 1
+
 main() {
     if [ -z "${KOKORO_ARTIFACTS_DIR}" ]; then
         echo "This script must be run in kokoro"
