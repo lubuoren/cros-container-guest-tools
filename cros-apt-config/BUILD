@@ -58,7 +58,7 @@ pkg_deb(
     homepage = "https://chromium.org",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-apt-config",
-    version = "0.17",
+    version = "0.18",
     section = "misc",
     depends = ["apt-transport-https"],
 )
