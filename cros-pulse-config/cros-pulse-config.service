@@ -1,0 +1,12 @@
+[Unit]
+Description=Helper unit for loading PulseAudio ALSA module
+Requires=pulseaudio.service
+After=pulseaudio.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/pacmd load-module module-alsa-sink device=hw:0,0
+RemainAfterExit=true
+
+[Install]
+WantedBy=default.target

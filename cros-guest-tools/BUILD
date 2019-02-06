@@ -22,6 +22,7 @@ pkg_deb(
         "bash-completion",
         "bzip2",
         "cros-apt-config",
+        "cros-pulse-config",
         "cros-sommelier-config",
         "cros-sudo-config",
         "cros-systemd-overrides",
@@ -41,5 +42,5 @@ pkg_deb(
         "wget",
     ],
     section = "misc",
-    version = "0.18",
+    version = "0.19",
 )

@@ -1,0 +1,3 @@
+PulseAudio helper for Chromium OS integration.
+This package installs a helper systemd unit for PulseAudio support. This is
+required as a workaround for the lack of udev in unprivileged containers.
