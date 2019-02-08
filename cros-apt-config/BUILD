@@ -4,12 +4,14 @@ genrule(
     name = "cros-keyring-gpg",
     srcs = ["cros.pubkey"],
     outs = ["cros.gpg"],
-    cmd = """gpg --homedir /tmp \
+    cmd = """gpg --no-tty \
+                 --homedir /tmp \
                  --no-default-keyring \
                  --lock-never \
                  --keyring ./tmp.keyring \
                  --import $(location cros.pubkey) && \
-             gpg --homedir /tmp \
+             gpg --no-tty \
+                 --homedir /tmp \
                  --no-default-keyring \
                  --lock-never \
                  --keyring ./tmp.keyring \
