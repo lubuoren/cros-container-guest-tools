@@ -72,7 +72,7 @@ class LxdTestCase(unittest.TestCase):
             },
             'sshd_config': {
                 'source': sshd_dir,
-                'path': '/dev/.ssh/sshd_config',
+                'path': '/dev/.ssh',
                 'type': 'disk',
             },
         })

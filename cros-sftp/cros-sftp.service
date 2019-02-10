@@ -11,6 +11,7 @@ KillMode=process
 Restart=on-failure
 RestartPreventExitStatus=255
 Type=notify
+RuntimeDirectory=sshd
 
 [Install]
 WantedBy=default.target
