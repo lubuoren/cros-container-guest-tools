@@ -1,0 +1,20 @@
+# Copyright 2019 The Chromium OS Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+# Add llvm packages necesary for mesa.
+
+echo HOOK: add llvm dependencies
+
+apt-get install -y apt-utils
+tee -a /etc/apt/sources.list <<EOF
+deb http://apt.llvm.org/stretch/ llvm-toolchain-stretch-7 main
+deb-src http://apt.llvm.org/stretch/ llvm-toolchain-stretch-7 main
+EOF
+apt-get update
+apt-get install -y \
+    llvm-7 \
+    llvm-7-dev \
+    libclang-7-dev \
+    libclang-common-7-dev \
+    clang-7

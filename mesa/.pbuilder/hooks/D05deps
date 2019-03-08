@@ -1,0 +1,19 @@
+# Copyright 2019 The Chromium OS Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+# Allow mesa to be built with a newer version of libdrm (which will be built
+# first and then made available via this hook).
+
+echo HOOK: add extra dependencies
+
+DEPSPATH="${DEPSBASE}/"
+if [ -d "${DEPSPATH}" ] ; then
+    echo HOOK: add dependencies from "${DEPSPATH}:"
+    ls -R "${DEPSPATH}"
+
+    apt-get install --assume-yes apt-utils
+    ( cd "${DEPSPATH}"; apt-ftparchive packages . > Packages )
+    echo "deb [trusted=yes] file://${DEPSPATH} ./" >> /etc/apt/sources.list
+    apt-get update
+fi
