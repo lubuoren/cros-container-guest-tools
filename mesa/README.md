@@ -57,3 +57,15 @@ To import the tarball Docker image on another machine:
 ```sh
 sudo docker load -i buildmesa.tar.xz
 ```
+
+## Kokoro
+
+The exported Docker image tarball must be copied to x20 under the path
+`/x20/teams/chromeos-vm/docker/buildmesa.tar.xz`:
+```sh
+prodaccess
+cp buildmesa.tar.xz /google/data/rw/teams/chromeos-vm/docker
+```
+
+The owner of the tarball must be set to `chromeos-vm-ci-read-write` to
+allows Kokoro to have access to it.
