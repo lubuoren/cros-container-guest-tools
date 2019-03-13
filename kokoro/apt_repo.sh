@@ -29,8 +29,13 @@ Description: CrOS containers guest tools
         echo "${distributions}" >> "${repo_dir}/conf/distributions"
 
         local deb
-        for deb in "${KOKORO_GFILE_DIR}"/guest_debs/*.deb; do
-            reprepro -b "${repo_dir}" includedeb "${release}" "${deb}"
+        for subdir in guest_debs mesa_debs; do
+            local debdir="${KOKORO_GFILE_DIR}"/"${subdir}"
+            if [ -d "${debdir}" ]; then
+                for deb in "${debdir}"/*.deb; do
+                    reprepro -b "${repo_dir}" includedeb "${release}" "${deb}"
+                done
+            fi
         done
     done
 }
