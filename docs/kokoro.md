@@ -74,3 +74,9 @@ apt packages can be rolled out to the production buckets.
 [Stainless]: https://goto.google.com/stainless
 [Tast]: https://chromium.googlesource.com/chromiumos/platform/tast-tests/+/master/src/chromiumos/tast/local/bundles/cros/vm/
 [Termina]: https://chromium.googlesource.com/chromiumos/overlays/board-overlays/+/24a9d16fc15c3d07d726f3f974a541572d3584e5/project-termina/
+
+## Mesa
+
+New versions of [Mesa] for use within the container are built from upstream.
+
+[Mesa]: https://chromium.googlesource.com/chromiumos/containers/cros-container-guest-tools/+/refs/heads/master/mesa/
