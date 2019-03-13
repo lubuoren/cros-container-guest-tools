@@ -1,0 +1,3 @@
+deb http://deb.debian.org/debian stretch-backports main
+deb http://apt.llvm.org/stretch/ llvm-toolchain-stretch-7 main
+deb https://storage.googleapis.com/cros-packages/mesa stretch main

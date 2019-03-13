@@ -1,0 +1,4 @@
+Chromium OS virtual GPU alpha for stretch.
+This package installs the llvm-sandbox keyring for the llvm apt repo,
+and the source list to allow access to updated stretch-backports,
+llvm-7 and mesa packages to enable virtual GPU support.
