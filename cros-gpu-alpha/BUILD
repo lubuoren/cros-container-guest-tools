@@ -39,10 +39,19 @@ pkg_tar(
 )
 
 pkg_tar(
+    name = "cros-gpu-alpha-pref",
+    strip_prefix = "/cros-gpu-alpha",
+    package_dir = "/etc/apt/preferences.d",
+    srcs = ["cros-gpu-alpha.pref"],
+    mode = "0644",
+)
+
+pkg_tar(
     name = "debian-data",
     extension = "tar.gz",
     deps = [
         ":cros-gpu-alpha-list",
+        ":cros-gpu-alpha-pref",
         ":llvm-keyring",
     ],
 )
@@ -55,7 +64,7 @@ pkg_deb(
     homepage = "https://chromium.org",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-gpu-alpha",
-    version = "0.1",
+    version = "0.2",
     section = "misc",
     depends = ["apt-transport-https"],
 )
