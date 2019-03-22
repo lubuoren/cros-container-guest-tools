@@ -38,9 +38,10 @@ pkg_deb(
         "man-db",
         "pulseaudio",
         "unzip",
+        "usbutils",
         "vim",
         "wget",
     ],
     section = "misc",
-    version = "0.19",
+    version = "0.20",
 )
