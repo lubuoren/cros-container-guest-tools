@@ -5,6 +5,11 @@ Description=Master sommelier listening on socket wayland-%i
 Environment="WAYLAND_DISPLAY_VAR=WAYLAND_DISPLAY"
 Environment="SOMMELIER_SCALE=1.0"
 Type=notify
+ExecStartPre=/bin/sh -c \
+                 "/usr/bin/test -c /dev/dri/renderD128 && \
+                      /bin/systemctl --user set-environment \
+                          SOMMELIER_DRM_DEVICE=/dev/dri/renderD128; \
+                  /bin/true"
 ExecStart=/usr/bin/sommelier \
               --master \
               --sd-notify="READY=1" \
