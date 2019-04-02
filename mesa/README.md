@@ -58,6 +58,52 @@ To import the tarball Docker image on another machine:
 sudo docker load -i buildmesa.tar.xz
 ```
 
+### Building packages from untested changes
+To test new mesa changes, prepare a local branch based off of
+`debian-stretch-19.1`:
+```sh
+git remote add upstream git://anongit.freedesktop.org/mesa/mesa
+git remote update upstream
+git checkout -b debian-stretch-19.1 cros/debian-stretch-19.1
+git merge upstream/master
+debchange -i
+git add debian/changelog
+git commit
+```
+
+Upload a sandbox branch to test with Docker and start a container.
+```sh
+git push cros HEAD:refs/sandbox/"${USER}"/debian-stretch-test
+sudo docker run \
+    --privileged \
+    --volume=$PWD/artifacts:/artifacts \
+    -it buildmesa:latest \
+    bash
+```
+
+Within the Docker container, perform a build.  $USER will need to be
+set manually within the container.
+```sh
+./setupchroot.sh
+./sync.sh
+(cd mesa &&
+ git fetch origin refs/sandbox/$USER/debian-stretch-test &&
+ git checkout -B "${MESA_BRANCH}" FETCH_HEAD)
+./buildpackages.sh
+exit
+```
+
+The Debian packages will be available in `$PWD/artifacts` to test.
+
+Send merge commit to gerrit:
+```sh
+debchange -r
+git add debian/changelog
+git commit
+git push cros upstream/master:refs/heads/temporary_upstream
+repo upload . --cbr
+```
+
 ## Kokoro
 The exported Docker image tarball must be copied to x20 under the path
 `/x20/teams/chromeos-vm/docker/buildmesa.tar.xz`:
