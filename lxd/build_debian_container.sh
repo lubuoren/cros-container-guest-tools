@@ -25,6 +25,7 @@ build_container() {
 
     local rootfs="${tempdir}/rootfs"
     unsquashfs -d "${rootfs}" "${tempdir}/image.root"
+    chmod 0755 "${rootfs}"
 
     if [ "${arch}" = "arm64" ]; then
         cp /usr/bin/qemu-aarch64-static "${rootfs}/usr/bin/"
