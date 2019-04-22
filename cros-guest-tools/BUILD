@@ -37,6 +37,7 @@ pkg_deb(
         "file",
         "git",
         "gnupg",
+        "iputils-ping",
         "less",
         "libxss1",
         "man-db",
@@ -47,5 +48,5 @@ pkg_deb(
         "wget",
     ],
     section = "misc",
-    version = "0.20",
+    version = "0.21",
 )
