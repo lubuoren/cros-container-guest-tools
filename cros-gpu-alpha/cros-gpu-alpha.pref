@@ -1,4 +1,24 @@
-Package: *
+Package: libwayland-client0
+Pin: release n=stretch-backports
+Pin-Priority: 500
+Explanation: Prioritize stretch-backports versions
+
+Package: libwayland-server0
+Pin: release n=stretch-backports
+Pin-Priority: 500
+Explanation: Prioritize stretch-backports versions
+
+Package: libwayland-cursor0
+Pin: release n=stretch-backports
+Pin-Priority: 500
+Explanation: Prioritize stretch-backports versions
+
+Package: libwayland-bin
+Pin: release n=stretch-backports
+Pin-Priority: 500
+Explanation: Prioritize stretch-backports versions
+
+Package: wayland-protocols
 Pin: release n=stretch-backports
 Pin-Priority: 500
 Explanation: Prioritize stretch-backports versions

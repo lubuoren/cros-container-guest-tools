@@ -64,7 +64,7 @@ pkg_deb(
     homepage = "https://chromium.org",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-gpu-alpha",
-    version = "0.2",
+    version = "0.3",
     section = "misc",
     depends = ["apt-transport-https"],
 )
