@@ -122,3 +122,11 @@ wget https://apt.llvm.org/llvm-snapshot.gpg.key
 gpg --no-default-keyring --keyring ./llvm-tmp.gpg --import llvm-snapshot.gpg.key
 gpg --keyring ./llvm-tmp.gpg --export --output llvm-keyring.gpg
 ```
+
+## Versioning
+The Chrome OS releases are often coming from ToT and do not match released
+or even branched mesa builds.  Pre-releases will be numbered in a format such
+as `19.2.0~cros1-2` to signify a Chrome OS pre-release of 19.2.0.  cros1 will
+be the second merge from upstream.  -2 will be the third build of that 
+upstream build.  An actual release will look like 19.2.0-0~bpo0-1 and will 
+be considered greater than the Chrome OS pre-release.
