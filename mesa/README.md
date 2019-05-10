@@ -60,11 +60,11 @@ sudo docker load -i buildmesa.tar.xz
 
 ### Building packages from untested changes
 To test new mesa changes, prepare a local branch based off of
-`debian-stretch-19.1`:
+`debian-stretch-19.2`:
 ```sh
 git remote add upstream git://anongit.freedesktop.org/mesa/mesa
 git remote update upstream
-git checkout -b debian-stretch-19.1 cros/debian-stretch-19.1
+git checkout -b debian-stretch-19.2 cros/debian-stretch-19.2
 git merge upstream/master
 debchange -i
 git add debian/changelog
