@@ -1,0 +1,26 @@
+digraph {
+  graph [fontname="helvetica"];
+  node [fontname="helvetica" shape="rectangle" style="rounded" width=2.5 height=0.7];
+  edge [fontname="helvetica"];
+
+  // Nodes with special text.
+  apt_signer [label=<<font point-size="9"><b>prod</b></font><br align="left"/>apt_signer<br/>> fillcolor="red" style="filled,rounded"];
+  gerrit [label=<Gerrit presubmit result<br/>(Verfied +1/-1)> shape="none" width=2];
+  publish_apt_staging [label=<publish_apt_staging<br/><font point-size="9"><b>gs://cros-packages-staging</b></font>>];
+  publish_lxd_staging [label=<publish_lxd_staging<br/><font point-size="9"><b>gs://cros-containers-staging</b></font>>];
+
+  // Align nodes horizontally.
+  { rank=same lxd_container gerrit }
+  { rank=same publish_apt_staging publish_lxd_staging }
+
+  // Weights are used to align nodes veritcally.
+  guest_tools_mesa -> apt_repo;
+  apt_repo -> apt_signer [weight=10];
+  apt_repo -> lxd_container [label="presubmit"];
+  apt_signer -> lxd_container [weight=10];
+  lxd_container -> publish_artifacts [label="continuous"];
+  lxd_container -> gerrit;
+  publish_artifacts -> publish_apt_staging;
+  publish_artifacts -> publish_lxd_staging;
+
+}
