@@ -5,25 +5,13 @@
 
 set -ex
 
+. "$(dirname "$0")/common.sh" || exit 1
+. "$(dirname "$0")/common_build.sh" || exit 1
+
 main() {
-    if [ -z "${KOKORO_ARTIFACTS_DIR}" ]; then
-        echo "This script must be run in kokoro"
-        exit 1
-    fi
+    require_kokoro_artifacts
 
-    local base_image="buildmesa"
-    local base_image_tarball="${KOKORO_GFILE_DIR}"/"${base_image}".tar.xz
-
-    if [[ "$(docker images -q ${base_image} 2> /dev/null)" == "" ]]; then
-        docker load -i "${base_image_tarball}"
-    fi
-
-    docker run \
-        --rm \
-        --privileged \
-        -v "${KOKORO_ARTIFACTS_DIR}"/mesa_debs:/artifacts \
-        "${base_image}" \
-        ./sync-and-build.sh
+    build_mesa
 }
 
 main "$@"

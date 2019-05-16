@@ -8,15 +8,8 @@ set -ex
 . "$(dirname "$0")/common.sh" || exit 1
 
 main() {
-    if [ -z "${KOKORO_ARTIFACTS_DIR}" ]; then
-        echo "This script must be run in kokoro"
-        exit 1
-    fi
-
-    if [ -z "${CROS_MILESTONE}" ]; then
-        echo "CROS_MILESTONE must be set"
-        exit 1
-    fi
+    require_kokoro_artifacts
+    require_cros_milestone
 
     local src_root="${KOKORO_ARTIFACTS_DIR}"/git/cros-container-guest-tools
     local result_dir="${src_root}"/simplestreams

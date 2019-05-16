@@ -5,11 +5,10 @@
 
 set -ex
 
+. "$(dirname "$0")/common.sh" || exit 1
+
 main() {
-    if [ -z "${KOKORO_ARTIFACTS_DIR}" ]; then
-        echo "This script must be run in kokoro"
-        exit 1
-    fi
+    require_kokoro_artifacts
 
     local src_root="${KOKORO_ARTIFACTS_DIR}/git/cros-container-guest-tools"
     local repo_dir="${src_root}"/apt_unsigned
