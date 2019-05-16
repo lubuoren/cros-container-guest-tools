@@ -13,9 +13,6 @@ main() {
 
     local src_root="${KOKORO_ARTIFACTS_DIR}"/git/cros-container-guest-tools
     local result_dir="${src_root}"/apt
-    if [ "${CROS_MILESTONE}" != "69" ]; then
-        result_dir="${result_dir}/${CROS_MILESTONE}"
-    fi
     mkdir -p "${result_dir}"
 
     cp -r "${KOKORO_GFILE_DIR}"/apt_signed/* "${result_dir}"
