@@ -13,6 +13,9 @@ main() {
 
     local src_root="${KOKORO_ARTIFACTS_DIR}"/git/cros-container-guest-tools
     local result_dir="${src_root}"/simplestreams
+    if [ "${CROS_MILESTONE}" != "69" ]; then
+        result_dir="${result_dir}/${CROS_MILESTONE}"
+    fi
 
     "${src_root}"/lxd/simplestreams_gen.py "${KOKORO_GFILE_DIR}/lxd" \
                                            "${result_dir}"
