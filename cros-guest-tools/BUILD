@@ -26,6 +26,7 @@ pkg_deb(
         "bash-completion",
         "bzip2",
         "cros-apt-config",
+        "cros-gpu",
         "cros-pulse-config",
         "cros-sommelier-config",
         "cros-sudo-config",
@@ -48,5 +49,5 @@ pkg_deb(
         "wget",
     ],
     section = "misc",
-    version = "0.21",
+    version = "0.22",
 )
