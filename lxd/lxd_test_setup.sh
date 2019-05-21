@@ -14,6 +14,9 @@ main() {
 
     apt-get update
 
+    # For graphics.CrostiniTrace*
+    apt-get -q -y install apitrace
+
     # For webserver testing.
     apt-get -q -y install python2.7
 
