@@ -47,11 +47,20 @@ pkg_tar(
 )
 
 pkg_tar(
+    name = "cros-unattended-upgrades",
+    strip_prefix = "/cros-gpu",
+    package_dir = "/etc/apt/apt.conf.d",
+    srcs = ["96cros-unattended-upgrades"],
+    mode = "0644",
+)
+
+pkg_tar(
     name = "debian-data",
     extension = "tar.gz",
     deps = [
         ":cros-gpu-list",
         ":cros-gpu-pref",
+        ":cros-unattended-upgrades",
         ":llvm-keyring",
     ],
 )
@@ -64,7 +73,7 @@ pkg_deb(
     homepage = "https://chromium.org",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-gpu",
-    version = "0.3",
+    version = "0.4",
     section = "misc",
     depends = ["apt-transport-https"],
     conflicts = ["cros-gpu-alpha"],
