@@ -18,6 +18,7 @@ main() {
         local distributions="
 Origin: Google
 Label: cros-containers
+Suite: stable
 Codename: ${release}
 Version: 1.0
 Architectures: amd64 arm64 armhf i386
