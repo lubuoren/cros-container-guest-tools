@@ -10,6 +10,7 @@ ln -s /usr/lib/systemd/user/sommelier-x@.service \
    /etc/systemd/user/default.target.wants/sommelier-x@1.service
 update-alternatives --install /usr/bin/sommelier sommelier /opt/google/cros-containers/bin/sommelier 1
 
-# TODO(crbug.com/835959): Remove this once we fix mesa.
+# TODO(crbug.com/966744): Remove this once we fix sommelier/xwayland.
 mkdir -p /usr/lib64/dri
 update-alternatives --install /usr/lib64/dri/swrast_dri.so swrast_dri /opt/google/cros-containers/lib/swrast_dri.so 1
+update-alternatives --install /usr/lib64/dri/virtio_gpu_dri.so virtio_gpu_dri /opt/google/cros-containers/lib/virtio_gpu_dri.so 1

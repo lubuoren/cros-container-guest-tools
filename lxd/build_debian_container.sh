@@ -128,6 +128,7 @@ main() {
     mkdir -p "${dummy_path}"/{bin,lib}
     touch "${dummy_path}"/bin/sommelier
     touch "${dummy_path}"/lib/swrast_dri.so
+    touch "${dummy_path}"/lib/virtio_gpu_dri.so
 
     # If doing presubmit, only run tests.
     if [[ $job_name = *"presubmit"* ]]; then
