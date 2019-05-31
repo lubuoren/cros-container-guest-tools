@@ -16,7 +16,9 @@ pkg_deb(
     homepage = "https://chromium.org",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-systemd-overrides",
-    version = "0.10",
+    postinst = "postinst",
+    prerm = "prerm",
+    version = "0.11",
     section = "misc",
     depends = ["systemd"],
 )
