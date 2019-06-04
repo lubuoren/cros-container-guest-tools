@@ -15,7 +15,7 @@ main() {
     apt-get update
 
     # For graphics.CrostiniTrace*
-    apt-get -q -y install apitrace
+    apt-get -q -y install mesa-utils apitrace
 
     # For webserver testing.
     apt-get -q -y install python2.7
