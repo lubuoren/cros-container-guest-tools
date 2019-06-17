@@ -28,6 +28,9 @@ main() {
 
     # For vm.CrostiniCpuPerf.
     apt-get -q -y install lmbench
+
+    # For vm.CrostiniAudioSanity.
+    apt-get -q -y install alsa-utils
 }
 
 main "$@"
