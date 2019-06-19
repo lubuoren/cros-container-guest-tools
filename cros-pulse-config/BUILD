@@ -29,7 +29,7 @@ pkg_deb(
     homepage = "https://chromium.org",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-pulse-config",
-    version = "0.1",
+    version = "0.1.1",
     section = "misc",
     depends = ["pulseaudio"],
 )
