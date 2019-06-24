@@ -14,6 +14,11 @@ The Docker image can be created with:
 sudo docker build --tag=buildmesa .
 ```
 
+To export the base Docker image to use within the continuous build system:
+```sh
+sudo docker save buildmesa:latest | xz -T 0 -z > buildmesa.tar.xz
+```
+
 The packages are built with `gbp-buildpackage` within a chroot of the Docker
 container.  The chroots for each architecture can be pre-generated and
 cached with:
@@ -23,15 +28,10 @@ sudo docker run --privileged --name=$name -it buildmesa ./setupchroot.sh
 sudo docker commit $name buildmesa:setup
 ```
 
-To export the Docker image with cached chroot to use within the continuous
-build system:
+To export the Docker image with cached chroot.  This image is too large
+to use within the continuous build system:
 ```sh
-sudo docker save buildmesa:setup | xz -T 0 -z > buildmesa.tar.xz
-```
-
-To export the base Docker image to use within the continuous build system:
-```sh
-sudo docker save buildmesa:latest | xz -T 0 -z > buildmesa.tar.xz
+sudo docker save buildmesa:setup | xz -T 0 -z > buildmesa-setup.tar.xz
 ```
 
 ## Building packages
@@ -72,6 +72,7 @@ git commit
 ```
 
 Upload a sandbox branch to test with Docker and start a container.
+`buildmesa:latest` can be changed to `buildmesa:setup` if it is available.
 ```sh
 git push cros HEAD:refs/sandbox/"${USER}"/debian-stretch-test
 sudo docker run \
