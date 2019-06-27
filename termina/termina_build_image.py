@@ -99,8 +99,7 @@ def repack_rootfs(output_dir, disk_path):
     if len(images) > 0:
       shutil.copy(str(images[0]), str(output_kernel))
     else:
-      # Decompress the kernel binary.
-      extract_vmlinux(str(rootfs_dir / 'boot' / 'vmlinuz'), str(output_kernel))
+      shutil.copy(str(rootfs_dir / 'boot' / 'vmlinuz'), str(output_kernel))
 
     # Remove cruft we don't need.
     cruft_dirs = ['boot', 'lib/firmware', 'mnt/stateful_partition']
