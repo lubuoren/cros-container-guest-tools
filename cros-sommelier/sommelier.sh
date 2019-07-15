@@ -2,9 +2,6 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-# Not bash or zsh?
-[ -n "$BASH_VERSION" -o -n "$ZSH_VERSION" ] || return 0
-
 # Not running under sommelier?
 [ $(systemctl --user show-environment | grep ^SOMMELIER_VERSION=) ] || return 0
 
