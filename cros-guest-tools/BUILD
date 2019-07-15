@@ -19,7 +19,7 @@ pkg_deb(
         "cros-sommelier",
     ],
     description_file = "deb-description",
-    homepage = "https://chromium.org",
+    homepage = "https://chromium.googlesource.com/chromiumos/containers/cros-container-guest-tools/",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-guest-tools",
     recommends = [

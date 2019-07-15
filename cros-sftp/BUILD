@@ -26,7 +26,7 @@ pkg_deb(
     architecture = "all",
     data = ":debian-data",
     description_file = "deb-description",
-    homepage = "https://chromium.org",
+    homepage = "https://chromium.googlesource.com/chromiumos/docs/+/HEAD/containers_and_vms.md",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-sftp",
     version = "0.14",
