@@ -3,38 +3,25 @@
 # found in the LICENSE file.
 
 # Not running under sommelier?
-[ $(systemctl --user show-environment | grep ^SOMMELIER_VERSION=) ] || return 0
-
-# DISPLAY not set?
-if [ -z "$DISPLAY" ]; then
-  export $(systemctl --user show-environment | grep ^DISPLAY=) > /dev/null
+if ! systemctl --user show-environment | grep -q ^SOMMELIER_VERSION=; then
+  return 0
 fi
 
-# DISPLAY_LOW_DENSITY not set?
-if [ -z "$DISPLAY_LOW_DENSITY" ]; then
-  export $(systemctl --user show-environment | \
-      grep ^DISPLAY_LOW_DENSITY=) > /dev/null
-fi
+# Helper function to export a variable if it isn't already set.
+__sommelier_export() {
+  local var="$1"
+  # We have to resort to eval as POSIX doesn't support ${!var} indirection.
+  if eval "[ -z \"\${${var}}\" ]"; then
+    export "$(systemctl --user show-environment | grep "^${var}=")" >/dev/null
+  fi
+}
 
-# XCURSOR_SIZE not set?
-if [ -z "$XCURSOR_SIZE" ]; then
-  export $(systemctl --user show-environment | grep ^XCURSOR_SIZE=) > /dev/null
-fi
+__sommelier_export DISPLAY
+__sommelier_export DISPLAY_LOW_DENSITY
+__sommelier_export XCURSOR_SIZE
+__sommelier_export XCURSOR_SIZE_LOW_DENSITY
+__sommelier_export WAYLAND_DISPLAY
+__sommelier_export WAYLAND_DISPLAY_LOW_DENSITY
 
-# XCURSOR_SIZE_LOW_DENSITY not set?
-if [ -z "$XCURSOR_SIZE_LOW_DENSITY" ]; then
-  export $(systemctl --user show-environment | \
-      grep ^XCURSOR_SIZE_LOW_DENSITY=) > /dev/null
-fi
-
-# WAYLAND_DISPLAY not set?
-if [ -z "$WAYLAND_DISPLAY" ]; then
-  export $(systemctl --user show-environment | \
-    grep ^WAYLAND_DISPLAY=) > /dev/null
-fi
-
-# WAYLAND_DISPLAY_LOW_DENSITY not set?
-if [ -z "$WAYLAND_DISPLAY_LOW_DENSITY" ]; then
-  export $(systemctl --user show-environment | \
-      grep ^WAYLAND_DISPLAY_LOW_DENSITY=) > /dev/null
-fi
+# No need to export this to the shell env.
+unset -f __sommelier_export
