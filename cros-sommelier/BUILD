@@ -35,7 +35,7 @@ pkg_tar(
     strip_prefix = "/cros-sommelier",
     package_dir = "/etc/profile.d",
     srcs = ["sommelier.sh"],
-    mode = "0755",
+    mode = "0644",
 )
 
 pkg_tar(
