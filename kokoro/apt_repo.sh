@@ -28,8 +28,14 @@ Description: CrOS containers guest tools
 
         echo "${distributions}" >> "${repo_dir}/conf/distributions"
 
+        local deb_dirs=('guest_debs')
+
+        if [[ "${release}" == "stretch" ]]; then
+            deb_dirs+=('mesa_debs')
+        fi
+
         local deb
-        for subdir in guest_debs mesa_debs; do
+        for subdir in "${deb_dirs[@]}"; do
             local debdir="${KOKORO_GFILE_DIR}"/"${subdir}"
             if [ -d "${debdir}" ]; then
                 for deb in "${debdir}"/*.deb; do
