@@ -22,9 +22,11 @@ main() {
     apt-get update
     # python3 is used for integration testing.
     apt-get -q -y --no-install-recommends install python3
-    # The cros-gpu package installs more apt sources.
-    apt-get -q -y --allow-unauthenticated install cros-gpu
-    apt-get update
+    if [ "${release}" = "stretch" ]; then
+        # The cros-gpu package installs more apt sources.
+        apt-get -q -y --allow-unauthenticated install cros-gpu
+        apt-get update
+    fi
 
     apt-get -q -y --allow-unauthenticated install cros-guest-tools
     apt-get -q -y install less
