@@ -76,7 +76,7 @@ build_container() {
     local metadata_tarball="${result_dir}/lxd.tar.xz"
     local rootfs_tarball="${result_dir}/rootfs.tar.xz"
     cp "${tempdir}/image" "${metadata_tarball}"
-    tar -Ipixz -cpf "${rootfs_tarball}" -C "${rootfs}" .
+    tar -Ipixz --xattrs --acls -cpf "${rootfs_tarball}" -C "${rootfs}" .
     mksquashfs "${rootfs}"/* "${result_dir}/rootfs.squashfs"
 
     if [ "${arch}" = "amd64" ] && [ "${test_image}" != true ]; then
