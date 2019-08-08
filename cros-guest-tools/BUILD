@@ -34,6 +34,7 @@ pkg_deb(
         "cros-ui-config",
         "cros-wayland",
         "curl",
+        "dbus-user-session",
         "dbus-x11",
         "file",
         "git",
@@ -49,5 +50,5 @@ pkg_deb(
         "wget",
     ],
     section = "misc",
-    version = "0.22",
+    version = "0.23",
 )
