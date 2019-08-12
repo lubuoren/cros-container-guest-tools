@@ -14,23 +14,28 @@ main() {
 
     apt-get update
 
-    # For graphics.CrostiniTrace*
-    apt-get -q -y install mesa-utils apitrace
+    # For crostini.AudioSanity.
+    apt-get -q -y install alsa-utils
 
-    # For webserver testing.
-    apt-get -q -y install python2.7
-
-    # For vm.CrostiniDiskIOPerf.
-    apt-get -q -y install fio
-
-    # For vm.CrostiniNetworkPerf.
-    apt-get -q -y install iperf3 iputils-ping
-
-    # For vm.CrostiniCpuPerf.
+    # For crostini.CpuPerf.
     apt-get -q -y install lmbench
 
-    # For vm.CrostiniAudioSanity.
-    apt-get -q -y install alsa-utils
+    # For crostini.DiskIOPerf.
+    apt-get -q -y install fio
+
+    # For crostini.NetworkPerf.
+    apt-get -q -y install iperf3 iputils-ping
+
+    # For crostini.Toolkit.*.
+    apt-get -q -y install python3-gi python3-gi-cairo gir1.2-gtk-3.0 # GTK3
+    apt-get -q -y install python3-pyqt5                              # Qt5
+    apt-get -q -y install python3-tk                                 # Tkinter
+
+    # For crostini.Webserver.
+    apt-get -q -y install python2.7
+
+    # For graphics.CrostiniTrace*
+    apt-get -q -y install mesa-utils apitrace
 }
 
 main "$@"
