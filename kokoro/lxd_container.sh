@@ -8,11 +8,14 @@ set -ex
 . "$(dirname "$0")/common.sh" || exit 1
 
 install_deps() {
+    # Remove CUDA sources before updating (b/139349554).
+    sudo rm -f /etc/apt/sources.list.d/cuda.list*
+
     sudo apt-get -q update
 
     # LXD setup. Use the latest snap version.
     sudo apt-get install -q -y snapd
-    sudo snap install lxd
+    sudo snap install lxd --channel=3.0/stable
     sudo snap start lxd
     sudo /snap/bin/lxd waitready
 
