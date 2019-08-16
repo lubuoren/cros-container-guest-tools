@@ -3,25 +3,6 @@ update-alternatives --install /usr/bin/x-www-browser x-www-browser /usr/bin/garc
 update-alternatives --install /usr/bin/www-browser www-browser /usr/bin/garcon-url-handler 200
 update-alternatives --install /usr/bin/gnome-www-browser gnome-www-browser /usr/bin/garcon-url-handler 200
 update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator /usr/bin/garcon-terminal-handler 200
-# TODO(jkardatzke): Remove the below code after it's had sufficient time to
-# propagate to all existing installs since we also have this in /etc/skel.
-# Install our config file in the default user's home dir if it isn't there already.
-for dir in /home/*/ ; do
-  diruid="$(stat -c %u "${dir}")"
-  if [ "${diruid}" -eq 1000 ] ; then
-    configdir="${dir}"/.config
-    if [ ! -d "${configdir}" ] ; then
-      mkdir -p "${configdir}"
-      chown 1000:1000 "${configdir}"
-      chmod 755 "${configdir}"
-    fi
-    settingsfile="${dir}"/.config/cros-garcon.conf
-    if [ ! -f "${settingsfile}" ] ; then
-      cp /etc/skel/.config/cros-garcon.conf "${settingsfile}"
-      chown 1000:1000 "${settingsfile}"
-      chmod 644 "${settingsfile}"
-    fi
-  fi
-done
+
 # Make xdg-desktop-menu happy when installing system desktop files.
 mkdir -p /usr/share/desktop-directories
