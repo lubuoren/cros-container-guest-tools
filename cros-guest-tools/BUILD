@@ -37,6 +37,7 @@ pkg_deb(
         "dbus-user-session",
         "dbus-x11",
         "file",
+        "fuse",
         "git",
         "gnupg",
         "iputils-ping",
@@ -50,5 +51,5 @@ pkg_deb(
         "wget",
     ],
     section = "misc",
-    version = "0.23",
+    version = "0.24",
 )
