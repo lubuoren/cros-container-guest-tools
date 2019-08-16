@@ -170,14 +170,14 @@ class LxdTestCase(unittest.TestCase):
   def test_user_services_gpu(self):
     self.container.start(wait=True)
     self.container.devices.update({
-          'renderD128': {
-              'major': '226',
-              'minor': '128',
-              'mode': '0666',
-              'path': '/dev/dri/renderD128',
-              'type': 'unix-char',
-          },
-      })
+        'renderD128': {
+            'major': '226',
+            'minor': '128',
+            'mode': '0666',
+            'path': '/dev/dri/renderD128',
+            'type': 'unix-char',
+        },
+    })
     self.container.save()
     time.sleep(10)
     self.assertEqual(self.container.status_code, RUNNING)
@@ -230,7 +230,7 @@ class LxdTestCase(unittest.TestCase):
 
 if __name__ == '__main__':
   if len(sys.argv) != 3:
-    print("usage: test.py result_dir unified_tarball")
+    print('usage: test.py result_dir unified_tarball')
     sys.exit(1)
 
   LxdTestCase.UNIFIED_TARBALL = sys.argv.pop()
