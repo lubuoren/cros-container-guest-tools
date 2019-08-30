@@ -132,7 +132,7 @@ def repack_rootfs(output_dir, disk_path):
     subprocess.run(['unsquashfs', '-d', str(stateful_dir), str(stateful_img_path)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 
     # Extract the kernel. For ARM we just grab the Image-* file. For x86, we
-    # need to extract the ELF binary from vmlinuz.
+    # grab the vmlinuz (bzImage).
     images = list(rootfs_dir.glob('boot/Image-*'))
     output_kernel = output_dir / 'vm_kernel'
     if len(images) > 0:
