@@ -80,8 +80,14 @@ def dedupe_hardlinks(target_dir):
 
 
 def create_fs_image(img_path, src_path):
+  # Create image at 120% of source size.
+  # resize2fs will shrink it to the minimum size later.
+  du_output = subprocess.check_output(['du', '-bsx', src_path]).decode('utf-8')
+  src_size = int(du_output.split()[0])
+  img_size = int(src_size * 1.20)
+
   with img_path.open('wb+') as vm_rootfs:
-    vm_rootfs.truncate(400 * 1024 * 1024)
+    vm_rootfs.truncate(img_size)
 
   subprocess.run(
       [
