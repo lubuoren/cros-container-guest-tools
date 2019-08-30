@@ -78,6 +78,40 @@ def dedupe_hardlinks(target_dir):
     target_path.unlink()
     os.link(str(src_path), str(target_path))
 
+
+def create_fs_image(img_path, src_path):
+  with img_path.open('wb+') as vm_rootfs:
+    vm_rootfs.truncate(400 * 1024 * 1024)
+
+  subprocess.run(
+      [
+          '/sbin/mkfs.ext4',
+          '-F',
+          '-m', '0',
+          '-i', '16384',
+          '-b', '4096',
+          '-O', '^has_journal',
+          str(img_path)
+      ],
+      stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+
+  with tempfile.TemporaryDirectory() as tempdir_path:
+    mnt_dir = Path(tempdir_path)
+    mnt_dir.mkdir()
+
+    with mount_disk(str(img_path), str(mnt_dir)) as mntpoint:
+      subprocess.run(
+          ['rsync', '-aH', str(src_path) + '/', str(mnt_dir)],
+          stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+
+    subprocess.run(
+        ['/sbin/e2fsck', '-y', '-f', str(img_path)],
+        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+    subprocess.run(
+        ['/sbin/resize2fs', '-M', str(img_path)],
+        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+
+
 def repack_rootfs(output_dir, disk_path):
   with tempfile.TemporaryDirectory() as tempdir_path:
     tempdir = Path(tempdir_path)
@@ -124,19 +158,8 @@ def repack_rootfs(output_dir, disk_path):
     dedupe_hardlinks(rootfs_dir)
 
     # Create vm_rootfs.img.
-    vm_rootfs_img = output_dir / 'vm_rootfs.img'
-    with vm_rootfs_img.open('wb+') as vm_rootfs:
-      vm_rootfs.truncate(400 * 1024 * 1024)
+    create_fs_image(output_dir / 'vm_rootfs.img', rootfs_dir)
 
-    subprocess.run(['/sbin/mkfs.ext4', '-F', '-m', '0', '-i', '16384', '-b', '4096', '-O', '^has_journal', str(vm_rootfs_img)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-    mnt_dir = tempdir / 'mnt'
-    mnt_dir.mkdir()
-
-    with mount_disk(str(vm_rootfs_img), str(mnt_dir)) as mntpoint:
-      subprocess.run(['rsync', '-aH', str(rootfs_dir) + '/', str(mnt_dir)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-
-    subprocess.run(['/sbin/e2fsck', '-y', '-f', str(vm_rootfs_img)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-    subprocess.run(['/sbin/resize2fs', '-M', str(vm_rootfs_img)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 
 def main():
   parser = argparse.ArgumentParser(description='Build a Termina image')
