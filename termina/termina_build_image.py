@@ -133,9 +133,7 @@ def repack_rootfs(output_dir, disk_path):
     mnt_dir.mkdir()
 
     with mount_disk(str(vm_rootfs_img), str(mnt_dir)) as mntpoint:
-      for rootfs_child in rootfs_dir.iterdir():
-        mnt_dest = mnt_dir / rootfs_child.name
-        subprocess.run(['rsync', '-aH', str(rootfs_dir) + '/', str(mnt_dir)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+      subprocess.run(['rsync', '-aH', str(rootfs_dir) + '/', str(mnt_dir)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 
     subprocess.run(['/sbin/e2fsck', '-y', '-f', str(vm_rootfs_img)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
     subprocess.run(['/sbin/resize2fs', '-M', str(vm_rootfs_img)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
