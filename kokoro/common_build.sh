@@ -21,17 +21,21 @@ build_guest_tools() {
 }
 
 build_mesa() {
-    local base_image="buildmesa"
-    local base_image_tarball="${KOKORO_GFILE_DIR}"/"${base_image}".tar.xz
+    local dist
+    for dist in stretch buster; do
+      cd "${KOKORO_ARTIFACTS_DIR}/git/cros-container-guest-tools/${dist}"
+      local base_image="buildmesa_${dist}"
+      local base_image_tarball="${KOKORO_GFILE_DIR}"/"${base_image}".tar.xz
 
-    if [[ "$(docker images -q ${base_image} 2> /dev/null)" == "" ]]; then
-        docker load -i "${base_image_tarball}"
-    fi
+      if [[ -z $(docker images -q $"{base_image}" 2> /dev/null) ]]; then
+          docker load -i "${base_image_tarball}"
+      fi
 
-    docker run \
-        --rm \
-        --privileged \
-        -v "${KOKORO_ARTIFACTS_DIR}"/mesa_debs:/artifacts \
-        "${base_image}" \
-        ./sync-and-build.sh
+      docker run \
+          --rm \
+          --privileged \
+          -v "${KOKORO_ARTIFACTS_DIR}/${dist}_mesa_debs":/artifacts \
+          "${base_image}" \
+          ./sync-and-build.sh
+    done
 }
