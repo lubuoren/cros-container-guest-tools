@@ -23,7 +23,6 @@ build_guest_tools() {
 build_mesa() {
     local dist
     for dist in stretch buster; do
-      cd "${KOKORO_ARTIFACTS_DIR}/git/cros-container-guest-tools/${dist}"
       local base_image="buildmesa_${dist}"
       local base_image_tarball="${KOKORO_GFILE_DIR}"/"${base_image}".tar.xz
 
