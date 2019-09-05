@@ -11,12 +11,13 @@ After changes are made the image will need to be regenerated.
 ## Generating Docker image
 The Docker image can be created with:
 ```sh
-sudo docker build --tag=buildmesa .
+sudo docker build --tag=buildmesa_stretch .
 ```
 
 To export the base Docker image to use within the continuous build system:
 ```sh
-sudo docker save buildmesa:latest | xz -T 0 -z > buildmesa.tar.xz
+sudo docker save buildmesa_stretch:latest | \
+    xz -T 0 -z > buildmesa_stretch.tar.xz
 ```
 
 The packages are built with `gbp-buildpackage` within a chroot of the Docker
@@ -24,14 +25,16 @@ container.  The chroots for each architecture can be pre-generated and
 cached with:
 ```sh
 name=bm$(date +%s)
-sudo docker run --privileged --name=$name -it buildmesa ./setupchroot.sh
-sudo docker commit $name buildmesa:setup
+sudo docker run --privileged --name=$name -it buildmesa_stretch \
+    ./setupchroot.sh
+sudo docker commit $name buildmesa_stretch:setup
 ```
 
 To export the Docker image with cached chroot.  This image is too large
 to use within the continuous build system:
 ```sh
-sudo docker save buildmesa:setup | xz -T 0 -z > buildmesa-setup.tar.xz
+sudo docker save buildmesa_stretch:setup | \
+    xz -T 0 -z > buildmesa_stretch-setup.tar.xz
 ```
 
 ## Building packages
@@ -41,7 +44,7 @@ written to `$PWD/artifacts`:
 sudo docker run \
     --privileged \
     --volume=$PWD/artifacts:/artifacts \
-    -it buildmesa:setup ./sync-and-build.sh
+    -it buildmesa_stretch:setup ./sync-and-build.sh
 ```
 
 To build the packages using the base image with artifacts written to
@@ -50,12 +53,12 @@ To build the packages using the base image with artifacts written to
 sudo docker run \
     --privileged \
     --volume=$PWD/artifacts:/artifacts \
-    -it buildmesa
+    -it buildmesa_stretch
 ```
 
 To import the tarball Docker image on another machine:
 ```sh
-sudo docker load -i buildmesa.tar.xz
+sudo docker load -i buildmesa_stretch.tar.xz
 ```
 
 ### Building packages from untested changes
@@ -72,13 +75,14 @@ git commit
 ```
 
 Upload a sandbox branch to test with Docker and start a container.
-`buildmesa:latest` can be changed to `buildmesa:setup` if it is available.
+`buildmesa_stretch:latest` can be changed to `buildmesa_stretch:setup` if it is
+available.
 ```sh
 git push cros HEAD:refs/sandbox/"${USER}"/debian-stretch-test
 sudo docker run \
     --privileged \
     --volume=$PWD/artifacts:/artifacts \
-    -it buildmesa:latest \
+    -it buildmesa_stretch:latest \
     bash
 ```
 
@@ -94,7 +98,7 @@ set manually within the container.
 exit
 ```
 
-The Debian packages will be available in `$PWD/artifacts` to test.
+The Debian packages will be available in `$PWD/artifacts/stretch` to test.
 
 Send merge commit to gerrit:
 ```sh
@@ -107,10 +111,10 @@ repo upload . --cbr
 
 ## Kokoro
 The exported Docker image tarball must be copied to x20 under the path
-`/x20/teams/chromeos-vm/docker/buildmesa.tar.xz`:
+`/x20/teams/chromeos-vm/docker/buildmesa_stretch.tar.xz`:
 ```sh
 prodaccess
-cp buildmesa.tar.xz /google/data/rw/teams/chromeos-vm/docker
+cp buildmesa_stretch.tar.xz /google/data/rw/teams/chromeos-vm/docker
 ```
 
 The owner of the tarball must be set to `chromeos-vm-ci-read-write` to

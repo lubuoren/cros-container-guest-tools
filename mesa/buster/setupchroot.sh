@@ -44,7 +44,6 @@ main() {
             ARCH="${arch}" \
             pbuilder create \
                 --mirror http://deb.debian.org/debian \
-                --keyring "${HOME}/llvm-keyring.gpg" \
                 --distribution "${CHROOT_DISTRIBUTION}" \
                 --architecture "${arch}" \
                 --debootstrapopts \
