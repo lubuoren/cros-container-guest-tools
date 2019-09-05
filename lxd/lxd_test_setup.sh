@@ -23,6 +23,9 @@ main() {
     # For crostini.DiskIOPerf.
     apt-get -q -y install fio
 
+    # For crostini.InputLatency.
+    apt-get -q -y install python2.7
+
     # For crostini.NetworkPerf.
     apt-get -q -y install iperf3 iputils-ping
 
