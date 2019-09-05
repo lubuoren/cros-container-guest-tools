@@ -32,7 +32,7 @@ main() {
     apt-get -q -y install python3-tk                                 # Tkinter
 
     # For crostini.Webserver.
-    apt-get -q -y install python2.7
+    apt-get -q -y install busybox
 
     # For graphics.CrostiniTrace*
     apt-get -q -y install mesa-utils apitrace
