@@ -10,5 +10,5 @@ The guest packages can be built with Bazel. The CrOS milestone to target and
 release name (stretch, buster, etc.) are required.
 
 ```sh
-bazel build //... --action_env="MILESTONE=74" --action_env="RELEASE=buster"
+bazel build //... --action_env="MILESTONE=74" --action_env="RELEASE=buster" --host_force_python=py2
 ```
