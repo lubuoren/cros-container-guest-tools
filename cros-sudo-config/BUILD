@@ -13,10 +13,19 @@ pkg_tar(
 )
 
 pkg_tar(
+    name = "cros-pkexec-config",
+    strip_prefix = "/cros-sudo-config",
+    package_dir = "/var/lib/polkit-1/localauthority/10-vendor.d",
+    srcs = ["10-cros-nopasswd.pkla"],
+    mode = "0440",
+)
+
+pkg_tar(
     name = "debian-data",
     extension = "tar.gz",
     deps = [
         ":cros-sudo-config",
+        ":cros-pkexec-config",
     ],
 )
 
@@ -28,7 +37,7 @@ pkg_deb(
     homepage = "https://chromium.googlesource.com/chromiumos/docs/+/HEAD/containers_and_vms.md",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-sudo-config",
-    version = "0.10",
+    version = "0.11",
     section = "misc",
     conffiles_file = "conffiles",
     depends = ["sudo"],

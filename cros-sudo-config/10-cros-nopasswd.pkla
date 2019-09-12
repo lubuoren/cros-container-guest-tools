@@ -1,0 +1,4 @@
+[Allow sudo users to use pkexec without a password]
+Identity=unix-group:sudo
+Action=org.freedesktop.policykit.exec
+ResultAny=yes

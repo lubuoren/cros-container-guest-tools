@@ -1,3 +1,4 @@
 sudo config for Chromium OS integration.
 This package installs default configuration for sudo
-to allow passwordless sudo access for the sudo group.
+to allow passwordless sudo access for the sudo group,
+and passwordless pkexec for the sudo group.
