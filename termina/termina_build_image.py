@@ -103,7 +103,6 @@ def create_fs_image(img_path, src_path):
 
   with tempfile.TemporaryDirectory() as tempdir_path:
     mnt_dir = Path(tempdir_path)
-    mnt_dir.mkdir()
 
     with mount_disk(str(img_path), str(mnt_dir)) as mntpoint:
       subprocess.run(
