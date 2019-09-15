@@ -17,6 +17,7 @@ pkg_deb(
         "cros-notificationd",
         "cros-sftp",
         "cros-sommelier",
+        "cros-ui-config",
     ],
     description_file = "deb-description",
     homepage = "https://chromium.googlesource.com/chromiumos/containers/cros-container-guest-tools/",
@@ -31,7 +32,6 @@ pkg_deb(
         "cros-sommelier-config",
         "cros-sudo-config",
         "cros-systemd-overrides",
-        "cros-ui-config",
         "cros-wayland",
         "curl",
         "dbus-user-session",
@@ -51,5 +51,5 @@ pkg_deb(
         "wget",
     ],
     section = "misc",
-    version = "0.24",
+    version = "0.25",
 )
