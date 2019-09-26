@@ -27,3 +27,8 @@ Package: wayland-protocols
 Pin: release n=stretch-backports
 Pin-Priority: 500
 Explanation: Prioritize stretch-backports versions
+
+Package: zstd
+Pin: release n=stretch-backports
+Pin-Priority: 500
+Explanation: Prioritize stretch-backports versions

@@ -73,7 +73,7 @@ pkg_deb(
     homepage = "https://chromium.googlesource.com/chromiumos/docs/+/HEAD/containers_and_vms.md",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-gpu",
-    version = "0.5",
+    version = "0.6",
     section = "misc",
     depends = ["apt-transport-https"],
     conflicts = ["cros-gpu-alpha"],
