@@ -7,14 +7,20 @@ set -ex
 
 # This script makes use of the following environment variables defined
 # in the Dockerfile:
-# - LIBDRM_TAG
-# - MESA_BRANCH
+# - MESA_BUILD_BRANCH
+# - MESA_CHECKOUT_BRANCH
 
 main() {
-    # Clone sources.
-    git clone https://chromium.googlesource.com/chromiumos/third_party/mesa &&
-        (cd mesa &&
-         git checkout -B "${MESA_BRANCH}" origin/"${MESA_BRANCH}")
+    if [[ ! -d mesa ]]; then
+        # Clone sources.
+        git clone \
+            https://chromium.googlesource.com/chromiumos/third_party/mesa &&
+            (cd mesa &&
+             git checkout origin/"${MESA_CHECKOUT_BRANCH}")
+    fi
+
+    cd mesa
+    git checkout -B "${MESA_BUILD_BRANCH}"
 }
 
 main "$@"

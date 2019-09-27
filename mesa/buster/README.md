@@ -55,6 +55,16 @@ sudo docker run \
     -it buildmesa_buster
 ```
 
+To build only for specified architectures specify `ARCHES` environment
+variable:
+```sh
+sudo docker run \
+    --privileged \
+    --volume=$PWD/artifacts:/artifacts \
+    -e ARCHES='amd64' \
+    -it buildmesa_buster
+```
+
 To import the tarball Docker image on another machine:
 ```sh
 sudo docker load -i buildmesa_buster.tar.xz
@@ -86,6 +96,16 @@ sudo docker run \
     bash
 ```
 
+Build packages using an existing mesa git repo within a Chrome OS checkout:
+```sh
+sudo docker run \
+    --privileged \
+    --volume=$PWD/src/platform/container-guest-tools/mesa/buster/artifacts:/artifacts \
+    --volume=$PWD/.repo:/.repo \
+    --volume=$PWD/src/third_party/mesa-debian:/scratch/mesa \
+    -it buildmesa_buster:latest
+```
+
 Within the Docker container, perform a build.  $USER will need to be
 set manually within the container.
 ```sh
@@ -93,7 +113,7 @@ set manually within the container.
 ./sync.sh
 (cd mesa &&
  git fetch origin refs/sandbox/$USER/debian-buster-test &&
- git checkout -B "${MESA_BRANCH}" FETCH_HEAD)
+ git checkout -B "${MESA_BUILD_BRANCH}" FETCH_HEAD)
 ./buildpackages.sh
 exit
 ```

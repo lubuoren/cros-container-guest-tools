@@ -33,7 +33,8 @@ COPY *.sh /scratch/
 WORKDIR /scratch
 VOLUME $ARTIFACTS
 
-ENV MESA_BRANCH=debian
+ENV MESA_BUILD_BRANCH=debian-build
+ENV MESA_CHECKOUT_BRANCH=debian
 
 CMD ./sync-and-build.sh
 

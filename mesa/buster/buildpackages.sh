@@ -10,7 +10,7 @@ set -ex
 # - ARCHES
 # - ARTIFACTS
 # - DISTRIBUTION
-# - MESA_BRANCH
+# - MESA_BUILD_BRANCH
 
 main() {
     # Packages stored here will be accessible outside of the build as well
