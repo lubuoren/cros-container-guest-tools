@@ -31,7 +31,7 @@ WORKDIR /scratch
 VOLUME $ARTIFACTS
 
 ENV LIBDRM_TAG=libdrm-2.4.97-1
-ENV MESA_BRANCH=debian
+ENV MESA_BRANCH=debian-stretch-19.2
 
 CMD ./sync-and-build.sh
 
