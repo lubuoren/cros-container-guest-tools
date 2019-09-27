@@ -23,18 +23,30 @@ build_guest_tools() {
 build_mesa() {
     local dist
     for dist in stretch buster; do
-      local base_image="buildmesa_${dist}"
-      local base_image_tarball="${KOKORO_GFILE_DIR}"/"${base_image}".tar.xz
+        local base_image="buildmesa_${dist}"
+        local base_image_tarball="${KOKORO_GFILE_DIR}"/"${base_image}".tar.xz
 
-      if [[ -z $(docker images -q $"{base_image}" 2> /dev/null) ]]; then
-          docker load -i "${base_image_tarball}"
-      fi
+        if [[ -z $(docker images -q $"{base_image}" 2> /dev/null) ]]; then
+            docker load -i "${base_image_tarball}"
+        fi
 
-      docker run \
-          --rm \
-          --privileged \
-          -v "${KOKORO_ARTIFACTS_DIR}/${dist}_mesa_debs":/artifacts \
-          "${base_image}" \
-          ./sync-and-build.sh
+        # Post-stretch the Docker image build scripts use the mesa checkout
+        # from Kokoro.
+        if [[ "${dist}" == "stretch" ]]; then
+            docker run \
+                --rm \
+                --privileged \
+                -v "${KOKORO_ARTIFACTS_DIR}/${dist}_mesa_debs":/artifacts \
+                "${base_image}" \
+                ./sync-and-build.sh
+        else
+            docker run \
+                --rm \
+                --privileged \
+                -v "${KOKORO_ARTIFACTS_DIR}/${dist}_mesa_debs":/artifacts \
+                -v "${KOKORO_ARTIFACTS_DIR}/git/mesa":/scratch/mesa \
+                "${base_image}" \
+                ./sync-and-build.sh
+        fi
     done
 }
