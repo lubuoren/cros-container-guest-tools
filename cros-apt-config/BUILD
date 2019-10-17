@@ -48,7 +48,7 @@ pkg_tar(
 )
 
 pkg_deb(
-    name = "cros-apt-config-deb",
+    name = "deb",
     architecture = "all",
     data = ":debian-data",
     depends = ["apt-transport-https"],
@@ -58,4 +58,5 @@ pkg_deb(
     package = "cros-apt-config",
     section = "misc",
     version = "0.19",
+    visibility = ["//cros-debs:__pkg__"],
 )

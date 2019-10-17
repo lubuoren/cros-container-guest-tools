@@ -9,7 +9,7 @@ pkg_tar(
 )
 
 pkg_deb(
-    name = "cros-guest-tools-deb",
+    name = "deb",
     architecture = "all",
     data = ":debian-data",
     depends = [
@@ -52,4 +52,5 @@ pkg_deb(
     ],
     section = "misc",
     version = "0.25",
+    visibility = ["//cros-debs:__pkg__"],
 )

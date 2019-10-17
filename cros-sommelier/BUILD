@@ -52,7 +52,7 @@ pkg_tar(
 )
 
 pkg_deb(
-    name = "cros-sommelier-deb",
+    name = "deb",
     architecture = "all",
     conffiles_file = "conffiles",
     data = ":debian-data",
@@ -73,4 +73,5 @@ pkg_deb(
     ],
     section = "misc",
     version = "0.23",
+    visibility = ["//cros-debs:__pkg__"],
 )

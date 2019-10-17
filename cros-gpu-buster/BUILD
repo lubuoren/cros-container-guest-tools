@@ -4,31 +4,23 @@
 
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar", "pkg_deb")
 
+# Empty package, we don't yet need anything special for buster but we will.
 pkg_tar(
-    name = "cros-notificationd-dbus-service-files",
-    srcs = ["org.freedesktop.Notifications.service"],
-    mode = "0644",
-    package_dir = "/usr/share/dbus-1/services/",
-    strip_prefix = "/cros-notificationd",
-)
-
-pkg_tar(
-    name = "debian-data",
+    name = "debian-data-buster",
     extension = "tar.gz",
-    deps = [
-        ":cros-notificationd-dbus-service-files",
-    ],
 )
 
 pkg_deb(
     name = "deb",
     architecture = "all",
-    data = ":debian-data",
+    conflicts = ["cros-gpu-alpha"],
+    data = ":debian-data-buster",
+    depends = ["apt-transport-https"],
     description_file = "deb-description",
     homepage = "https://chromium.googlesource.com/chromiumos/docs/+/HEAD/containers_and_vms.md",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
-    package = "cros-notificationd",
+    package = "cros-gpu",
     section = "misc",
-    version = "0.1",
+    version = "10.6",
     visibility = ["//cros-debs:__pkg__"],
 )

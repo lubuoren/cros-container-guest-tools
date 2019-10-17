@@ -30,7 +30,7 @@ pkg_tar(
 )
 
 pkg_deb(
-    name = "cros-sudo-config-deb",
+    name = "deb",
     architecture = "all",
     conffiles_file = "conffiles",
     data = ":debian-data",
@@ -41,4 +41,5 @@ pkg_deb(
     package = "cros-sudo-config",
     section = "misc",
     version = "0.11",
+    visibility = ["//cros-debs:__pkg__"],
 )

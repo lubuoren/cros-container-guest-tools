@@ -38,7 +38,7 @@ pkg_tar(
 )
 
 pkg_deb(
-    name = "cros-tast-tests-deb",
+    name = "deb",
     architecture = "all",
     data = ":debian-data",
     description_file = "deb-description",
@@ -47,4 +47,5 @@ pkg_deb(
     package = "cros-tast-tests",
     section = "misc",
     version = "0.4",
+    visibility = ["//cros-debs:__pkg__"],
 )

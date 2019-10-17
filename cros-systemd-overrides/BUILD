@@ -9,7 +9,7 @@ pkg_tar(
 )
 
 pkg_deb(
-    name = "cros-systemd-overrides-deb",
+    name = "deb",
     architecture = "all",
     data = ":debian-data",
     depends = ["systemd"],
@@ -21,4 +21,5 @@ pkg_deb(
     prerm = "prerm",
     section = "misc",
     version = "0.11",
+    visibility = ["//cros-debs:__pkg__"],
 )

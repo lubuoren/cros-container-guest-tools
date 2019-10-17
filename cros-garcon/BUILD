@@ -95,7 +95,7 @@ pkg_tar(
 )
 
 pkg_deb(
-    name = "cros-garcon-deb",
+    name = "deb",
     architecture = "all",
     conffiles_file = "conffiles",
     data = ":debian-data",
@@ -112,4 +112,5 @@ pkg_deb(
     prerm = "prerm",
     section = "misc",
     version = "0.21",
+    visibility = ["//cros-debs:__pkg__"],
 )

@@ -22,7 +22,7 @@ pkg_tar(
 )
 
 pkg_deb(
-    name = "cros-sftp-deb",
+    name = "deb",
     architecture = "all",
     data = ":debian-data",
     depends = ["openssh-server"],
@@ -32,4 +32,5 @@ pkg_deb(
     package = "cros-sftp",
     section = "misc",
     version = "0.14",
+    visibility = ["//cros-debs:__pkg__"],
 )

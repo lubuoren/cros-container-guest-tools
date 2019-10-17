@@ -22,7 +22,7 @@ pkg_tar(
 )
 
 pkg_deb(
-    name = "cros-pulse-config-deb",
+    name = "deb",
     architecture = "all",
     data = ":debian-data",
     depends = ["pulseaudio"],
@@ -32,4 +32,5 @@ pkg_deb(
     package = "cros-pulse-config",
     section = "misc",
     version = "0.1.1",
+    visibility = ["//cros-debs:__pkg__"],
 )

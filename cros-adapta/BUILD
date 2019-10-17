@@ -18,7 +18,7 @@ pkg_tar(
 )
 
 pkg_deb(
-    name = "cros-adapta-deb",
+    name = "deb",
     architecture = "all",
     data = ":debian-data",
     depends = [
@@ -35,4 +35,5 @@ pkg_deb(
     package = "cros-adapta",
     section = "misc",
     version = "0.3",
+    visibility = ["//cros-debs:__pkg__"],
 )

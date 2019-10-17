@@ -24,26 +24,26 @@ genrule(
 
 pkg_tar(
     name = "llvm-keyring",
-    strip_prefix = "/cros-gpu",
-    package_dir = "//etc/apt/trusted.gpg.d",
     srcs = ["llvm-snapshot.gpg"],
     mode = "0644",
+    package_dir = "//etc/apt/trusted.gpg.d",
+    strip_prefix = "/cros-gpu",
 )
 
 pkg_tar(
     name = "cros-gpu-list",
-    strip_prefix = "/cros-gpu",
-    package_dir = "/etc/apt/sources.list.d",
     srcs = ["cros-gpu.list"],
     mode = "0644",
+    package_dir = "/etc/apt/sources.list.d",
+    strip_prefix = "/cros-gpu",
 )
 
 pkg_tar(
     name = "cros-gpu-pref",
-    strip_prefix = "/cros-gpu",
-    package_dir = "/etc/apt/preferences.d",
     srcs = ["cros-gpu.pref"],
     mode = "0644",
+    package_dir = "/etc/apt/preferences.d",
+    strip_prefix = "/cros-gpu",
 )
 
 pkg_tar(
@@ -57,15 +57,16 @@ pkg_tar(
 )
 
 pkg_deb(
-    name = "cros-gpu-deb",
+    name = "deb",
     architecture = "all",
+    conflicts = ["cros-gpu-alpha"],
     data = ":debian-data",
+    depends = ["apt-transport-https"],
     description_file = "deb-description",
     homepage = "https://chromium.googlesource.com/chromiumos/docs/+/HEAD/containers_and_vms.md",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-gpu",
-    version = "0.6",
     section = "misc",
-    depends = ["apt-transport-https"],
-    conflicts = ["cros-gpu-alpha"],
+    version = "9.6",
+    visibility = ["//cros-debs:__pkg__"],
 )

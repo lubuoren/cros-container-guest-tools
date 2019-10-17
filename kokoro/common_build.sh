@@ -13,11 +13,11 @@ build_guest_tools() {
     cd "${src_root}"
 
     # Build all targets.
-    bazel build //...
+    bazel build //cros-debs:debs
 
     # Copy resulting debs to results directory.
-    chmod 644 bazel-bin/*/*.deb
-    cp bazel-bin/*/*_*.deb "${result_dir}"
+    chmod 644 bazel-bin/cros-debs/*/*.deb
+    cp -r bazel-bin/cros-debs/* "${result_dir}"
 }
 
 build_mesa() {

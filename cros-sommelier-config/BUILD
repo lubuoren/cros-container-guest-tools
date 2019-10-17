@@ -54,7 +54,7 @@ pkg_tar(
 )
 
 pkg_deb(
-    name = "cros-sommelier-config-deb",
+    name = "deb",
     architecture = "all",
     conffiles_file = "conffiles",
     data = ":debian-data",
@@ -70,4 +70,5 @@ pkg_deb(
     prerm = "prerm",
     section = "misc",
     version = "0.14",
+    visibility = ["//cros-debs:__pkg__"],
 )

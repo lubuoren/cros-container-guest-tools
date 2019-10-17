@@ -37,7 +37,7 @@ pkg_tar(
 )
 
 pkg_deb(
-    name = "cros-wayland-deb",
+    name = "deb",
     architecture = "all",
     conffiles_file = "conffiles",
     data = ":debian-data",
@@ -47,4 +47,5 @@ pkg_deb(
     package = "cros-wayland",
     section = "x11",
     version = "0.10",
+    visibility = ["//cros-debs:__pkg__"],
 )

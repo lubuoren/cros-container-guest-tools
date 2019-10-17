@@ -57,7 +57,7 @@ pkg_tar(
 )
 
 pkg_deb(
-    name = "cros-ui-config-deb",
+    name = "deb",
     architecture = "all",
     conffiles_file = "conffiles",
     data = ":debian-data",
@@ -75,4 +75,5 @@ pkg_deb(
     postrm = "postrm",
     section = "misc",
     version = "0.12",
+    visibility = ["//cros-debs:__pkg__"],
 )

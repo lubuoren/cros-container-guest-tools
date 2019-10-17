@@ -28,7 +28,7 @@ Description: CrOS containers guest tools
 
         echo "${distributions}" >> "${repo_dir}/conf/distributions"
 
-        local deb_dirs=("guest_debs" "${release}_mesa_debs")
+        local deb_dirs=("${release}-debs" "${release}_mesa_debs")
 
         local deb
         for subdir in "${deb_dirs[@]}"; do

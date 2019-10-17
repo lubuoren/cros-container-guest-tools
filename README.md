@@ -6,11 +6,10 @@ with Chrome OS. This includes build scripts that are run in Google's
 internal continuous integration service.
 
 ## Building
-The guest packages can be built with Bazel. The CrOS milestone to target and
-release name (stretch, buster, etc.) are required.
+The guest packages can be built with Bazel.
 
 ```sh
-bazel build //... --action_env="MILESTONE=74" --action_env="RELEASE=buster" --host_force_python=py2
+bazel build //cros-debs:debs --host_force_python=py2
 ```
 
 ## Releasing
