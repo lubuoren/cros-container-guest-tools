@@ -9,24 +9,62 @@ set -ex
 # in the Dockerfile:
 # - ARCHES
 # - ARTIFACTS
-# - DISTRIBUTION
-# - MESA_BUILD_BRANCH
+# - DISTRIBUTIONS
+# - PACKAGES
+
+make_tarball() {
+    local package="$1"
+
+    pushd "${package}" >/dev/null
+
+    local ver="$(dpkg-parsechangelog | \
+                 awk '/^Version:/ {print $2}' | \
+                 sed 's/-.*$//')"
+    git archive --format=tar HEAD \
+        --prefix="${package}-${ver}/" | \
+        gzip -9 > "../${package}_${ver}.orig.tar.gz"
+
+    popd >/dev/null
+}
+
+build_packages() {
+    local dist="$1"
+    local arch="$2"
+    local package="$3"
+
+    pushd "${package}" >/dev/null
+
+    DIST="${dist}" ARCH="${arch}" \
+        pdebuild --debbuildopts "-i -d" \
+            --buildresult "${ARTIFACTS}" \
+            -- \
+            --distribution "${dist}" \
+            --architecture "${arch}" \
+            --basetgz "/var/cache/pbuilder/base-${arch}.tgz"
+
+    popd >/dev/null
+}
 
 main() {
     # Packages stored here will be accessible outside of the build as well
     # as used for buildpackages of subsequent packages (via hooks).
-    for dist in ${DISTRIBUTIONS[@]}; do
-        for arch in ${ARCHES[@]}; do
-            mkdir -p "${ARTIFACTS}"
-            (cd mesa &&
-                DIST="${dist}" ARCH="${arch}" \
-                pdebuild --debbuildopts "-i -d" \
-                --buildresult "${ARTIFACTS}" \
-                -- \
-                --distribution "${dist}" \
-                --architecture "${arch}" \
-                --basetgz "/var/cache/pbuilder/base-${arch}.tgz")
+    mkdir -p "${ARTIFACTS}"
 
+    local package
+    local dist
+    local arch
+
+    # PACKAGES, DISTRIBUTIONS, and ARCHES are passed by docker environment as
+    # scalars.
+    for package in ${PACKAGES}; do
+        if [[ "${package}" == "apitrace" ]]; then
+            make_tarball "${package}"
+        fi
+
+        for dist in ${DISTRIBUTIONS}; do
+            for arch in ${ARCHES}; do
+                build_packages "${dist}" "${arch}" "${package}"
+            done
         done
     done
 }

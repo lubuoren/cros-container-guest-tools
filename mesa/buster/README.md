@@ -1,12 +1,19 @@
 # mesa
 
 ## Overview
-This is the Docker image to build mesa Debian packages for the Chrome OS
-container.
+This is the Docker image to build mesa-related Debian packages for the Chrome
+OS container.
 
 ## Configuration
 Configuration is handled via environment variables in the `Dockerfile`.
 After changes are made the image will need to be regenerated.
+
+The values of these environment variables can be overridden during the
+Docker invocation to limit what is being built.  Of note are the following
+variables:
+- ARCHES - The architectures to build for (amd64, i386, arm64, armhf)
+- DISTRIBUTIONS - The distributions to build for (currently just buster)
+- PACCKAGES - The packages to build for (apitrace, mesa)
 
 ## Generating Docker image
 The Docker image can be created from platform/container-guest-tools/mesa/buster
@@ -20,7 +27,7 @@ To export the base Docker image to use within the continuous build system:
 sudo docker save buildmesa_buster:latest | xz -T 0 -z > buildmesa_buster.tar.xz
 ```
 
-The packages are built with `gbp-buildpackage` within a chroot of the Docker
+The packages are built with `pdebuild` within a chroot of the Docker
 container.  The chroots for each architecture can be pre-generated and
 cached with:
 ```sh
@@ -30,7 +37,7 @@ sudo docker commit $name buildmesa_buster:setup
 ```
 
 To export the Docker image with cached chroot.  This image is too large
-to use within the continuous build system:
+to use within the continuous build system and is mainly useful for testing:
 ```sh
 sudo docker save buildmesa_buster:setup | \
     xz -T 0 -z > buildmesa_buster-setup.tar.xz
@@ -71,7 +78,26 @@ sudo docker load -i buildmesa_buster.tar.xz
 ```
 
 ### Building packages from untested changes
+
+The Debian packages will be available in `$PWD/artifacts` to test.
+
+#### Using Chrome OS checkout
+These following steps are run from the top of a Chrome OS checkout.
+
+Build packages using an existing mesa git repo within a Chrome OS checkout:
+```sh
+sudo docker run \
+    --privileged \
+    --volume=$PWD/src/platform/container-guest-tools/mesa/buster/artifacts:/artifacts \
+    --volume=$PWD/.repo:/.repo \
+    --volume=$PWD/src/third_party/mesa-debian:/scratch/mesa \
+    -e PACKAGES='mesa' \
+    -it buildmesa_buster:latest
+```
+
+#### Using sandbox branch
 These following steps are run from third_party/mesa.
+
 To test new mesa changes, prepare a local branch based off of
 `debian`:
 ```sh
@@ -96,16 +122,6 @@ sudo docker run \
     bash
 ```
 
-Build packages using an existing mesa git repo within a Chrome OS checkout:
-```sh
-sudo docker run \
-    --privileged \
-    --volume=$PWD/src/platform/container-guest-tools/mesa/buster/artifacts:/artifacts \
-    --volume=$PWD/.repo:/.repo \
-    --volume=$PWD/src/third_party/mesa-debian:/scratch/mesa \
-    -it buildmesa_buster:latest
-```
-
 Within the Docker container, perform a build.  $USER will need to be
 set manually within the container.
 ```sh
@@ -118,8 +134,7 @@ set manually within the container.
 exit
 ```
 
-The Debian packages will be available in `$PWD/artifacts/buster` to test.
-
+#### Gerrit merge commits
 Send merge commit to gerrit:
 ```sh
 debchange -r
@@ -148,3 +163,10 @@ as `19.2.0~cros1-2` to signify a Chrome OS pre-release of 19.2.0.  cros1 will
 be the second merge from upstream.  -2 will be the third build of that 
 upstream build.  An actual release will look like 19.2.0-0~bpo0-1 and will 
 be considered greater than the Chrome OS pre-release.
+
+
+## Additional packages
+In addition to `mesa` the following packages are built:
+- `apitrace` - To enable trace-based testing.
+
+Builds can be limited via the `PACKAGES` environment variable.
