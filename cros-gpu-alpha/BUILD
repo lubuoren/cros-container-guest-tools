@@ -24,26 +24,26 @@ genrule(
 
 pkg_tar(
     name = "llvm-keyring",
-    strip_prefix = "/cros-gpu-alpha",
-    package_dir = "//etc/apt/trusted.gpg.d",
     srcs = ["llvm-snapshot.gpg"],
     mode = "0644",
+    package_dir = "//etc/apt/trusted.gpg.d",
+    strip_prefix = "/cros-gpu-alpha",
 )
 
 pkg_tar(
     name = "cros-gpu-alpha-list",
-    strip_prefix = "/cros-gpu-alpha",
-    package_dir = "/etc/apt/sources.list.d",
     srcs = ["cros-gpu-alpha.list"],
     mode = "0644",
+    package_dir = "/etc/apt/sources.list.d",
+    strip_prefix = "/cros-gpu-alpha",
 )
 
 pkg_tar(
     name = "cros-gpu-alpha-pref",
-    strip_prefix = "/cros-gpu-alpha",
-    package_dir = "/etc/apt/preferences.d",
     srcs = ["cros-gpu-alpha.pref"],
     mode = "0644",
+    package_dir = "/etc/apt/preferences.d",
+    strip_prefix = "/cros-gpu-alpha",
 )
 
 pkg_tar(
@@ -59,13 +59,13 @@ pkg_tar(
 pkg_deb(
     name = "cros-gpu-alpha-deb",
     architecture = "all",
+    conflicts = ["cros-gpu"],
     data = ":debian-data",
+    depends = ["apt-transport-https"],
     description_file = "deb-description",
     homepage = "https://chromium.googlesource.com/chromiumos/docs/+/HEAD/containers_and_vms.md",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-gpu-alpha",
-    version = "0.4",
     section = "misc",
-    depends = ["apt-transport-https"],
-    conflicts = ["cros-gpu"],
+    version = "0.4",
 )

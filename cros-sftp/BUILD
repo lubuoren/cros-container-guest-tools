@@ -6,11 +6,11 @@ load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar", "pkg_deb")
 
 pkg_tar(
     name = "cros-sftp-unitfiles",
-    strip_prefix = "/cros-sftp",
-    package_dir = "/usr/lib/systemd/system/",
     srcs = ["cros-sftp.service"],
     mode = "0644",
-    symlinks = { "./usr/lib/systemd/system/default.target.wants/cros-sftp.service": "/usr/lib/systemd/system/cros-sftp.service" },
+    package_dir = "/usr/lib/systemd/system/",
+    strip_prefix = "/cros-sftp",
+    symlinks = {"./usr/lib/systemd/system/default.target.wants/cros-sftp.service": "/usr/lib/systemd/system/cros-sftp.service"},
 )
 
 pkg_tar(
@@ -25,11 +25,11 @@ pkg_deb(
     name = "cros-sftp-deb",
     architecture = "all",
     data = ":debian-data",
+    depends = ["openssh-server"],
     description_file = "deb-description",
     homepage = "https://chromium.googlesource.com/chromiumos/docs/+/HEAD/containers_and_vms.md",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-sftp",
-    version = "0.14",
     section = "misc",
-    depends = ["openssh-server"],
+    version = "0.14",
 )

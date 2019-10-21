@@ -6,39 +6,39 @@ load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar", "pkg_deb")
 
 pkg_tar(
     name = "cros-sudo-config",
-    strip_prefix = "/cros-sudo-config",
-    package_dir = "/etc/sudoers.d",
     srcs = ["10-cros-nopasswd"],
     mode = "0440",
+    package_dir = "/etc/sudoers.d",
+    strip_prefix = "/cros-sudo-config",
 )
 
 pkg_tar(
     name = "cros-pkexec-config",
-    strip_prefix = "/cros-sudo-config",
-    package_dir = "/var/lib/polkit-1/localauthority/10-vendor.d",
     srcs = ["10-cros-nopasswd.pkla"],
     mode = "0440",
+    package_dir = "/var/lib/polkit-1/localauthority/10-vendor.d",
+    strip_prefix = "/cros-sudo-config",
 )
 
 pkg_tar(
     name = "debian-data",
     extension = "tar.gz",
     deps = [
-        ":cros-sudo-config",
         ":cros-pkexec-config",
+        ":cros-sudo-config",
     ],
 )
 
 pkg_deb(
     name = "cros-sudo-config-deb",
     architecture = "all",
+    conffiles_file = "conffiles",
     data = ":debian-data",
+    depends = ["sudo"],
     description_file = "deb-description",
     homepage = "https://chromium.googlesource.com/chromiumos/docs/+/HEAD/containers_and_vms.md",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-sudo-config",
-    version = "0.11",
     section = "misc",
-    conffiles_file = "conffiles",
-    depends = ["sudo"],
+    version = "0.11",
 )

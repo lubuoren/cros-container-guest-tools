@@ -13,70 +13,70 @@ genrule(
 
 pkg_tar(
     name = "cros-garcon-desktop",
-    strip_prefix= "/cros-garcon",
-    package_dir = "/usr/share/applications",
     srcs = ["garcon_host_browser.desktop"],
     mode = "0644",
+    package_dir = "/usr/share/applications",
+    strip_prefix = "/cros-garcon",
 )
 
 pkg_tar(
     name = "cros-garcon-etc-skel",
-    strip_prefix = "/cros-garcon",
-    package_dir = "/etc/skel",
     srcs = [":skel-config"],
     mode = "0644",
+    package_dir = "/etc/skel",
+    strip_prefix = "/cros-garcon",
 )
 
 pkg_tar(
     name = "cros-garcon-systemd",
-    strip_prefix = "/cros-garcon",
-    package_dir = "/usr/lib/systemd/user",
     srcs = ["cros-garcon.service"],
     mode = "0644",
-    symlinks = { "./usr/lib/systemd/user/default.target.wants/cros-garcon.service": "/usr/lib/systemd/user/cros-garcon.service" },
+    package_dir = "/usr/lib/systemd/user",
+    strip_prefix = "/cros-garcon",
+    symlinks = {"./usr/lib/systemd/user/default.target.wants/cros-garcon.service": "/usr/lib/systemd/user/cros-garcon.service"},
 )
 
 pkg_tar(
     name = "cros-garcon-terminal-handler",
-    strip_prefix = "/cros-garcon",
-    package_dir = "/usr/bin",
     srcs = ["garcon-terminal-handler"],
     mode = "0755",
+    package_dir = "/usr/bin",
+    strip_prefix = "/cros-garcon",
 )
 
 pkg_tar(
     name = "cros-garcon-url-handler",
-    strip_prefix = "/cros-garcon",
-    package_dir = "/usr/bin",
     srcs = ["garcon-url-handler"],
     mode = "0755",
+    package_dir = "/usr/bin",
+    strip_prefix = "/cros-garcon",
 )
 
 pkg_tar(
     name = "cros-garcon-config",
-    strip_prefix = "/cros-garcon",
-    package_dir = "/etc/systemd/user/cros-garcon.service.d",
     srcs = ["cros-garcon-override.conf"],
     mode = "0644",
+    package_dir = "/etc/systemd/user/cros-garcon.service.d",
+    strip_prefix = "/cros-garcon",
 )
 
 pkg_tar(
     name = "cros-garcon-polkit",
-    strip_prefix = "/cros-garcon",
-    package_dir = "/var/lib/polkit-1/localauthority/50-local.d",
     srcs = [
         "garcon-packagekit.pkla",
-        "garcon-synaptic.pkla"
+        "garcon-synaptic.pkla",
     ],
     mode = "0644",
+    package_dir = "/var/lib/polkit-1/localauthority/50-local.d",
+    strip_prefix = "/cros-garcon",
 )
 
 pkg_tar(
     name = "cros-garcon-dpkg-config",
-    strip_prefix = "/cros-garcon",
-    package_dir = "/etc/dpkg/dpkg.cfg.d",
     srcs = ["garcon-hook"],
     mode = "0644",
+    package_dir = "/etc/dpkg/dpkg.cfg.d",
+    strip_prefix = "/cros-garcon",
 )
 
 pkg_tar(
@@ -97,15 +97,19 @@ pkg_tar(
 pkg_deb(
     name = "cros-garcon-deb",
     architecture = "all",
+    conffiles_file = "conffiles",
     data = ":debian-data",
+    depends = [
+        "desktop-file-utils",
+        "packagekit",
+        "xdg-utils",
+    ],
     description_file = "deb-description",
     homepage = "https://chromium.googlesource.com/chromiumos/platform2/+/HEAD/vm_tools/garcon/",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-garcon",
-    depends = ["desktop-file-utils","packagekit","xdg-utils"],
-    version = "0.21",
-    section = "misc",
-    conffiles_file = "conffiles",
     postinst = "postinst",
     prerm = "prerm",
+    section = "misc",
+    version = "0.21",
 )

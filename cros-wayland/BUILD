@@ -13,18 +13,18 @@ genrule(
 
 pkg_tar(
     name = "cros-wayland-etc-skel",
-    strip_prefix = "/cros-wayland",
-    package_dir = "/etc/skel",
     srcs = [":skel-config"],
     mode = "0644",
+    package_dir = "/etc/skel",
+    strip_prefix = "/cros-wayland",
 )
 
 pkg_tar(
     name = "cros-wayland-udev",
-    strip_prefix = "/cros-wayland",
-    package_dir = "/lib/udev/rules.d",
     srcs = ["10-cros-virtwl.rules"],
     mode = "0644",
+    package_dir = "/lib/udev/rules.d",
+    strip_prefix = "/cros-wayland",
 )
 
 pkg_tar(
@@ -39,12 +39,12 @@ pkg_tar(
 pkg_deb(
     name = "cros-wayland-deb",
     architecture = "all",
+    conffiles_file = "conffiles",
     data = ":debian-data",
     description_file = "deb-description",
     homepage = "https://chromium.googlesource.com/chromiumos/docs/+/HEAD/containers_and_vms.md",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-wayland",
-    version = "0.10",
     section = "x11",
-    conffiles_file = "conffiles",
+    version = "0.10",
 )

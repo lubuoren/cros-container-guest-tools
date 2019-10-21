@@ -1,0 +1,23 @@
+#!/bin/bash
+# Copyright 2019 The Chromium OS Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+# Wrapper for buildifier: only run if buildifier exists and filter out non-bazel
+# files.
+
+declare -r PRESUBMIT_FILES
+
+# Filter out anything which doesn't look like a build or bazel file
+files=$(echo "${PRESUBMIT_FILES:?}" | tr ' ' '\n' | grep -E 'BUILD|\.bzl')
+
+if [[ -n "${files}" ]] && command -v buildifier &>/dev/null; then
+    messages=$(buildifier --lint=warn --mode=check ${files})
+    if [[ -n "${messages}" ]]; then
+        echo "Style check failed: ${messages}" >&2
+        echo "Try running buildifier --lint=fix on your bazel files to"\
+                 "automatically fix." >&2
+        exit 1
+    fi
+fi
+# If they don't have buildifier do nothing.

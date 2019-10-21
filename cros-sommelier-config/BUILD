@@ -6,38 +6,40 @@ load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar", "pkg_deb")
 
 pkg_tar(
     name = "cros-sommelier-config",
-    strip_prefix = "/cros-sommelier-config",
-    package_dir = "/etc/systemd/user/sommelier@0.service.d",
     srcs = ["cros-sommelier-override.conf"],
     mode = "0644",
+    package_dir = "/etc/systemd/user/sommelier@0.service.d",
+    strip_prefix = "/cros-sommelier-config",
 )
 
 pkg_tar(
     name = "cros-sommelier-x-config",
-    strip_prefix = "/cros-sommelier-config",
-    package_dir = "/etc/systemd/user/sommelier-x@0.service.d",
     srcs = ["cros-sommelier-x-override.conf"],
     mode = "0644",
+    package_dir = "/etc/systemd/user/sommelier-x@0.service.d",
+    strip_prefix = "/cros-sommelier-config",
 )
 
 pkg_tar(
     name = "cros-sommelier-low-density-config",
-    strip_prefix = "/cros-sommelier-config",
-    package_dir = "/etc/systemd/user/sommelier@1.service.d",
-    srcs = ["cros-sommelier-override.conf",
-            "cros-sommelier-low-density-override.conf",
-           ],
+    srcs = [
+        "cros-sommelier-low-density-override.conf",
+        "cros-sommelier-override.conf",
+    ],
     mode = "0644",
+    package_dir = "/etc/systemd/user/sommelier@1.service.d",
+    strip_prefix = "/cros-sommelier-config",
 )
 
 pkg_tar(
     name = "cros-sommelier-x-low-density-config",
-    strip_prefix = "/cros-sommelier-config",
-    package_dir = "/etc/systemd/user/sommelier-x@1.service.d",
-    srcs = ["cros-sommelier-x-override.conf",
-            "cros-sommelier-low-density-override.conf",
-           ],
+    srcs = [
+        "cros-sommelier-low-density-override.conf",
+        "cros-sommelier-x-override.conf",
+    ],
     mode = "0644",
+    package_dir = "/etc/systemd/user/sommelier-x@1.service.d",
+    strip_prefix = "/cros-sommelier-config",
 )
 
 pkg_tar(
@@ -54,15 +56,18 @@ pkg_tar(
 pkg_deb(
     name = "cros-sommelier-config-deb",
     architecture = "all",
+    conffiles_file = "conffiles",
     data = ":debian-data",
+    depends = [
+        "libpam-systemd",
+        "cros-sommelier",
+    ],
     description_file = "deb-description",
     homepage = "https://chromium.googlesource.com/chromiumos/platform2/+/HEAD/vm_tools/sommelier/",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-sommelier-config",
-    version = "0.14",
-    section = "misc",
-    conffiles_file = "conffiles",
     postinst = "postinst",
     prerm = "prerm",
-    depends = ["libpam-systemd", "cros-sommelier"],
+    section = "misc",
+    version = "0.14",
 )

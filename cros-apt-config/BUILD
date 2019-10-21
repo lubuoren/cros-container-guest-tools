@@ -24,18 +24,18 @@ genrule(
 
 pkg_tar(
     name = "cros-keyring",
-    strip_prefix = "/cros-apt-config",
-    package_dir = "//etc/apt/trusted.gpg.d",
     srcs = ["cros.gpg"],
     mode = "0644",
+    package_dir = "//etc/apt/trusted.gpg.d",
+    strip_prefix = "/cros-apt-config",
 )
 
 pkg_tar(
     name = "cros-apt-prefs",
-    strip_prefix = "/cros-apt-config",
-    package_dir = "/etc/apt/preferences.d",
     srcs = ["cros.pref"],
     mode = "0644",
+    package_dir = "/etc/apt/preferences.d",
+    strip_prefix = "/cros-apt-config",
 )
 
 pkg_tar(
@@ -51,11 +51,11 @@ pkg_deb(
     name = "cros-apt-config-deb",
     architecture = "all",
     data = ":debian-data",
+    depends = ["apt-transport-https"],
     description_file = "deb-description",
     homepage = "https://chromium.googlesource.com/chromiumos/docs/+/HEAD/containers_and_vms.md",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-apt-config",
-    version = "0.19",
     section = "misc",
-    depends = ["apt-transport-https"],
+    version = "0.19",
 )
