@@ -8,7 +8,7 @@ set -ex
 # This script makes use of the following environment variables defined
 # in the Dockerfile:
 # - ARCHES
-# - DISTRIBUTION
+# - CHROOT_DISTRIBUTION
 
 main() {
     mount binfmt_misc -t binfmt_misc /proc/sys/fs/binfmt_misc || true
@@ -36,7 +36,9 @@ main() {
     fi
 
     # Create chroots for each architecture.
-    for arch in ${ARCHES[@]}; do
+    local arch
+    # ARCHES is passed by docker environment as scalar.
+    for arch in ${ARCHES}; do
         tgzfile="/var/cache/pbuilder/base-${arch}.tgz"
         if [ ! -f "${tgzfile}" ]; then
             # Create the pbuilder chroot. .pbuilderrc uses ARCH and DIST.
