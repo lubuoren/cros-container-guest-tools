@@ -1,10 +1,12 @@
 # mesa
 
 ## Overview
+
 This is the Docker image to build mesa-related Debian packages for the Chrome
 OS container.
 
 ## Configuration
+
 Configuration is handled via environment variables in the `Dockerfile`.
 After changes are made the image will need to be regenerated.
 
@@ -16,6 +18,7 @@ variables:
 - PACCKAGES - The packages to build for (apitrace, mesa)
 
 ## Generating Docker image
+
 The Docker image can be created from platform/container-guest-tools/mesa/buster
 with:
 ```sh
@@ -44,6 +47,7 @@ sudo docker save buildmesa_buster:setup | \
 ```
 
 ## Building packages
+
 To build the packages using the image with cached chroot with artifacts
 written to `$PWD/artifacts`:
 ```sh
@@ -82,6 +86,7 @@ sudo docker load -i buildmesa_buster.tar.xz
 The Debian packages will be available in `$PWD/artifacts` to test.
 
 #### Using Chrome OS checkout
+
 These following steps are run from the top of a Chrome OS checkout.
 
 Build packages using an existing mesa git repo within a Chrome OS checkout:
@@ -96,6 +101,7 @@ sudo docker run \
 ```
 
 #### Using sandbox branch
+
 These following steps are run from third_party/mesa.
 
 To test new mesa changes, prepare a local branch based off of
@@ -135,6 +141,7 @@ exit
 ```
 
 #### Gerrit merge commits
+
 Send merge commit to gerrit:
 ```sh
 debchange -r
@@ -145,6 +152,7 @@ repo upload . --cbr
 ```
 
 ## Kokoro
+
 The exported Docker image tarball must be copied to x20 under the path
 `/x20/teams/chromeos-vm/docker/buildmesa_buster.tar.xz`:
 ```sh
@@ -157,6 +165,7 @@ allows Kokoro to have access to it.
 ```
 
 ## Versioning
+
 The Chrome OS releases are often coming from ToT and do not match released
 or even branched mesa builds.  Pre-releases will be numbered in a format such
 as `19.2.0~cros1-2` to signify a Chrome OS pre-release of 19.2.0.  cros1 will
@@ -164,8 +173,8 @@ be the second merge from upstream.  -2 will be the third build of that
 upstream build.  An actual release will look like 19.2.0-0~bpo0-1 and will 
 be considered greater than the Chrome OS pre-release.
 
-
 ## Additional packages
+
 In addition to `mesa` the following packages are built:
 - `apitrace` - To enable trace-based testing.
 
