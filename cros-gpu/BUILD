@@ -47,20 +47,11 @@ pkg_tar(
 )
 
 pkg_tar(
-    name = "cros-unattended-upgrades",
-    strip_prefix = "/cros-gpu",
-    package_dir = "/etc/apt/apt.conf.d",
-    srcs = ["96cros-unattended-upgrades"],
-    mode = "0644",
-)
-
-pkg_tar(
     name = "debian-data",
     extension = "tar.gz",
     deps = [
         ":cros-gpu-list",
         ":cros-gpu-pref",
-        ":cros-unattended-upgrades",
         ":llvm-keyring",
     ],
 )
