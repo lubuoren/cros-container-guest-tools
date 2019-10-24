@@ -57,7 +57,7 @@ main() {
     # PACKAGES, DISTRIBUTIONS, and ARCHES are passed by docker environment as
     # scalars.
     for package in ${PACKAGES}; do
-        if [[ "${package}" == "apitrace" ]]; then
+        if [[ "${package}" != "mesa" ]]; then
             make_tarball "${package}"
         fi
 

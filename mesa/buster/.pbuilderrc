@@ -23,4 +23,7 @@ BUILDRESULT="/var/cache/pbuilder/${NAME}/result/"
 APTCACHE="/var/cache/pbuilder/${NAME}/aptcache/"
 BUILDPLACE="/var/cache/pbuilder/build"
 
+# Retrieve packages from testing as needed.
+OTHERMIRROR="deb http://deb.debian.org/debian/ testing main"
+
 mkdir -p "${APTCACHE}"

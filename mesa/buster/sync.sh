@@ -17,12 +17,17 @@ clone_repo() {
 
     local repo
 
-    local THIRD_PARTY="https://chromium.googlesource.com/chromiumos/third_party"
+    local CHROMIUMOS="https://chromium.googlesource.com/chromiumos/"
+    local THIRD_PARTY="${CHROMIUMOS}/third_party"
+    local PLATFORM="${CHROMIUMOS}/platform"
 
     if [[ ! -d "${package}" ]]; then
         case "${package}" in
           apitrace|mesa)
             repo="${THIRD_PARTY}/${package}"
+            ;;
+          glbench)
+            repo="${PLATFORM}/${package}"
             ;;
           *)
             echo "ERROR: unable to sync unknown package ${package}"
