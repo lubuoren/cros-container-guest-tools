@@ -162,15 +162,16 @@ def repack_rootfs(output_dir, disk_path):
 
     dedupe_hardlinks(rootfs_dir)
 
-    # Create vm_tools.img.
+    # Create vm_tools.img if /opt/google/cros-containers exists.
     tools_dir = rootfs_dir / 'opt' / 'google' / 'cros-containers'
-    create_fs_image(output_dir / 'vm_tools.img', tools_dir)
+    if tools_dir.exists():
+      create_fs_image(output_dir / 'vm_tools.img', tools_dir)
 
-    # Remove contents of tools_dir so they are not included in vm_rootfs.img.
-    # Leave the top-level /opt/google/cros-containers directory in place
-    # as a mount point.
-    for child in tools_dir.iterdir():
-      shutil.rmtree(child)
+      # Remove contents of tools_dir so they are not included in vm_rootfs.img.
+      # Leave the top-level /opt/google/cros-containers directory in place
+      # as a mount point.
+      for child in tools_dir.iterdir():
+        shutil.rmtree(child)
 
     # Create vm_rootfs.img.
     create_fs_image(output_dir / 'vm_rootfs.img', rootfs_dir)
