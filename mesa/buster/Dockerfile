@@ -33,7 +33,7 @@ COPY *.sh /scratch/
 WORKDIR /scratch
 VOLUME $ARTIFACTS
 
-ENV PACKAGES="apitrace mesa"
+ENV PACKAGES="apitrace glbench mesa"
 ENV MESA_BUILD_BRANCH=debian-build
 ENV MESA_CHECKOUT_BRANCH=debian
 
