@@ -27,7 +27,7 @@ pkg_tar(
     srcs = ["llvm-snapshot.gpg"],
     mode = "0644",
     package_dir = "//etc/apt/trusted.gpg.d",
-    strip_prefix = "/cros-gpu",
+    strip_prefix = "/cros-gpu-stretch",
 )
 
 pkg_tar(
@@ -35,7 +35,7 @@ pkg_tar(
     srcs = ["cros-gpu.list"],
     mode = "0644",
     package_dir = "/etc/apt/sources.list.d",
-    strip_prefix = "/cros-gpu",
+    strip_prefix = "/cros-gpu-stretch",
 )
 
 pkg_tar(
@@ -43,7 +43,7 @@ pkg_tar(
     srcs = ["cros-gpu.pref"],
     mode = "0644",
     package_dir = "/etc/apt/preferences.d",
-    strip_prefix = "/cros-gpu",
+    strip_prefix = "/cros-gpu-stretch",
 )
 
 pkg_tar(
