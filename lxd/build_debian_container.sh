@@ -15,6 +15,7 @@ build_container() {
     local apt_dir=$4
     local test_image=$5
     local release=$6
+    local job_name=$7
 
     local setup_script="${src_root}"/lxd/lxd_setup.sh
     local setup_test_script="${src_root}"/lxd/lxd_test_setup.sh
@@ -43,10 +44,10 @@ build_container() {
     mkdir "${rootfs}/run/apt"
     cp -r "${apt_dir}"/* "${rootfs}/run/apt"
 
-    chroot "${rootfs}" /run/"$(basename ${setup_script})" "${release}"
+    chroot "${rootfs}" /run/"$(basename ${setup_script})" "${release}" "${job_name}"
 
     if [ "${test_image}" = true ]; then
-        chroot "${rootfs}" /run/"$(basename ${setup_test_script})"
+        chroot "${rootfs}" /run/"$(basename ${setup_test_script})" "${release}" "${job_name}"
     fi
 
     umount "${rootfs}/tmp"
@@ -137,19 +138,22 @@ main() {
                         "${results_dir}" \
                         "${apt_dir}" \
                         false \
-                        stretch
+                        stretch \
+                        "${job_name}"
         build_container "amd64" \
                         "${src_root}" \
                         "${results_dir}" \
                         "${apt_dir}" \
                         true \
-                        stretch
+                        stretch \
+                        "${job_name}"
         build_container "amd64" \
                         "${src_root}" \
                         "${results_dir}" \
                         "${apt_dir}" \
                         true \
-                        buster
+                        buster \
+                        "${job_name}"
         exit 0
     fi
 
@@ -162,7 +166,8 @@ main() {
                                 "${results_dir}" \
                                 "${apt_dir}" \
                                 "${test_image}" \
-                                "${release}"
+                                "${release}" \
+                                "${job_name}"
             done
         done
     done
