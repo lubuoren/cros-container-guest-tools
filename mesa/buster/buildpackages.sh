@@ -57,9 +57,11 @@ main() {
     # PACKAGES, DISTRIBUTIONS, and ARCHES are passed by docker environment as
     # scalars.
     for package in ${PACKAGES}; do
-        if [[ "${package}" != "mesa" ]]; then
+        case "{package}" in
+          apitrace|glbench)
             make_tarball "${package}"
-        fi
+            ;;
+        esac
 
         for dist in ${DISTRIBUTIONS}; do
             for arch in ${ARCHES}; do

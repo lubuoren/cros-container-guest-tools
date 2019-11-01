@@ -23,7 +23,7 @@ clone_repo() {
 
     if [[ ! -d "${package}" ]]; then
         case "${package}" in
-          apitrace|mesa)
+          apitrace|libdrm|mesa)
             repo="${THIRD_PARTY}/${package}"
             ;;
           glbench)
