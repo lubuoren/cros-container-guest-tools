@@ -57,7 +57,7 @@ main() {
     # PACKAGES, DISTRIBUTIONS, and ARCHES are passed by docker environment as
     # scalars.
     for package in ${PACKAGES}; do
-        case "{package}" in
+        case "${package}" in
           apitrace|glbench)
             make_tarball "${package}"
             ;;
