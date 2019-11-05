@@ -67,7 +67,7 @@ def build_component(board, image_path, output_dir, component_version):
   mnt_dir.mkdir()
 
   with mount_disk(str(component_disk), str(mnt_dir)) as mntpoint:
-    for component_file in ['about_os_credits.html', 'lsb-release', 'vm_kernel', 'vm_rootfs.img']:
+    for component_file in ['about_os_credits.html', 'lsb-release', 'vm_kernel', 'vm_rootfs.img', 'vm_tools.img']:
       shutil.copy(str(component_dir / component_file), str(mnt_dir / component_file))
 
   subprocess.run(['/sbin/e2fsck', '-y', '-f', str(component_disk)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
