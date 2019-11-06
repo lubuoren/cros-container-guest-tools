@@ -1,2 +1,2 @@
 deb https://deb.debian.org/debian stretch-backports main
-deb https://apt.llvm.org/stretch/ llvm-toolchain-stretch-7 main
+deb [arch=amd64,i386] https://apt.llvm.org/stretch/ llvm-toolchain-stretch-7 main

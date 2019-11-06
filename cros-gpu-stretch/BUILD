@@ -67,6 +67,6 @@ pkg_deb(
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-gpu",
     section = "misc",
-    version = "9.6",
+    version = "9.7",
     visibility = ["//cros-debs:__pkg__"],
 )
