@@ -26,7 +26,7 @@ build_mesa() {
         local base_image="buildmesa_${dist}"
         local base_image_tarball="${KOKORO_GFILE_DIR}"/"${base_image}".tar.xz
 
-        if [[ -z $(docker images -q $"{base_image}" 2> /dev/null) ]]; then
+        if [[ -z $(docker images -q "${base_image}" 2> /dev/null) ]]; then
             docker load -i "${base_image_tarball}"
         fi
 
