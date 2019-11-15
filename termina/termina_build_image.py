@@ -18,7 +18,7 @@ from pathlib import Path
 from termina_util import extract_vmlinux, mount_disk
 
 def extract_squashfs_partition(dest_path, disk_path, part_num):
-  base_cmd = ['partx', '--raw', '--noheadings', '--nr', str(part_num)]
+  base_cmd = ['sudo', 'partx', '--raw', '--noheadings', '--nr', str(part_num)]
   part_start_sectors = subprocess.check_output(base_cmd + ['--output', 'START', disk_path])
   part_start_bytes = int(part_start_sectors) * 512
   part_size_sectors = subprocess.check_output(base_cmd + ['--output', 'SECTORS', disk_path])
@@ -106,7 +106,7 @@ def create_fs_image(img_path, src_path):
 
     with mount_disk(str(img_path), str(mnt_dir)) as mntpoint:
       subprocess.run(
-          ['rsync', '-aH', str(src_path) + '/', str(mnt_dir)],
+          ['sudo', 'rsync', '-aH', str(src_path) + '/', str(mnt_dir)],
           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 
     subprocess.run(

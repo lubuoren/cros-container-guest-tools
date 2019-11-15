@@ -35,12 +35,12 @@ def extract_vmlinux(vmlinuz_path, vmlinux_path):
 
 @contextmanager
 def mount_disk(src, target):
-  subprocess.check_call(['mount', src, target])
+  subprocess.check_call(['sudo', 'mount', src, target])
   try:
     yield target
   finally:
     try:
-      subprocess.check_call(['umount', target])
+      subprocess.check_call(['sudo', 'umount', target])
     except:
       print('failed to unmount', target)
 

@@ -50,25 +50,40 @@ def download_image(board, build, branch, output_dir):
 
   return filename
 
-def build_component(board, image_path, output_dir, component_version):
+def unpack_component(board, image_path, output_dir):
   component_dir = output_dir / board
   component_dir.mkdir()
   result = subprocess.run(['tar', 'xvf', image_path, '-C', str(component_dir)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+  return component_dir / 'chromiumos_base_image.bin'
+
+def build_component(board, image_path, output_dir, component_version):
   print('Repacking rootfs')
-  repack_rootfs(component_dir, component_dir / 'chromiumos_base_image.bin')
+  component_dir = output_dir / board
+  component_dir.mkdir(exist_ok=True)
+  repack_rootfs(component_dir, image_path)
 
   # Assemble the component disk image.
   print('Building component disk image')
+
+  # Create image at 150% of source size.
+  # resize2fs will shrink it to the minimum size later.
+  du_output = subprocess.check_output(['du', '-bsx',
+                                       component_dir]).decode('utf-8')
+  src_size = int(du_output.split()[0])
+  img_size = int(src_size * 1.50)
+
   component_disk = component_dir / 'image.ext4'
   with component_disk.open('wb+') as component:
-    component.truncate(300 * 1024 * 1024)
+    component.truncate(img_size)
   subprocess.run(['/sbin/mkfs.ext4', '-b', '4096', '-O', '^has_journal', str(component_disk)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
   mnt_dir = component_dir / 'mnt'
   mnt_dir.mkdir()
 
   with mount_disk(str(component_disk), str(mnt_dir)) as mntpoint:
-    for component_file in ['about_os_credits.html', 'lsb-release', 'vm_kernel', 'vm_rootfs.img', 'vm_tools.img']:
-      shutil.copy(str(component_dir / component_file), str(mnt_dir / component_file))
+    for component_file in ['about_os_credits.html', 'lsb-release',
+                           'vm_kernel', 'vm_rootfs.img', 'vm_tools.img']:
+      subprocess.run(['sudo', 'cp', str(component_dir / component_file),
+                      str(mnt_dir / component_file)], check=True)
 
   subprocess.run(['/sbin/e2fsck', '-y', '-f', str(component_disk)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
   subprocess.run(['/sbin/resize2fs', '-M', str(component_disk)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
@@ -108,14 +123,11 @@ def main():
 
   args = parser.parse_args()
 
-  if os.geteuid() != 0:
-    print('this script must be run as root')
-    sys.exit(1)
-
   with tempfile.TemporaryDirectory() as tempdir_path:
     tempdir = Path(tempdir_path)
     for board in ['tatl', 'tael']:
-      image_path = download_image(board, args.build, args.branch, tempdir)
+      download_path = download_image(board, args.build, args.branch, tempdir)
+      image_path = unpack_component(board, download_path, tempdir)
       build_component(board, image_path, tempdir, args.component_version)
       if args.output_dir:
         target_dir = Path(args.output_dir) / board
