@@ -20,6 +20,47 @@ build_guest_tools() {
     cp -r bazel-bin/cros-debs/* "${result_dir}"
 }
 
+# Builds one of the mesa-related tools. Usage is:
+#     build_mesa_shard <package> <distro> <architecture>
+# Which will build <package> for the <distro> debian version with the given
+# processor <architecture>.
+build_mesa_shard() {
+    [[ $# == 3 ]]
+    local pkg="$1"
+    local dist="$2"
+    local arch="$3"
+    local base_image="buildmesa_${dist}"
+    local base_image_tarball="${KOKORO_GFILE_DIR}"/"${base_image}".tar.xz
+
+    if [[ -z $(docker images -q "${base_image}" 2> /dev/null) ]]; then
+        docker load -i "${base_image_tarball}"
+    fi
+
+    # Post-stretch the Docker image build scripts use the mesa checkout
+    # from Kokoro.
+    if [[ "${dist}" == "stretch" ]]; then
+        docker run \
+            --rm \
+            --privileged \
+            --volume "${KOKORO_ARTIFACTS_DIR}/${dist}_mesa_debs":/artifacts \
+            --env "ARCHES=${arch}" \
+            --env "PACKAGES=${pkg}" \
+            "${base_image}" \
+            ./sync-and-build.sh
+    else
+        docker run \
+            --rm \
+            --privileged \
+            --volume "${KOKORO_ARTIFACTS_DIR}/${dist}_mesa_debs":/artifacts \
+            --volume "${KOKORO_ARTIFACTS_DIR}/git/mesa":/scratch/mesa \
+            --env "ARCHES=${arch}" \
+            --env "PACKAGES=${pkg}" \
+            "${base_image}" \
+            ./sync-and-build.sh
+    fi
+}
+
+# TODO(hollingum): delete this once we no longer support non-sharded builds
 build_mesa() {
     local dist
     for dist in stretch buster; do

@@ -11,6 +11,7 @@ set -ex
 # place.
 
 main() {
+    env
     ./setupchroot.sh
     ./sync.sh
     ./buildpackages.sh

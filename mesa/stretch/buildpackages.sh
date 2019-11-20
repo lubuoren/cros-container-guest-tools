@@ -18,17 +18,21 @@ main() {
     export GIT_PBUILDER_OUTPUT_DIR="${ARTIFACTS}"
 
     for arch in ${ARCHES[@]}; do
-        # Build libdrm.
-        (cd libdrm &&
-            DIST="${DISTRIBUTION}" ARCH="${arch}" gbp buildpackage \
-                --git-debian-branch=debian-unstable \
-                --git-upstream-tree=origin/upstream-unstable)
+        if [[ -z ${PACKAGES} ]] || [[ ${PACKAGES} == "libdrm" ]]; then
+            # Build libdrm.
+            (cd libdrm &&
+                DIST="${DISTRIBUTION}" ARCH="${arch}" gbp buildpackage \
+                    --git-debian-branch=debian-unstable \
+                    --git-upstream-tree=origin/upstream-unstable)
+        fi
 
-        # Build mesa.
-        (cd mesa &&
-            DIST="${DISTRIBUTION}" ARCH="${arch}" gbp buildpackage \
-                --git-debian-branch="${MESA_BRANCH}" \
-                --git-upstream-tree=origin/master)
+        if [[ -z ${PACKAGES} ]] || [[ ${PACKAGES} == "mesa" ]]; then
+            # Build mesa.
+            (cd mesa &&
+                DIST="${DISTRIBUTION}" ARCH="${arch}" gbp buildpackage \
+                    --git-debian-branch="${MESA_BRANCH}" \
+                    --git-upstream-tree=origin/master)
+        fi
     done
 }
 
