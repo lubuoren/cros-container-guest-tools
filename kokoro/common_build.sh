@@ -21,14 +21,15 @@ build_guest_tools() {
 }
 
 # Builds one of the mesa-related tools. Usage is:
-#     build_mesa_shard <package> <distro> <architecture>
+#     build_mesa_shard <distro> <architecture> [<package> ...]
 # Which will build <package> for the <distro> debian version with the given
 # processor <architecture>.
 build_mesa_shard() {
-    [[ $# == 3 ]]
-    local pkg="$1"
-    local dist="$2"
-    local arch="$3"
+    [[ $# -ge 3 ]]
+    local dist="$1"
+    local arch="$2"
+    shift 2
+    local pkg="$@"
     local base_image="buildmesa_${dist}"
     local base_image_tarball="${KOKORO_GFILE_DIR}"/"${base_image}".tar.xz
 
@@ -43,8 +44,7 @@ build_mesa_shard() {
             --rm \
             --privileged \
             --volume "${KOKORO_ARTIFACTS_DIR}/${dist}_mesa_debs":/artifacts \
-            --env "ARCHES=${arch}" \
-            --env "PACKAGES=${pkg}" \
+            --env ARCHES="${arch}" \
             "${base_image}" \
             ./sync-and-build.sh
     else
@@ -53,8 +53,8 @@ build_mesa_shard() {
             --privileged \
             --volume "${KOKORO_ARTIFACTS_DIR}/${dist}_mesa_debs":/artifacts \
             --volume "${KOKORO_ARTIFACTS_DIR}/git/mesa":/scratch/mesa \
-            --env "ARCHES=${arch}" \
-            --env "PACKAGES=${pkg}" \
+            --env ARCHES="${arch}" \
+            --env PACKAGES="${pkg}" \
             "${base_image}" \
             ./sync-and-build.sh
     fi

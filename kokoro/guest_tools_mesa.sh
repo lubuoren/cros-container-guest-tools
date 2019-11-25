@@ -29,8 +29,8 @@ main() {
     elif [[ ${shard_target} == "guest_tools" ]]; then
       build_guest_tools
     else
-      # We convert the shard_target ("package_distro_arch") into arguements for
-      # building the shard.
+      # We convert the shard_target ("distro_arch_pkg1_pkg2...") into arguments
+      # for building the shard.
       build_mesa_shard $(echo ${shard_target} | tr '_' ' ')
     fi
 }
