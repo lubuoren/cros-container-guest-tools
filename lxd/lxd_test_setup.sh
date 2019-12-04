@@ -58,6 +58,9 @@ EOD
     apt-get -q -y install python3-pyqt5                              # Qt5
     apt-get -q -y install python3-tk                                 # Tkinter
 
+    # For crostini.VimCompile.
+    apt-get -q -y install gcc make libncurses5-dev libncursesw5-dev # Compilation toolchain
+
     # For crostini.Webserver.
     apt-get -q -y install busybox
 
