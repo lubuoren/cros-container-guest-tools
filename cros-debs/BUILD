@@ -11,6 +11,7 @@ filegroup(
         "//cros-apt-config:deb",
         "//cros-garcon:deb",
         "//cros-guest-tools:deb",
+        "//cros-host-fonts:deb",
         "//cros-notificationd:deb",
         "//cros-pulse-config:deb",
         "//cros-sftp:deb",

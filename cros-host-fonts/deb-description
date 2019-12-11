@@ -1,0 +1,3 @@
+Share fonts from Chromium OS.
+This package provides a config file to search for the
+shared Chromium OS font directory.

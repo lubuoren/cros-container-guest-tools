@@ -2,7 +2,7 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar", "pkg_deb")
+load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_deb", "pkg_tar")
 
 pkg_tar(
     name = "debian-data",
@@ -14,6 +14,7 @@ pkg_deb(
     data = ":debian-data",
     depends = [
         "cros-garcon",
+        "cros-host-fonts",
         "cros-notificationd",
         "cros-sftp",
         "cros-sommelier",
