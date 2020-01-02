@@ -1,0 +1,45 @@
+#!/bin/bash
+# Copyright 2020 The Chromium OS Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+#
+# Run this script to uprev the crostini pin, pointing it at the latest build.
+
+set -e
+
+if [[ -z "$1" ]]; then
+    echo "Usage: $0 MILESTONE from within a Chrome OS checkout"
+    exit 1
+fi
+
+if ! workdir="$(repo list -pf chromiumos/overlays/chromiumos-overlay)/chromeos-base/crostini-pin" \
+    || [[ ! -d "${workdir}" ]]; then
+    echo "Unable to find crostini-pin directory, are you running in a chrome os checkout?"
+    exit 2
+fi
+
+cd "${workdir}"
+
+if [[ "$(ls crostini-pin-* | wc -l)" != "1" ]]; then
+    echo "Unable to find current pin in $(pwd)"
+    exit 3
+fi
+
+echo "Searching for latest release."
+
+milestone="$1"
+latest="$(
+    gsutil ls "gs://cros-containers-staging/${milestone}/images/debian/buster/arm64/default/" \
+    | rev | cut -d/ -f2 | cut -d- -f2 | rev | sort -n | tail -n 1 | tr "_:" ".")"
+
+current="$(ls crostini-pin-*)"
+target="crostini-pin-${milestone}.${latest}-r1.ebuild"
+
+if [[ "${current}" == "${target}" ]]; then
+    echo "Already up-to-date at ${latest}, nothing to do."
+else
+    git mv "${current}" "${target}"
+
+    echo "Uprevved to ${latest} within $(pwd)"
+    echo "Please cd to this directory and create the uprev CL by hand now."
+fi
