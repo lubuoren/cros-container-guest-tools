@@ -11,4 +11,6 @@ Description:
 Files for garcon integration with Ansible that are put into Crostini default
 container so that ansible-playbook spawned from garcon is integrated with
 garcon, for example, produces custom parsable output.
-Local Modifications: none
+Local Modifications: Callback plugin is renamed and description is changed to
+match plugin purpose. Added custom messages parsed by garcon, stripped down,
+changed warnings print destination to stdout.

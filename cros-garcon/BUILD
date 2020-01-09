@@ -80,9 +80,18 @@ pkg_tar(
 )
 
 pkg_tar(
+    name = "cros-garcon-ansible-integration",
+    srcs = ["third_party/garcon.py"],
+    mode = "0644",
+    package_dir = "/usr/share/ansible/plugins/callback",
+    strip_prefix = "/cros-garcon/third_party",
+)
+
+pkg_tar(
     name = "debian-data",
     extension = "tar.gz",
     deps = [
+        ":cros-garcon-ansible-integration",
         ":cros-garcon-config",
         ":cros-garcon-desktop",
         ":cros-garcon-dpkg-config",
@@ -111,6 +120,6 @@ pkg_deb(
     postinst = "postinst",
     prerm = "prerm",
     section = "misc",
-    version = "0.21",
+    version = "0.22",
     visibility = ["//cros-debs:__pkg__"],
 )
