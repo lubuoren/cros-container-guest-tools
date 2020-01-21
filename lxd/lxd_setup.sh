@@ -35,9 +35,6 @@ main() {
     rm /etc/apt/sources.list.d/cros-staging.list
     apt-get update
 
-    # iptables is required for adb sideloading to work by default.
-    apt-get -q -y install iptables
-
     # Don't run sshd out of the box.
     touch /etc/ssh/sshd_not_to_be_run
 

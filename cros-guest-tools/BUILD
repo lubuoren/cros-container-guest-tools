@@ -42,6 +42,7 @@ pkg_deb(
         "git",
         "gnupg",
         "iputils-ping",
+        "iptables",
         "less",
         "libxss1",
         "man-db",
@@ -52,6 +53,6 @@ pkg_deb(
         "wget",
     ],
     section = "misc",
-    version = "0.25",
+    version = "0.26",
     visibility = ["//cros-debs:__pkg__"],
 )
