@@ -12,7 +12,12 @@ __sommelier_export() {
   local var="$1"
   # We have to resort to eval as POSIX doesn't support ${!var} indirection.
   if eval "[ -z \"\${${var}}\" ]"; then
-    export "$(systemctl --user show-environment | grep "^${var}=")" >/dev/null
+    local setting
+    # Only export the var if it's been defined.  This might be an account that
+    # the user has setup or modified.  No point in spewing errors.
+    if setting="$(systemctl --user show-environment | grep "^${var}=")"; then
+      export "${setting}"
+    fi
   fi
 }
 
