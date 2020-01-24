@@ -22,7 +22,6 @@ main() {
         /escalated_sign/escalated_sign.py --tool=linux_gpg_sign \
                                           --job-dir=/escalated_sign_jobs -- \
                                           --loglevel=debug \
-                                          --signing_key='6494C6D6997C215E!' \
                                           "${release_file}"
 
         mv "${release_file}.asc" "${release_file}.gpg"
@@ -34,7 +33,6 @@ main() {
         /escalated_sign/escalated_sign.py --tool=linux_gpg_sign \
                                           --job-dir=/escalated_sign_jobs -- \
                                           --loglevel=debug \
-                                          --signing_key='6494C6D6997C215E!' \
                                           {} \;
 }
 
