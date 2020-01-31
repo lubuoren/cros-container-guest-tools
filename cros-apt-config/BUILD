@@ -57,6 +57,6 @@ pkg_deb(
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-apt-config",
     section = "misc",
-    version = "0.19",
+    version = "0.20",
     visibility = ["//cros-debs:__pkg__"],
 )
