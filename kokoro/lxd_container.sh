@@ -24,11 +24,6 @@ install_deps() {
     sudo cp "${KOKORO_GFILE_DIR}"/qemu-aarch64-static /usr/bin/qemu-aarch64-static
     sudo chmod 0755 /usr/bin/qemu-aarch64-static
 
-    # gnome-icon-theme_3.12.0-2 sometimes gets checksum failures when installing
-    # from deb.debian.org, use our own known-good copy.
-    mkdir -p /tmp/extra-debs
-    cp "${KOKORO_GFILE_DIR}/gnome-icon-theme_3.12.0-2_all.deb" /tmp/extra-debs
-
     # pixz improves compression time for the rootfs significantly.
     sudo apt-get install -q -y pixz
 

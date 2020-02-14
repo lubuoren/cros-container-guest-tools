@@ -20,18 +20,9 @@ main() {
     echo "deb [trusted=yes] file:///run/apt ${release} main" >/etc/apt/sources.list.d/cros-staging.list
 
     apt-get update
-
     # python3 is used for integration testing.
     apt-get -q -y --no-install-recommends install python3
     if [ "${release}" = "stretch" ]; then
-        # gnome-icon-theme_3.12.0-2 sometimes gets checksum failures when
-        # installing from deb.debian.org, use our own known-good copy.
-        # Buster has a newer version we haven't seen failures on.
-        # This is a hack, but we're in the process of upgrading everyone to
-        # Buster so when we stop supporting stretch this goes away.
-        apt-get -q -y --no-install-recommends install \
-            /extra-debs/gnome-icon-theme_3.12.0-2_all.deb
-
         # The cros-gpu package installs more apt sources.
         apt-get -q -y --allow-unauthenticated install cros-gpu
         apt-get update
