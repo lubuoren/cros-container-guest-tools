@@ -45,10 +45,26 @@ pkg_tar(
     extension = "tar.gz",
     deps = [
         ":cros-sommelier-elf",
+        ":cros-sommelier-etc-skel",
         ":cros-sommelier-profiled",
         ":cros-sommelier-unitfiles",
         ":cros-sommelierrc",
     ],
+)
+
+genrule(
+    name = "skel-config",
+    srcs = ["skel.sommelierrc"],
+    outs = [".sommelierrc"],
+    cmd = "mv $(location skel.sommelierrc) $@",
+)
+
+pkg_tar(
+    name = "cros-sommelier-etc-skel",
+    srcs = [":skel-config"],
+    mode = "0644",
+    package_dir = "/etc/skel",
+    strip_prefix = "/cros-sommelier",
 )
 
 pkg_deb(
@@ -72,6 +88,6 @@ pkg_deb(
         "xkb-data",
     ],
     section = "misc",
-    version = "0.24",
+    version = "0.25",
     visibility = ["//cros-debs:__pkg__"],
 )

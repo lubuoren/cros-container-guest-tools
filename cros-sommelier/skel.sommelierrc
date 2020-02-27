@@ -1,0 +1,13 @@
+# Copyright 2020 The Chromium OS Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+#
+# Use this file to customize per-user sommelier options.
+#
+# For documentation, see:
+# https://chromium.googlesource.com/chromiumos/platform2/+/HEAD/vm_tools/sommelier/
+
+# Example: Set default X resources at startup.
+#if [ -f ~/.Xresources ]; then
+#  xrdb -merge ~/.Xresources
+#fi
