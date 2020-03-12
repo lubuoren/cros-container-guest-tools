@@ -10,6 +10,10 @@ build_guest_tools() {
     local result_dir="${src_root}"/guest_debs
     mkdir -p "${result_dir}"
 
+    # TODO(crbug.com/1060811): This is a hack to get around a kokoro bug. Remove
+    # it when it is no longer necessary.
+    rm -rf "/home/kbuilder/.cache/bazel/_bazel_kbuilder/install/4cfcf40fe067e89c8f5c38e156f8d8ca"
+
     cd "${src_root}"
 
     # Build all targets.

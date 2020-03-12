@@ -9,6 +9,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
     && apt-get install -q -y \
+        apt-transport-https \
+        ca-certificates \
         debian-keyring \
         debian-archive-keyring \
         git-buildpackage \
