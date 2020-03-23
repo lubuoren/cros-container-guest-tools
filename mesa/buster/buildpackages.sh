@@ -45,6 +45,33 @@ build_packages() {
     popd >/dev/null
 }
 
+# Rebuild a package as binNMU (https://wiki.debian.org/binNMU)
+build_packages_binnmu() {
+    local dist="$1"
+    local arch="$2"
+    local package="$3"
+    local nmu="$4"
+    local nmu_maintainer="$5"
+    local nmu_version="$6"
+    local nmu_timestamp="$7"
+
+    pushd "${package}" >/dev/null
+
+    DIST="${dist}" ARCH="${arch}" \
+        pdebuild --debbuildopts "-i -d" \
+            --buildresult "${ARTIFACTS}" \
+            -- \
+            --distribution "${dist}" \
+            --architecture "${arch}" \
+            --basetgz "/var/cache/pbuilder/base-${arch}.tgz" \
+            --bin-nmu "${nmu}" \
+            --bin-nmu-maintainer "${nmu_maintainer}" \
+            --bin-nmu-version "${nmu_version}" \
+            --bin-nmu-timestamp "${nmu_timestamp}"
+
+    popd >/dev/null
+}
+
 main() {
     # Packages stored here will be accessible outside of the build as well
     # as used for buildpackages of subsequent packages (via hooks).
@@ -65,7 +92,17 @@ main() {
 
         for dist in ${DISTRIBUTIONS}; do
             for arch in ${ARCHES}; do
-                build_packages "${dist}" "${arch}" "${package}"
+                case "${package}" in
+                  waffle)
+                    build_packages_binnmu "${dist}" "${arch}" "${package}" \
+                        "Rebuild for ${dist}" \
+                        "David Riley <davidriley@chromium.org>" \
+                        1 "@1584995126"
+                    ;;
+                  *)
+                    build_packages "${dist}" "${arch}" "${package}"
+                    ;;
+                esac
             done
         done
     done

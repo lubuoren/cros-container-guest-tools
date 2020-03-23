@@ -47,13 +47,48 @@ create_branch() {
     (cd "${package}" && git checkout -B "${branch}")
 }
 
+untar_package() {
+    local package="$1"
+
+    local DISTFILES="http://commondatastorage.googleapis.com/chromeos-localmirror/crostini/distfiles"
+
+    local orig
+    local debian
+    if [[ ! -d "${package}" ]]; then
+        case "${package}" in
+          waffle)
+            orig="1.6.0"
+            debian="1.6.0-4"
+            ;;
+          *)
+            echo "ERROR: unable to untar unknown package ${package}"
+            exit 1
+            ;;
+        esac
+    fi
+
+    wget "${DISTFILES}/${package}_${orig}.orig.tar.xz"
+    wget "${DISTFILES}/${package}_${debian}.debian.tar.xz"
+    mkdir "${package}"
+    tar -C "${package}" --strip-components=1 -xf \
+        "${package}_${orig}.orig.tar.xz"
+    tar -C "${package}" -xf "${package}_${debian}.debian.tar.xz"
+}
+
 main() {
     local package
 
     # PACKAGES is passed by docker environment as scalar.
     for package in ${PACKAGES}; do
-        clone_repo "${package}" "${MESA_CHECKOUT_BRANCH}"
-        create_branch "${package}" "${MESA_BUILD_BRANCH}"
+        case "${package}" in
+          waffle)
+            untar_package "${package}"
+            ;;
+          *)
+            clone_repo "${package}" "${MESA_CHECKOUT_BRANCH}"
+            create_branch "${package}" "${MESA_BUILD_BRANCH}"
+            ;;
+        esac
     done
 }
 

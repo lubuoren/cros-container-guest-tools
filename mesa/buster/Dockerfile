@@ -35,8 +35,9 @@ COPY *.sh /scratch/
 WORKDIR /scratch
 VOLUME $ARTIFACTS
 
+# waffle must be build prior to apitrace and glbench to satisfy dependencies.
 # libdrm must be built prior to mesa to satisfy dependencies.
-ENV PACKAGES="apitrace glbench libdrm mesa"
+ENV PACKAGES="waffle apitrace glbench libdrm mesa"
 ENV MESA_BUILD_BRANCH=debian-build
 ENV MESA_CHECKOUT_BRANCH=debian
 
