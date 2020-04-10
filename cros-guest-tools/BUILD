@@ -52,8 +52,9 @@ pkg_deb(
         "usbutils",
         "vim",
         "wget",
+        "xz-utils",
     ],
     section = "misc",
-    version = "0.27",
+    version = "0.28",
     visibility = ["//cros-debs:__pkg__"],
 )
