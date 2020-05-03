@@ -135,32 +135,6 @@ main() {
     touch "${dummy_path}"/lib/swrast_dri.so
     touch "${dummy_path}"/lib/virtio_gpu_dri.so
 
-    # If doing presubmit, only run tests.
-    if [[ $job_name = *"presubmit"* ]]; then
-        build_container "amd64" \
-                        "${src_root}" \
-                        "${results_dir}" \
-                        "${apt_dir}" \
-                        false \
-                        stretch \
-                        "${job_name}"
-        build_container "amd64" \
-                        "${src_root}" \
-                        "${results_dir}" \
-                        "${apt_dir}" \
-                        true \
-                        stretch \
-                        "${job_name}"
-        build_container "amd64" \
-                        "${src_root}" \
-                        "${results_dir}" \
-                        "${apt_dir}" \
-                        true \
-                        buster \
-                        "${job_name}"
-        exit 0
-    fi
-
     # Build the normal and test images for each arch.
     for arch in amd64 arm64; do
         for release in stretch buster; do

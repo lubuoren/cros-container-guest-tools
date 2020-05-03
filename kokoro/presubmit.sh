@@ -6,12 +6,13 @@
 set -ex
 
 . "$(dirname "$0")/common.sh" || exit 1
-. "$(dirname "$0")/common_build.sh" || exit 1
 
 main() {
     require_kokoro_artifacts
 
-    build_guest_tools
+    # This is used in other scripts to skip things like apt signing that
+    # shouldn't be done to unsubmitted code.
+    touch ${KOKORO_ARTIFACTS_DIR}/running_presubmits
 }
 
 main "$@"
