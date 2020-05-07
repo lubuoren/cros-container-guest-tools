@@ -2,7 +2,7 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar", "pkg_deb")
+load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_deb", "pkg_tar")
 
 pkg_tar(
     name = "cros-pulse-config-systemd",
@@ -10,7 +10,10 @@ pkg_tar(
     mode = "0644",
     package_dir = "/usr/lib/systemd/user",
     strip_prefix = "/cros-pulse-config",
-    symlinks = {"./usr/lib/systemd/user/default.target.wants/cros-pulse-config.service": "/usr/lib/systemd/user/cros-pulse-config.service"},
+    symlinks = {
+        "./usr/lib/systemd/user/default.target.wants/cros-pulse-config.service": "/usr/lib/systemd/user/cros-pulse-config.service",
+        "./usr/lib/systemd/user/pulseaudio.service.wants/cros-pulse-config.service": "/usr/lib/systemd/user/cros-pulse-config.service",
+    },
 )
 
 pkg_tar(
@@ -31,6 +34,6 @@ pkg_deb(
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-pulse-config",
     section = "misc",
-    version = "0.1.2",
+    version = "0.1.3",
     visibility = ["//cros-debs:__pkg__"],
 )

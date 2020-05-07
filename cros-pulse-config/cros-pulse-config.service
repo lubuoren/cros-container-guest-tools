@@ -11,3 +11,5 @@ RemainAfterExit=true
 
 [Install]
 WantedBy=default.target
+# Start the service with pulseaudio.service start events.
+WantedBy=pulseaudio.service
