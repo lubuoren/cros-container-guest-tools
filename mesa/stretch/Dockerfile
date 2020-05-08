@@ -25,7 +25,7 @@ ENV ARCHES="amd64 i386"
 ENV DISTRIBUTION=stretch-backports
 ENV ARTIFACTS=/artifacts
 
-COPY .gbp.conf .pbuilderrc llvm-keyring.gpg  /root/
+COPY .gbp.conf .pbuilderrc  /root/
 COPY .pbuilder /root/.pbuilder/
 COPY *.sh /scratch/
 

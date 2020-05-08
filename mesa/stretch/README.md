@@ -120,14 +120,6 @@ cp buildmesa_stretch.tar.xz /google/data/rw/teams/chromeos-vm/docker
 The owner of the tarball must be set to `chromeos-vm-ci-read-write` to
 allows Kokoro to have access to it.
 
-## LLVM Keyring
-The LLVM keyring was generated with:
-```sh
-wget https://apt.llvm.org/llvm-snapshot.gpg.key
-gpg --no-default-keyring --keyring ./llvm-tmp.gpg --import llvm-snapshot.gpg.key
-gpg --keyring ./llvm-tmp.gpg --export --output llvm-keyring.gpg
-```
-
 ## Versioning
 The Chrome OS releases are often coming from ToT and do not match released
 or even branched mesa builds.  Pre-releases will be numbered in a format such

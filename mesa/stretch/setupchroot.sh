@@ -18,8 +18,7 @@ main() {
             DIST="${DISTRIBUTION}" ARCH="${arch}" git-pbuilder create \
                 --mirror http://deb.debian.org/debian \
                 --debootstrapopts \
-                    --keyring="/usr/share/keyrings/debian-archive-keyring.gpg" \
-                --keyring="${HOME}/llvm-keyring.gpg"
+                    --keyring="/usr/share/keyrings/debian-archive-keyring.gpg"
         fi
     done
 }
