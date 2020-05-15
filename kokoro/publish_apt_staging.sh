@@ -21,5 +21,4 @@ main() {
     cp -r "${KOKORO_GFILE_DIR}"/apt_signed/* "${result_dir}"
 }
 
-skip_in_presubmit
 main "$@"

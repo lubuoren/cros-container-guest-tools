@@ -21,5 +21,4 @@ main() {
                                            "${result_dir}"
 }
 
-skip_in_presubmit
 main "$@"

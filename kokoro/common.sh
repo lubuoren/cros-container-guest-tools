@@ -22,10 +22,3 @@ require_cros_milestone() {
         exit 1
     fi
 }
-
-skip_in_presubmit() {
-  if [ -e "${KOKORO_ARTIFACTS_DIR}"/running_presubmits ]; then
-    echo "Skipping because this is a presubmit job"
-    exit 0
-  fi
-}

@@ -36,5 +36,4 @@ main() {
                                           {} \;
 }
 
-skip_in_presubmit
 main "$@"
