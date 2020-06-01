@@ -67,6 +67,15 @@ EOD
     # For graphics.CrostiniTrace*.
     apt-get -q -y install mesa-utils apitrace zstd
 
+    # For filemanager.SMB.
+    echo "samba-common samba-common/workgroup string WORKGROUP" \
+      | debconf-set-selections
+    echo "samba-common samba-common/dhcp boolean true" \
+      | debconf-set-selections
+    echo "samba-common samba-common/do_debconf boolean true" \
+      | debconf-set-selections
+    apt-get -q -y install samba
+
     # For graphics.GLBench
     if [ "${release}" = "buster" ]; then
         # presubmit isn't pulling debs built by mesa. Skip the installation for presubmit only.
