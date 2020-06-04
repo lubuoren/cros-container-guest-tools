@@ -5,22 +5,20 @@
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_deb", "pkg_tar")
 
 pkg_tar(
-    name = "cros-pulse-config-systemd",
-    srcs = ["cros-pulse-config.service"],
+    name = "pulseaudio-config",
+    srcs = [
+        "daemon.conf",
+        "default.pa",
+    ],
     mode = "0644",
-    package_dir = "/usr/lib/systemd/user",
-    strip_prefix = "/cros-pulse-config",
-    symlinks = {
-        "./usr/lib/systemd/user/default.target.wants/cros-pulse-config.service": "/usr/lib/systemd/user/cros-pulse-config.service",
-        "./usr/lib/systemd/user/pulseaudio.service.wants/cros-pulse-config.service": "/usr/lib/systemd/user/cros-pulse-config.service",
-    },
+    package_dir = "/usr/share/cros-pulse-config",
 )
 
 pkg_tar(
     name = "debian-data",
     extension = "tar.gz",
     deps = [
-        ":cros-pulse-config-systemd",
+        ":pulseaudio-config",
     ],
 )
 
@@ -33,7 +31,9 @@ pkg_deb(
     homepage = "https://chromium.googlesource.com/chromiumos/docs/+/HEAD/containers_and_vms.md",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-pulse-config",
+    postinst = "postinst",
+    prerm = "prerm",
     section = "misc",
-    version = "0.1.3",
+    version = "0.2.0",
     visibility = ["//cros-debs:__pkg__"],
 )

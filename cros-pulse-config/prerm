@@ -1,0 +1,26 @@
+# Copyright 2020 The Chromium OS Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+#!/bin/sh
+
+set -e
+
+PULSEAUDIO_CONFIG_DIR=/etc/pulse
+
+case "$1" in
+    remove|upgrade)
+        for file in daemon.conf default.pa; do
+            rm -f ${PULSEAUDIO_CONFIG_DIR}/${file}
+            dpkg-divert --rename --remove \
+                ${PULSEAUDIO_CONFIG_DIR}/${file}
+        done
+        ;;
+
+    failed-upgrade)
+    ;;
+    *)
+        echo "prerm called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+exit 0
