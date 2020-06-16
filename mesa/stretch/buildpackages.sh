@@ -28,7 +28,7 @@ main() {
         (cd mesa &&
             DIST="${DISTRIBUTION}" ARCH="${arch}" gbp buildpackage \
                 --git-debian-branch="${MESA_BRANCH}" \
-                --git-upstream-tree=origin/master)
+                --git-upstream-tree="${MESA_BRANCH}")
     done
 }
 
