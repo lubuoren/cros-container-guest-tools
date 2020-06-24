@@ -51,9 +51,19 @@ def upload_termina(termina_dir, milestone, build):
       ["gsutil.py", "--", "cp", staging_file, "{}/staging".format(testing_url)])
   # Not removing staging_file in case the user wants to check it.
 
+def upload_debug_symbols(termina_dir, api_key):
+  with tempfile.NamedTemporaryFile(mode="w", delete=True) as tmp:
+    tmp.write(api_key)
+    tmp.flush()
+    for board in ["tatl", "tael"]:
+      tarball = os.path.join(termina_dir, board, "debug_breakpad.tar.xz")
+      subprocess.check_call(
+          ["upload_symbols", tarball, "--api_key", tmp.name, "--official_build", "--yes"])
 
 def main():
   parser = argparse.ArgumentParser(description=__doc__)
+  parser.add_argument(
+      "--api_key", required=True, help="crash server API key, found at http://pantheon/apis/credentials?project=crosvm-packages")
   parser.add_argument(
       "--milestone", required=True, help="milestone number, e.g. 78")
   parser.add_argument(
@@ -65,6 +75,7 @@ def main():
   args = parser.parse_args()
 
   upload_termina(args.dir, args.milestone, args.build)
+  upload_debug_symbols(args.dir, args.api_key)
 
 
 if __name__ == "__main__":

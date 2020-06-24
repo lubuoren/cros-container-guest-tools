@@ -20,13 +20,12 @@ from pathlib import Path
 from termina_build_image import repack_rootfs
 from termina_util import mount_disk, get_release_version
 
-def download_image(board, build, branch, output_dir):
+def get_build_path(board, build, branch):
   image_archive_url = 'https://storage.googleapis.com/chromeos-image-archive'
   build_config_format = '{}-full'
   if branch:
     build_config_format = '{}-full-tryjob'
   build_config = build_config_format.format(board)
-
 
   # Manually specified builds override branches.
   build_version = 'master'
@@ -42,13 +41,23 @@ def download_image(board, build, branch, output_dir):
   response = urllib.request.urlopen(symlink_url)
   build_number = response.read().decode('utf-8')
 
-  image_url = '{}/{}/chromiumos_base_image.tar.xz'.format(base_url, build_number)
+  return '{}/{}'.format(base_url, build_number)
+
+def download_image(board, gs_path, output_dir):
+  image_url = '{}/chromiumos_base_image.tar.xz'.format(gs_path)
   print('Downloading image from', image_url)
   target_path = output_dir / '{}_base_image.tar.xz'.format(board)
   filename, headers = urllib.request.urlretrieve(image_url, str(target_path))
   print('Image downloaded to', filename)
 
   return filename
+
+def download_debug_symbols(board, gs_path, output_dir):
+  debug_url = '{}/debug_breakpad.tar.xz'.format(gs_path)
+  print('Downloading debug symbols from', debug_url)
+  target_path = output_dir / board / 'debug_breakpad.tar.xz'
+  filename, headers = urllib.request.urlretrieve(debug_url, str(target_path))
+  print('Debug symbols downloaded to', filename)
 
 def unpack_component(board, image_path, output_dir):
   component_dir = output_dir / board
@@ -126,9 +135,11 @@ def main():
   with tempfile.TemporaryDirectory() as tempdir_path:
     tempdir = Path(tempdir_path)
     for board in ['tatl', 'tael']:
-      download_path = download_image(board, args.build, args.branch, tempdir)
+      gs_path = get_build_path(board, args.build, args.branch)
+      download_path = download_image(board, gs_path, tempdir)
       image_path = unpack_component(board, download_path, tempdir)
       build_component(board, image_path, tempdir, args.component_version)
+      download_debug_symbols(board, gs_path, tempdir)
       if args.output_dir:
         target_dir = Path(args.output_dir) / board
         shutil.copytree(str(tempdir / board), str(target_dir))
