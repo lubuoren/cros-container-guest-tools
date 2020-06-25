@@ -148,6 +148,7 @@ def repack_rootfs(output_dir, disk_path):
     # Add new mnt dirs.
     (rootfs_dir / 'mnt' / 'stateful').mkdir()
     (rootfs_dir / 'mnt' / 'shared').mkdir()
+    (rootfs_dir / 'mnt' / 'external').mkdir()
 
     # Copy the dev_image into its location at /usr/local.
     usr_local = rootfs_dir / 'usr' / 'local'
