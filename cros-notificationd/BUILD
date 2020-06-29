@@ -13,10 +13,19 @@ pkg_tar(
 )
 
 pkg_tar(
+    name = "cros-notificationd-systemd-service-files",
+    srcs = ["cros-notificationd.service"],
+    mode = "0644",
+    package_dir = "/usr/lib/systemd/user/",
+    strip_prefix = "/cros-notificationd",
+)
+
+pkg_tar(
     name = "debian-data",
     extension = "tar.gz",
     deps = [
         ":cros-notificationd-dbus-service-files",
+        ":cros-notificationd-systemd-service-files",
     ],
 )
 
@@ -29,6 +38,6 @@ pkg_deb(
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-notificationd",
     section = "misc",
-    version = "0.1",
+    version = "0.2",
     visibility = ["//cros-debs:__pkg__"],
 )

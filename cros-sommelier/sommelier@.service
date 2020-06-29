@@ -17,6 +17,7 @@ ExecStart=/usr/bin/sommelier \
               /bin/sh -c \
                   "systemctl --user set-environment ${WAYLAND_DISPLAY_VAR}=$${WAYLAND_DISPLAY}; \
                    systemctl --user import-environment SOMMELIER_VERSION"
+ExecStopPost=/opt/google/cros-containers/bin/guest_service_failure_notifier sommelier
 Restart=always
 
 [Install]

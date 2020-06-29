@@ -5,6 +5,7 @@ After=network.target auditd.service
 [Service]
 ExecStartPre=/usr/sbin/sshd -t -f /dev/.ssh/sshd_config
 ExecStart=/usr/sbin/sshd -D -f /dev/.ssh/sshd_config
+ExecStopPost=/opt/google/cros-containers/bin/guest_service_failure_notifier cros-sftp
 ExecReload=/usr/sbin/sshd -t -f /dev/.ssh/sshd_config
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=process

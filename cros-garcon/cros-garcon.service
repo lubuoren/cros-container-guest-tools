@@ -5,6 +5,7 @@ After=sommelier@0.service sommelier-x@0.service
 [Service]
 Type=simple
 ExecStart=/opt/google/cros-containers/bin/garcon --server
+ExecStopPost=/opt/google/cros-containers/bin/guest_service_failure_notifier cros-garcon
 
 [Install]
 WantedBy=default.target

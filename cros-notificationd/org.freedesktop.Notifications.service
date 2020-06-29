@@ -1,3 +1,4 @@
 [D-BUS Service]
 Name=org.freedesktop.Notifications
-Exec=/opt/google/cros-containers/bin/notificationd --virtwl_device=/dev/wl0
+Exec=/bin/false
+SystemdService=cros-notificationd.service

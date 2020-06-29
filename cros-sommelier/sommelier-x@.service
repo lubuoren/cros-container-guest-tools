@@ -38,6 +38,7 @@ ExecStart=/usr/bin/sommelier \
                    touch ${HOME}/.Xauthority; \
                    xauth -f ${HOME}/.Xauthority add ${HOST}:%i . $(xxd -l 16 -p /dev/urandom); \
                    . /etc/sommelierrc"
+ExecStopPost=/opt/google/cros-containers/bin/guest_service_failure_notifier sommelier-x
 Restart=always
 
 [Install]

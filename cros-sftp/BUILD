@@ -31,6 +31,6 @@ pkg_deb(
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-sftp",
     section = "misc",
-    version = "0.14",
+    version = "0.15",
     visibility = ["//cros-debs:__pkg__"],
 )
