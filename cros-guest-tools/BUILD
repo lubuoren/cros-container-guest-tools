@@ -29,6 +29,7 @@ pkg_deb(
         "bzip2",
         "cros-apt-config",
         "cros-gpu",
+        "cros-logging",
         "cros-pulse-config",
         "cros-sommelier-config",
         "cros-sudo-config",
@@ -55,6 +56,6 @@ pkg_deb(
         "xz-utils",
     ],
     section = "misc",
-    version = "0.28",
+    version = "0.29",
     visibility = ["//cros-debs:__pkg__"],
 )

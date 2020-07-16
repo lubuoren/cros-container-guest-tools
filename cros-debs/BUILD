@@ -4,6 +4,7 @@
 
 load(":copy_debs.bzl", "copy_debs_to_folder")
 
+# Packages which are the same across different Debian versions.
 filegroup(
     name = "cros-debs-common",
     srcs = [
@@ -12,6 +13,7 @@ filegroup(
         "//cros-garcon:deb",
         "//cros-guest-tools:deb",
         "//cros-host-fonts:deb",
+        "//cros-logging:deb",
         "//cros-notificationd:deb",
         "//cros-pulse-config:deb",
         "//cros-sftp:deb",

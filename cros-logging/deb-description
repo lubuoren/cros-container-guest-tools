@@ -1,0 +1,4 @@
+Journald config for Chromium OS integration
+This package installs configuration for logging integration
+with Chrome OS so e.g. filing feedback reports can collect error logs from
+within the container.
