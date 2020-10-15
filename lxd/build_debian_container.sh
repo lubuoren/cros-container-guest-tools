@@ -8,17 +8,13 @@ set -ex
 LXD="/snap/bin/lxd"
 LXC="/snap/bin/lxc"
 
-build_container() {
+build_containers() {
     local arch=$1
     local src_root=$2
     local results_dir=$3
     local apt_dir=$4
-    local test_image=$5
-    local release=$6
-    local job_name=$7
-
-    local setup_script="${src_root}"/lxd/lxd_setup.sh
-    local setup_test_script="${src_root}"/lxd/lxd_test_setup.sh
+    local release=$5
+    local job_name=$6
 
     local base_image="images:debian/${release}/${arch}"
     local tempdir="$(mktemp -d)"
@@ -28,10 +24,34 @@ build_container() {
     unsquashfs -d "${rootfs}" "${tempdir}/image.root"
     chmod 0755 "${rootfs}"
 
+    for image_type in "prod" "test" "app_test"; do
+        build_and_export "${arch}" \
+                         "${src_root}" \
+                         "${rootfs}" \
+                         "${image_type}" \
+                         "${release}" \
+                         "${job_name}" \
+                         "${results_dir}" \
+                         "${apt_dir}"
+    done
+
+    rm -rf "${tempdir}"
+
+}
+
+build_and_export() {
+    local arch=$1
+    local src_root=$2
+    local rootfs=$3
+    local image_type=$4
+    local release=$5
+    local job_name=$6
+    local results_dir=$7
+    local apt_dir=$8
+
     if [ "${arch}" = "arm64" ]; then
         cp /usr/bin/qemu-aarch64-static "${rootfs}/usr/bin/"
     fi
-
     mkdir -p "${rootfs}/opt/google/cros-containers"
     mount --bind /tmp/cros-containers "${rootfs}/opt/google/cros-containers"
     mount --bind /run/resolvconf/resolv.conf "${rootfs}/etc/resolv.conf"
@@ -42,14 +62,28 @@ build_container() {
     mount -t tmpfs tmpfs "${rootfs}/run"
     mount -t tmpfs tmpfs "${rootfs}/tmp"
 
-    cp "${setup_script}" "${setup_test_script}" "${rootfs}/run/"
     mkdir "${rootfs}/run/apt"
     cp -r "${apt_dir}"/* "${rootfs}/run/apt"
 
-    chroot "${rootfs}" /run/"$(basename ${setup_script})" "${release}" "${job_name}"
+    if [ "${image_type}" = "prod" ]; then
+        local setup_script="${src_root}"/lxd/lxd_setup.sh
+        cp "${setup_script}" "${rootfs}/run/"
+        chroot "${rootfs}" /run/"$(basename ${setup_script})" \
+            "${release}" "${job_name}"
+    fi
 
-    if [ "${test_image}" = true ]; then
-        chroot "${rootfs}" /run/"$(basename ${setup_test_script})" "${release}" "${job_name}"
+    if [ "${image_type}" = "test" ]; then
+        local setup_test_script="${src_root}"/lxd/lxd_test_setup.sh
+        cp "${setup_test_script}" "${rootfs}/run/"
+        chroot "${rootfs}" /run/"$(basename ${setup_test_script})" \
+            "${release}" "${job_name}"
+    fi
+
+    if [ "${image_type}" = "app_test" ]; then
+        local setup_test_app_script="${src_root}"/lxd/lxd_test_app_setup.sh
+        cp "${setup_test_app_script}" "${rootfs}/run/"
+        chroot "${rootfs}" /run/"$(basename ${setup_test_app_script})" \
+            "${arch}"
     fi
 
     umount "${rootfs}/tmp"
@@ -71,8 +105,10 @@ build_container() {
     # rootfs.squashfs is raw rootfs squash'd.
     # lxd.tar.xz is metadata.yaml and templates dir.
     local result_dir="${results_dir}/debian/${release}/${arch}"
-    if [ "${test_image}" = true ]; then
+    if [ "${image_type}" = "test" ]; then
         result_dir="${result_dir}/test"
+    elif [ "${image_type}" = "app_test" ]; then
+        result_dir="${result_dir}/app_test"
     else
         result_dir="${result_dir}/default"
     fi
@@ -84,7 +120,7 @@ build_container() {
     tar -Ipixz --xattrs --acls -cpf "${rootfs_tarball}" -C "${rootfs}" .
     mksquashfs "${rootfs}"/* "${result_dir}/rootfs.squashfs"
 
-    if [ "${arch}" = "amd64" ] && [ "${test_image}" != true ]; then
+    if [ "${arch}" = "amd64" ] && [ "${image_type}" == "prod" ]; then
         # Workaround the "Invalid multipart image" flake by generating a
         # single tarball.
         tar xvf "${tempdir}/image" -C "${tempdir}"
@@ -93,8 +129,6 @@ build_container() {
         "${src_root}"/lxd/test.py "${results_dir}" \
                                   "${tempdir}/unified.tar.xz"
     fi
-
-    rm -rf "${tempdir}"
 }
 
 main() {
@@ -138,15 +172,12 @@ main() {
     # Build the normal and test images for each arch.
     for arch in amd64 arm64; do
         for release in stretch buster; do
-            for test_image in false true; do
-                build_container "${arch}" \
-                                "${src_root}" \
-                                "${results_dir}" \
-                                "${apt_dir}" \
-                                "${test_image}" \
-                                "${release}" \
-                                "${job_name}"
-            done
+            build_containers "${arch}" \
+                             "${src_root}" \
+                             "${results_dir}" \
+                             "${apt_dir}" \
+                             "${release}" \
+                             "${job_name}"
         done
     done
 }
