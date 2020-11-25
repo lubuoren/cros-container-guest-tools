@@ -185,10 +185,6 @@ def main():
 
   args = parser.parse_args()
 
-  if os.geteuid() != 0:
-    print('this script must be run as root')
-    sys.exit(1)
-
   disk_path = Path(args.image)
   if not disk_path.is_file():
     print('please provide the path to the termina image')
