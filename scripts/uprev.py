@@ -55,7 +55,7 @@ def main():
             file_arch = arch
 
         for ctype in ['test', 'app_test']:
-            for release in ['stretch', 'buster']:
+            for release in ['buster']:
                 base_url = f'gs://cros-containers-staging/{milestone}' \
                     f'/images/debian/{release}/{arch}/{ctype}/{latest_container}/'
 
