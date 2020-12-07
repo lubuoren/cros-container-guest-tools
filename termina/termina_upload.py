@@ -58,7 +58,7 @@ def upload_debug_symbols(termina_dir, api_key):
     for board in ["tatl", "tael"]:
       tarball = os.path.join(termina_dir, board, "debug_breakpad.tar.xz")
       subprocess.check_call(
-          ["upload_symbols", tarball, "--api_key", tmp.name, "--official_build", "--yes"])
+          ["upload_symbols", tarball, "--api_key", tmp.name, "--official_build", "--yes", "--dedupe"])
 
 def main():
   parser = argparse.ArgumentParser(description=__doc__)
