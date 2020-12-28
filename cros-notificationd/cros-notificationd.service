@@ -6,3 +6,4 @@ Type=dbus
 BusName=org.freedesktop.Notifications
 ExecStart=/opt/google/cros-containers/bin/notificationd --virtwl_device=/dev/wl0
 ExecStopPost=/opt/google/cros-containers/bin/guest_service_failure_notifier cros-notificationd
+Restart=always
