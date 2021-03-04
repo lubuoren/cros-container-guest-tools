@@ -43,9 +43,6 @@ def main():
         ['gsutil.py', 'ls', f'gs://cros-containers-staging/{milestone}'
          '/images/debian/buster/arm64/default/']
     ).decode().split()[-1].split('/')[-2]
-    latest_vm = subprocess.check_output(
-        ['gsutil.py', 'ls', f'gs://termina-component-testing/{milestone}/']
-    ).decode().split()[-1].split('/')[-2]
 
     for arch in ['amd64', 'arm64']:
         # The container URLs use 'arm64', but the tast data files use 'arm'
@@ -68,15 +65,6 @@ def main():
                     f'_{file_arch}.tar.xz.external'
                 update_data_file(base_url + 'rootfs.tar.xz',
                                  os.path.join(data_dir, rootfs_file))
-
-        if arch == 'amd64':
-            vm_arch = 'chromeos_intel64-archive'
-        else:
-            vm_arch = 'chromeos_arm32-archive'
-        update_data_file(f'gs://termina-component-testing/{milestone}'
-                         f'/{latest_vm}/{vm_arch}/files.zip',
-                         os.path.join(
-                             data_dir, f'crostini_vm_{file_arch}.zip.external'))
 
     print('Tast data dependencies updated')
     print(f'Go to {data_dir} and create a CL')
