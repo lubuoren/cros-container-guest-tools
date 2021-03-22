@@ -76,6 +76,9 @@ EOD
       | debconf-set-selections
     apt-get -q -y install samba
 
+    # For crostini.Notify
+    apt-get -q -y install libnotify-bin
+
     # For graphics.GLBench
     if [ "${release}" = "buster" ]; then
         # presubmit isn't pulling debs built by mesa. Skip the installation for presubmit only.
