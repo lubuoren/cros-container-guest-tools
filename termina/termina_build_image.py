@@ -127,9 +127,9 @@ def repack_rootfs(output_dir, disk_path):
 
     # Unsquash the rootfs and stateful partitions.
     rootfs_dir = tempdir / 'rootfs'
-    subprocess.run(['unsquashfs', '-d', str(rootfs_dir), str(rootfs_img_path)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+    subprocess.run(['unsquashfs', '-no-xattrs', '-d', str(rootfs_dir), str(rootfs_img_path)], stdout=subprocess.DEVNULL, check=True)
     stateful_dir = tempdir / 'stateful'
-    subprocess.run(['unsquashfs', '-d', str(stateful_dir), str(stateful_img_path)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+    subprocess.run(['unsquashfs', '-no-xattrs', '-d', str(stateful_dir), str(stateful_img_path)], stdout=subprocess.DEVNULL, check=True)
 
     # Extract the kernel. For ARM we just grab the Image-* file. For x86, we
     # grab the vmlinuz (bzImage).
