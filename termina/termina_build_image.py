@@ -79,7 +79,7 @@ def dedupe_hardlinks(target_dir):
     os.link(str(src_path), str(target_path))
 
 
-def create_fs_image(img_path, src_path):
+def create_fs_image(img_path, src_path, label=None):
   # Create image at 200% of source size.
   # resize2fs will shrink it to the minimum size later.
   du_output = subprocess.check_output(['du', '-bsx', src_path]).decode('utf-8')
@@ -108,7 +108,10 @@ def create_fs_image(img_path, src_path):
       subprocess.run(
           ['sudo', 'rsync', '-aH', str(src_path) + '/', str(mnt_dir)],
           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-
+    if label:
+      subprocess.run(
+          ['/sbin/e2label', str(img_path), label],
+          stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
     subprocess.run(
         ['/sbin/e2fsck', '-y', '-f', str(img_path)],
         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
@@ -166,7 +169,7 @@ def repack_rootfs(output_dir, disk_path):
     # Create vm_tools.img if /opt/google/cros-containers exists.
     tools_dir = rootfs_dir / 'opt' / 'google' / 'cros-containers'
     if tools_dir.exists():
-      create_fs_image(output_dir / 'vm_tools.img', tools_dir)
+      create_fs_image(output_dir / 'vm_tools.img', tools_dir, label='cros-vm-tools')
 
       # Remove contents of tools_dir so they are not included in vm_rootfs.img.
       # Leave the top-level /opt/google/cros-containers directory in place
