@@ -29,7 +29,7 @@ configs in [crostini-guest]. As an example, with 71 on stable and 74 in canary:
 | `cros-containers/crostini-guest/71/guest_tools` | 71        | `release-R71-11151.B` |
 | `cros-containers/crostini-guest/72/guest_tools` | 72        | `release-R72-11316.B` |
 | `cros-containers/crostini-guest/73/guest_tools` | 73        | `release-R73-11647.B` |
-| `cros-containers/crostini-guest/74/guest_tools` | 74        | `master`              |
+| `cros-containers/crostini-guest/74/guest_tools` | 74        | `main`                |
 
 The `continuous` jobs also build mesa with `guest_tools_mesa` starting with
 milestone 76.  mesa is built from the `debian` branch (or the appropriate
@@ -37,7 +37,7 @@ release branch).
 
 | Kokoro job                                           | Milestone | Chrome OS Branch      |
 |------------------------------------------------------|-----------|-----------------------|
-| `cros-containers/crostini-guest/76/guest_tools_mesa` | 76        | `master`              |
+| `cros-containers/crostini-guest/76/guest_tools_mesa` | 76        | `main`                |
 
 The artifacts for each branch will be pushed to a subdirectory on the target
 Google Storage bucket. Prebuilt containers are pushed to
@@ -51,7 +51,7 @@ Push from staging to the live buckets `gs://cros-containers` and
 
 ## Presubmit jobs
 
-The `presubmit` flow only runs on the `master` branch. Note that there are both
+The `presubmit` flow only runs on the `main` branch. Note that there are both
 a `presubmit` and `presubmit-cr` jobs - the former runs for `Trybot-Ready +1`,
 and the latter on `Code-Review +2` on Gerrit.  The `presubmit` jobs do not
 build mesa and only build `guest_tools`.
@@ -81,11 +81,11 @@ apt packages can be rolled out to the production buckets.
 [Kokoro]: https://goto.google.com/kokoro
 [release dashboard]: https://goto.google.com/omaharelease
 [Stainless]: https://goto.google.com/stainless
-[Tast]: https://chromium.googlesource.com/chromiumos/platform/tast-tests/+/master/src/chromiumos/tast/local/bundles/cros/vm/
+[Tast]: https://chromium.googlesource.com/chromiumos/platform/tast-tests/+/HEAD/src/chromiumos/tast/local/bundles/cros/vm/
 [Termina]: https://chromium.googlesource.com/chromiumos/overlays/board-overlays/+/24a9d16fc15c3d07d726f3f974a541572d3584e5/project-termina/
 
 ## Mesa
 
 New versions of [Mesa] for use within the container are built from upstream.
 
-[Mesa]: https://chromium.googlesource.com/chromiumos/containers/cros-container-guest-tools/+/refs/heads/master/mesa/
+[Mesa]: https://chromium.googlesource.com/chromiumos/containers/cros-container-guest-tools/+/HEAD/mesa/
