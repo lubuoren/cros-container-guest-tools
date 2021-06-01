@@ -31,10 +31,9 @@ install_deps() {
 
     # qemu setup.
     if [[ $(get_arch) == "arm64" ]]; then
-        sudo apt-get install -q -y qemu-user-static
-        sudo cp "${KOKORO_GFILE_DIR}"/qemu-aarch64-static \
-                /usr/bin/qemu-aarch64-static
-        sudo chmod 0755 /usr/bin/qemu-aarch64-static
+        sudo apt-get install -q -y libpipeline1 lsb-base
+        sudo dpkg --install "${KOKORO_GFILE_DIR}"/binfmt-support.deb
+        sudo dpkg --install "${KOKORO_GFILE_DIR}"/qemu-user-static.deb
     fi
 
     # gnome-icon-theme_3.12.0-2 sometimes gets checksum failures when installing

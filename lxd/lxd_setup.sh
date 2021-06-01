@@ -14,8 +14,6 @@ main() {
 
     # Use HTTPS repos.
     sed -i 's|http:|https:|g' /etc/apt/sources.list
-    # Use deb.debian.org redirection; security.debian.org doesn't handle HTTPS.
-    sed -i 's|security.debian.org|deb.debian.org|g' /etc/apt/sources.list
 
     echo "deb [trusted=yes] file:///run/apt ${release} main" >/etc/apt/sources.list.d/cros-staging.list
 

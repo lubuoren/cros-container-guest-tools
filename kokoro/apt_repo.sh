@@ -17,7 +17,7 @@ main() {
     local repo_dir="${src_root}"/apt_unsigned
     mkdir -p "${repo_dir}"/{,conf}
 
-    for release in stretch buster; do
+    for release in stretch buster bullseye; do
         local distributions="
 Origin: Google
 Label: cros-containers

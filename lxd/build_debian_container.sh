@@ -46,9 +46,6 @@ build_and_export() {
     local results_dir=$6
     local apt_dir=$7
 
-    if [ "${arch}" = "arm64" ]; then
-        cp /usr/bin/qemu-aarch64-static "${rootfs}/usr/bin/"
-    fi
     mkdir -p "${rootfs}/opt/google/cros-containers"
     mount --bind /tmp/cros-containers "${rootfs}/opt/google/cros-containers"
     mount --bind /run/resolvconf/resolv.conf "${rootfs}/etc/resolv.conf"
@@ -92,9 +89,6 @@ build_and_export() {
     umount "${rootfs}/etc/resolv.conf"
     umount "${rootfs}/opt/google/cros-containers"
     rm -rf "${rootfs}/opt/google"
-    if [ "${arch}" = "arm64" ]; then
-        rm "${rootfs}/usr/bin/qemu-aarch64-static"
-    fi
 
     # Repack into 2 tarballs + squashfs for distribution via simplestreams.
     # Combined sha256 is lxd.tar.xz | rootfs.

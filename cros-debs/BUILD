@@ -28,6 +28,13 @@ filegroup(
 )
 
 filegroup(
+    name = "bullseye-files",
+    srcs = [
+        ":cros-debs-common",
+    ],
+)
+
+filegroup(
     name = "buster-files",
     srcs = [
         ":cros-debs-common",
@@ -55,9 +62,16 @@ copy_debs_to_folder(
     out_dir = "buster-debs",
 )
 
+copy_debs_to_folder(
+    name = "bullseye-debs",
+    srcs = [":bullseye-files"],
+    out_dir = "bullseye-debs",
+)
+
 filegroup(
     name = "debs",
     srcs = [
+        ":bullseye-debs",
         ":buster-debs",
         ":stretch-debs",
     ],
