@@ -97,27 +97,21 @@ def create_fs_image(img_path, src_path, label=None):
           '-i', '16384',
           '-b', '4096',
           '-O', '^has_journal',
+          '-d', str(src_path),
           str(img_path)
       ],
       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 
-  with tempfile.TemporaryDirectory() as tempdir_path:
-    mnt_dir = Path(tempdir_path)
-
-    with mount_disk(str(img_path), str(mnt_dir)) as mntpoint:
-      subprocess.run(
-          ['sudo', 'rsync', '-aH', str(src_path) + '/', str(mnt_dir)],
-          stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-    if label:
-      subprocess.run(
-          ['/sbin/e2label', str(img_path), label],
-          stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+  if label:
     subprocess.run(
-        ['/sbin/e2fsck', '-y', '-f', str(img_path)],
+        ['/sbin/e2label', str(img_path), label],
         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-    subprocess.run(
-        ['/sbin/resize2fs', '-M', str(img_path)],
-        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+  subprocess.run(
+      ['/sbin/e2fsck', '-y', '-f', str(img_path)],
+      stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+  subprocess.run(
+      ['/sbin/resize2fs', '-M', str(img_path)],
+      stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 
 
 def repack_rootfs(output_dir, disk_path):
