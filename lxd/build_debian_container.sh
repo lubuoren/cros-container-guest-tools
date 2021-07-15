@@ -14,7 +14,6 @@ build_containers() {
     local results_dir=$3
     local apt_dir=$4
     local release=$5
-    local job_name=$6
 
     local base_image="images:debian/${release}/${arch}"
     local tempdir="$(mktemp -d)"
@@ -30,7 +29,6 @@ build_containers() {
                          "${rootfs}" \
                          "${image_type}" \
                          "${release}" \
-                         "${job_name}" \
                          "${results_dir}" \
                          "${apt_dir}"
     done
@@ -45,9 +43,8 @@ build_and_export() {
     local rootfs=$3
     local image_type=$4
     local release=$5
-    local job_name=$6
-    local results_dir=$7
-    local apt_dir=$8
+    local results_dir=$6
+    local apt_dir=$7
 
     if [ "${arch}" = "arm64" ]; then
         cp /usr/bin/qemu-aarch64-static "${rootfs}/usr/bin/"
@@ -69,14 +66,14 @@ build_and_export() {
         local setup_script="${src_root}"/lxd/lxd_setup.sh
         cp "${setup_script}" "${rootfs}/run/"
         chroot "${rootfs}" /run/"$(basename ${setup_script})" \
-            "${release}" "${job_name}"
+            "${release}"
     fi
 
     if [ "${image_type}" = "test" ]; then
         local setup_test_script="${src_root}"/lxd/lxd_test_setup.sh
         cp "${setup_test_script}" "${rootfs}/run/"
         chroot "${rootfs}" /run/"$(basename ${setup_test_script})" \
-            "${release}" "${job_name}"
+            "${release}"
     fi
 
     if [ "${image_type}" = "app_test" ]; then
@@ -135,7 +132,8 @@ main() {
     local src_root=$1
     local results_dir=$2
     local apt_dir=$3
-    local job_name=$4
+    local arch=$4
+    local release=$5
 
     if [ -z "${results_dir}" -o ! -d "${results_dir}" ]; then
         echo "Results directory '${results_dir}' doesn't exist."
@@ -152,11 +150,6 @@ main() {
         return 1
     fi
 
-    if [ -z "${job_name}" ]; then
-        echo "Job name should be specified"
-        return 1
-    fi
-
     if [ "$(id -u)" -ne 0 ]; then
         echo "This script must be run as root to repack rootfs tarballs."
         return 1
@@ -169,17 +162,27 @@ main() {
     touch "${dummy_path}"/lib/swrast_dri.so
     touch "${dummy_path}"/lib/virtio_gpu_dri.so
 
-    # Build the normal and test images for each arch.
-    for arch in amd64 arm64; do
-        for release in stretch buster; do
-            build_containers "${arch}" \
-                             "${src_root}" \
-                             "${results_dir}" \
-                             "${apt_dir}" \
-                             "${release}" \
-                             "${job_name}"
+    if [[ "${arch}" == "" && "${release}" == "" ]]; then
+        # Un-sharded build
+        # TODO(sidereal) Remove this branch
+
+        for arch in amd64 arm64; do
+            for release in stretch buster; do
+                build_containers "${arch}" \
+                                 "${src_root}" \
+                                 "${results_dir}" \
+                                 "${apt_dir}" \
+                                 "${release}" \
+                                 "${job_name}"
+            done
         done
-    done
+    else
+       build_containers "${arch}" \
+                        "${src_root}" \
+                        "${results_dir}" \
+                        "${apt_dir}" \
+                        "${release}"
+    fi
 }
 
 main "$@"
