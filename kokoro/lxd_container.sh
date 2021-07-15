@@ -7,11 +7,6 @@ set -ex
 
 . "$(dirname "$0")/common.sh" || exit 1
 
-# TODO(sidereal) remove once kokoro job configs are updated
-is_sharded() {
-    [[ $(basename "${KOKORO_JOB_NAME}") != "lxd_container" ]]
-}
-
 get_arch() {
     basename "${KOKORO_JOB_NAME}" |
         sed 's/^lxd_container_//; s/_[[:alnum:]]\+$//'
@@ -35,7 +30,7 @@ install_deps() {
     sudo /snap/bin/lxd waitready
 
     # qemu setup.
-    if [[ $(get_arch) == "arm64" ]] || ! is_sharded; then
+    if [[ $(get_arch) == "arm64" ]]; then
         sudo apt-get install -q -y qemu-user-static
         sudo cp "${KOKORO_GFILE_DIR}"/qemu-aarch64-static \
                 /usr/bin/qemu-aarch64-static
@@ -119,13 +114,8 @@ main() {
         apt_dir="${KOKORO_GFILE_DIR}/apt_unsigned"
     fi
 
-    if is_sharded; then
-        arch="$(get_arch)"
-        release="$(get_release)"
-    else
-        arch=""
-        release=""
-    fi
+    arch="$(get_arch)"
+    release="$(get_release)"
 
     sudo "${src_root}/lxd/build_debian_container.sh" "${src_root}" \
                                                      "${result_dir}" \

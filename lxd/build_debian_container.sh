@@ -162,27 +162,11 @@ main() {
     touch "${dummy_path}"/lib/swrast_dri.so
     touch "${dummy_path}"/lib/virtio_gpu_dri.so
 
-    if [[ "${arch}" == "" && "${release}" == "" ]]; then
-        # Un-sharded build
-        # TODO(sidereal) Remove this branch
-
-        for arch in amd64 arm64; do
-            for release in stretch buster; do
-                build_containers "${arch}" \
-                                 "${src_root}" \
-                                 "${results_dir}" \
-                                 "${apt_dir}" \
-                                 "${release}" \
-                                 "${job_name}"
-            done
-        done
-    else
-       build_containers "${arch}" \
-                        "${src_root}" \
-                        "${results_dir}" \
-                        "${apt_dir}" \
-                        "${release}"
-    fi
+    build_containers "${arch}" \
+                     "${src_root}" \
+                     "${results_dir}" \
+                     "${apt_dir}" \
+                     "${release}"
 }
 
 main "$@"
