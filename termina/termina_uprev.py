@@ -140,7 +140,6 @@ def main():
       download_path = download_image(board, gs_path, tempdir)
       image_path = unpack_component(board, download_path, tempdir)
       build_component(board, image_path, tempdir, args.component_version)
-      download_debug_symbols(board, gs_path, tempdir)
       if args.output_dir:
         target_dir = Path(args.output_dir) / board
         shutil.copytree(str(tempdir / board), str(target_dir))
