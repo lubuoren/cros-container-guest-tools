@@ -16,6 +16,9 @@ build_guest_tools() {
 
     cd "${src_root}"
 
+    # Default is 0.23, we need at least 0.27. But go all the way to 4.2.1 since
+    # (as of 2021-09-09) it's what's on our desktops.
+    use_bazel.sh 4.2.1
     # Build all targets.
     bazel build //cros-debs:debs
 
