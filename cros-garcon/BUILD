@@ -120,6 +120,7 @@ pkg_deb(
     postinst = "postinst",
     prerm = "prerm",
     section = "misc",
-    version = "0.24",
+    version = "0.25",
     visibility = ["//cros-debs:__pkg__"],
+    provides = ["x-terminal-emulator"]
 )
