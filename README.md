@@ -9,7 +9,7 @@ internal continuous integration service.
 The guest packages can be built with Bazel.
 
 ```sh
-bazel build //cros-debs:debs --host_force_python=py2
+bazel build //cros-debs:debs
 ```
 
 ## Releasing
