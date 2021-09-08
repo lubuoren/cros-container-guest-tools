@@ -1,0 +1,37 @@
+#!/bin/bash
+# Copyright 2021 The Chromium OS Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+# Checks that if we're modifying a Debian package we're bumping the version
+# number. This is a very rough check, we assume any folder with a BUILD file is
+# a Debian package and that any changes to any files in the folder are
+# meaningful and require a version bump. This has some false positives (e.g.
+# changing a comment) but can always ignore the check if it's really, truly, a
+# false positive (or bump the version anyway, besides mesa our packages are
+# small).
+
+declare -r PRESUBMIT_COMMIT
+
+files=$(git diff --name-only ${target})
+
+failures=()
+for file in $files; do
+    dir=$(dirname ${file})
+    if [[ -f "${dir}/BUILD" ]]; then
+        # Assume it's a bazel package, look for a version change.
+        git diff -U0 ${target} ${dir}/BUILD | grep 'version = ' > /dev/null
+        if [[ $? != 0 ]]; then
+            if [[ ! " ${failures[*]} " =~ " ${dir} " ]]; then
+                echo -n "The package in ${dir} was modified but the version "
+                echo -n "number wasn't increased. Please increment the version "
+                echo "number"
+                failures+=("${dir}")
+            fi
+        fi
+    fi;
+done
+
+# Our error code is the number of failing folders. If no violations found then
+# we return 0 for success.
+exit ${#failures[@]}
