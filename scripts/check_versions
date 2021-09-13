@@ -12,16 +12,18 @@
 # small).
 
 declare -r PRESUBMIT_COMMIT
+target=${PRESUBMIT_COMMIT}~..${PRESUBMIT_COMMIT}
 
-files=$(git diff --name-only ${target})
+files=$(git diff --name-only "${target}")
+
 
 failures=()
 for file in $files; do
-    dir=$(dirname ${file})
+    dir=$(dirname "${file}")
     if [[ -f "${dir}/BUILD" ]]; then
         # Assume it's a bazel package, look for a version change.
-        git diff -U0 ${target} ${dir}/BUILD | grep 'version = ' > /dev/null
-        if [[ $? != 0 ]]; then
+        if ! git diff -U0 "${target}" "${dir}/BUILD" |
+            grep 'version = ' > /dev/null; then
             if [[ ! " ${failures[*]} " =~ " ${dir} " ]]; then
                 echo -n "The package in ${dir} was modified but the version "
                 echo -n "number wasn't increased. Please increment the version "
@@ -29,7 +31,7 @@ for file in $files; do
                 failures+=("${dir}")
             fi
         fi
-    fi;
+    fi
 done
 
 # Our error code is the number of failing folders. If no violations found then
