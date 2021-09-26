@@ -42,20 +42,6 @@ filegroup(
     ],
 )
 
-filegroup(
-    name = "stretch-files",
-    srcs = [
-        ":cros-debs-common",
-        "//cros-gpu-stretch:deb",
-    ],
-)
-
-copy_debs_to_folder(
-    name = "stretch-debs",
-    srcs = [":stretch-files"],
-    out_dir = "stretch-debs",
-)
-
 copy_debs_to_folder(
     name = "buster-debs",
     srcs = [":buster-files"],
@@ -73,6 +59,5 @@ filegroup(
     srcs = [
         ":bullseye-debs",
         ":buster-debs",
-        ":stretch-debs",
     ],
 )

@@ -17,6 +17,8 @@ main() {
     local repo_dir="${src_root}"/apt_unsigned
     mkdir -p "${repo_dir}"/{,conf}
 
+    # We keep deprecated versions here indefinitely so "apt update" will pull
+    # down an empty repo instead of getting a hard 404 error.
     for release in stretch buster bullseye; do
         local distributions="
 Origin: Google
@@ -43,6 +45,10 @@ Description: CrOS containers guest tools
             fi
         done
     done
+
+    # Ensure Release files for all versions are generated, even if we ship no
+    # packages for them.
+    reprepro -b "${repo_dir}" export
 }
 
 main "$@"
