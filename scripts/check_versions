@@ -20,6 +20,13 @@ files=$(git diff --name-only "${target}")
 failures=()
 for file in $files; do
     dir=$(dirname "${file}")
+
+    # cros-debs is the parent build file, not actually a package, so there's no
+    # version number to increment.
+    if [[ "${dir}" == "cros-debs" ]]; then
+        continue
+    fi
+
     if [[ -f "${dir}/BUILD" ]]; then
         # Assume it's a bazel package, look for a version change.
         if ! git diff -U0 "${target}" "${dir}/BUILD" |
