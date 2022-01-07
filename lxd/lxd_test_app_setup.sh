@@ -8,14 +8,19 @@
 
 set -eux
 
+# To update this, run apt-cache policy code on your DUT with this
+# container installed, and look at the latest version.
+# Note that updating this package is likely to break screendiffs.
+VSCODE_VERSION="1.63.0-1638855526"
+
 main() {
     local arch=$1
 
     # for testing Gedit.
-    apt-get -q -y install gedit
+    apt -q -y install gedit
 
     # for testing Emacs.
-    apt-get -q -y install emacs
+    apt -q -y install emacs
 
     if [ "${arch}" = "amd64" ]; then
         # for testing Android Studio.
@@ -34,8 +39,8 @@ main() {
         apt-get -q -y install software-properties-common
         curl -sSL https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
         add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
-        apt-get update
-        apt-get -q -y install code
+        apt update
+        apt -q -y install "code=${VSCODE_VERSION}"
     fi
 }
 
