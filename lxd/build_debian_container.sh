@@ -8,6 +8,32 @@ set -ex
 LXD="/snap/bin/lxd"
 LXC="/snap/bin/lxc"
 
+cleanup() {
+    local tempdir="$1"
+    local rootfs="$2"
+
+    unmount_all "${rootfs}" || true
+    # Unmounting may fail because paths were not mounted.
+    # Cleanup is skipped if any mounted paths remain in the rootfs.
+    if grep -F -q "${rootfs}" /proc/self/mounts; then
+        echo "Failed to unmount filesystems, skipping cleanup of ${tempdir}."
+        exit 1
+    fi
+
+    rm -rf "${tempdir}"
+}
+
+unmount_all() {
+    local rootfs="$1"
+
+    umount "${rootfs}/tmp"
+    umount "${rootfs}/run"
+    umount "${rootfs}/proc"
+    umount "${rootfs}/dev"
+    umount "${rootfs}/etc/resolv.conf"
+    umount "${rootfs}/opt/google/cros-containers"
+}
+
 build_containers() {
     local arch=$1
     local src_root=$2
@@ -16,10 +42,21 @@ build_containers() {
     local release=$5
 
     local base_image="images:debian/${release}/${arch}"
-    local tempdir="$(mktemp -d)"
-    ${LXC} image export "${base_image}" "${tempdir}/image"
+    local tempdir
+    tempdir="$(mktemp -d)"
 
     local rootfs="${tempdir}/rootfs"
+    trap "cleanup \"${tempdir}\" \"${rootfs}\"" EXIT
+
+    # Make dummy sommelier paths for update-alternatives.
+    local dummy_path="${tempdir}/cros-containers"
+    mkdir -p "${dummy_path}"/{bin,lib}
+    touch "${dummy_path}"/bin/sommelier
+    touch "${dummy_path}"/lib/swrast_dri.so
+    touch "${dummy_path}"/lib/virtio_gpu_dri.so
+
+    ${LXC} image export "${base_image}" "${tempdir}/image"
+
     unsquashfs -d "${rootfs}" "${tempdir}/image.root"
     chmod 0755 "${rootfs}"
 
@@ -32,9 +69,6 @@ build_containers() {
                          "${results_dir}" \
                          "${apt_dir}"
     done
-
-    rm -rf "${tempdir}"
-
 }
 
 build_and_export() {
@@ -47,7 +81,7 @@ build_and_export() {
     local apt_dir=$7
 
     mkdir -p "${rootfs}/opt/google/cros-containers"
-    mount --bind /tmp/cros-containers "${rootfs}/opt/google/cros-containers"
+    mount --bind "${dummy_path}" "${rootfs}/opt/google/cros-containers"
     mount --bind /run/resolvconf/resolv.conf "${rootfs}/etc/resolv.conf"
     mount --bind /dev "${rootfs}/dev"
     mount -t proc none "${rootfs}/proc"
@@ -78,12 +112,7 @@ build_and_export() {
             "${arch}"
     fi
 
-    umount "${rootfs}/tmp"
-    umount "${rootfs}/run"
-    umount "${rootfs}/proc"
-    umount "${rootfs}/dev"
-    umount "${rootfs}/etc/resolv.conf"
-    umount "${rootfs}/opt/google/cros-containers"
+    unmount_all "${rootfs}"
     rm -rf "${rootfs}/opt/google"
 
     # Repack into 2 tarballs for distribution via simplestreams.
@@ -142,13 +171,6 @@ main() {
         echo "This script must be run as root to repack rootfs tarballs."
         return 1
     fi
-
-    # Make dummy sommelier paths for update-alternatives.
-    local dummy_path="/tmp/cros-containers"
-    mkdir -p "${dummy_path}"/{bin,lib}
-    touch "${dummy_path}"/bin/sommelier
-    touch "${dummy_path}"/lib/swrast_dri.so
-    touch "${dummy_path}"/lib/virtio_gpu_dri.so
 
     build_containers "${arch}" \
                      "${src_root}" \
