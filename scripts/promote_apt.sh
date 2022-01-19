@@ -33,7 +33,6 @@ main() {
   for dir in pool db dists; do
     gsutil.py -- -h "Cache-Control:public,max-age=30" \
       -m rsync \
-      -a public-read \
       -r \
       "${src_url}/${dir}/" "${target_url}/${dir}/"
   done
