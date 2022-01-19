@@ -21,6 +21,7 @@ main() {
     for release_file in "${repo_dir}"/dists/*/Release; do
         /escalated_sign/escalated_sign.py --tool=linux_gpg_sign \
                                           --job-dir=/escalated_sign_jobs -- \
+                                          --signing_key=4EB27DB2A3B88B8B
                                           --loglevel=debug \
                                           "${release_file}"
 
@@ -32,6 +33,7 @@ main() {
     find "${repo_dir}/pool" -name "*.deb" -exec \
         /escalated_sign/escalated_sign.py --tool=linux_gpg_sign \
                                           --job-dir=/escalated_sign_jobs -- \
+                                          --signing_key=4EB27DB2A3B88B8B
                                           --loglevel=debug \
                                           {} \;
 }
