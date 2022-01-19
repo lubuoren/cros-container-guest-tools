@@ -16,11 +16,16 @@ main() {
 
     cp -r "${KOKORO_GFILE_DIR}"/apt_unsigned/* "${repo_dir}"
 
+    # 78BD65473CB3BD13 - old key, expires 2022-07-21
+    # 4EB27DB2A3B88B8B - new key, expires 2024-10-25
+    local key_ids="78BD65473CB3BD13,4EB27DB2A3B88B8B"
+
     # Sign the Release file(s).
     local release_file
     for release_file in "${repo_dir}"/dists/*/Release; do
         /escalated_sign/escalated_sign.py --tool=linux_gpg_sign \
                                           --job-dir=/escalated_sign_jobs -- \
+                                          --signing_key="${key_ids}" \
                                           --loglevel=debug \
                                           "${release_file}"
 
@@ -32,6 +37,7 @@ main() {
     find "${repo_dir}/pool" -name "*.deb" -exec \
         /escalated_sign/escalated_sign.py --tool=linux_gpg_sign \
                                           --job-dir=/escalated_sign_jobs -- \
+                                          --signing_key="${key_ids}" \
                                           --loglevel=debug \
                                           {} \;
 }

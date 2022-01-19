@@ -31,6 +31,14 @@ pkg_tar(
 )
 
 pkg_tar(
+    name = "cros-keyring-new",
+    srcs = ["cros.gpg"],
+    mode = "0644",
+    package_dir = "//usr/share/keyrings",
+    strip_prefix = "/cros-apt-config",
+)
+
+pkg_tar(
     name = "cros-apt-prefs",
     srcs = ["cros.pref"],
     mode = "0644",
@@ -44,6 +52,7 @@ pkg_tar(
     deps = [
         ":cros-apt-prefs",
         ":cros-keyring",
+        ":cros-keyring-new",
     ],
 )
 
@@ -57,6 +66,6 @@ pkg_deb(
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-apt-config",
     section = "misc",
-    version = "0.20",
+    version = "0.21",
     visibility = ["//cros-debs:__pkg__"],
 )
