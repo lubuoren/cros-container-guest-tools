@@ -5,8 +5,7 @@
 
 set -ex
 
-LXD="/snap/bin/lxd"
-LXC="/snap/bin/lxc"
+DISTROBUILDER="/usr/local/bin/distrobuilder"
 
 cleanup() {
     local tempdir="$1"
@@ -41,12 +40,17 @@ build_containers() {
     local apt_dir=$4
     local release=$5
 
-    local base_image="images:debian/${release}/${arch}"
     local tempdir
     tempdir="$(mktemp -d)"
 
     local rootfs="${tempdir}/rootfs"
     trap "cleanup \"${tempdir}\" \"${rootfs}\"" EXIT
+
+    # build-dir only creates a rootfs, rather than build the LXD image.
+    # We pack the image later, so we can re-use the rootfs for each image type.
+    "${DISTROBUILDER}" build-dir "${src_root}/lxd/debian.yaml" "${rootfs}" \
+        -o "image.architecture=${arch}" \
+        -o "image.release=${release}"
 
     # Make dummy sommelier paths for update-alternatives.
     local dummy_path="${tempdir}/cros-containers"
@@ -54,11 +58,6 @@ build_containers() {
     touch "${dummy_path}"/bin/sommelier
     touch "${dummy_path}"/lib/swrast_dri.so
     touch "${dummy_path}"/lib/virtio_gpu_dri.so
-
-    ${LXC} image export "${base_image}" "${tempdir}/image"
-
-    unsquashfs -d "${rootfs}" "${tempdir}/image.root"
-    chmod 0755 "${rootfs}"
 
     for image_type in "prod" "test" "app_test"; do
         build_and_export "${arch}" \
@@ -115,7 +114,7 @@ build_and_export() {
     unmount_all "${rootfs}"
     rm -rf "${rootfs}/opt/google"
 
-    # Repack into 2 tarballs + squashfs for distribution via simplestreams.
+    # Pack into 2 tarballs + squashfs for distribution via simplestreams.
     # Combined sha256 is lxd.tar.xz | rootfs.
     # rootfs.tar.xz is raw rootfs tar'd up.
     # rootfs.squashfs is raw rootfs squash'd.
@@ -131,16 +130,26 @@ build_and_export() {
     mkdir -p "${result_dir}"
 
     local metadata_tarball="${result_dir}/lxd.tar.xz"
-    local rootfs_tarball="${result_dir}/rootfs.tar.xz"
-    cp "${tempdir}/image" "${metadata_tarball}"
-    tar -Ipixz --xattrs --acls -cpf "${rootfs_tarball}" -C "${rootfs}" .
-    mksquashfs "${rootfs}" "${result_dir}/rootfs.squashfs" \
-        -noappend -comp xz -b 1M -no-progress -no-recovery
+
+    pushd "${result_dir}" > /dev/null
+
+    "${DISTROBUILDER}" pack-lxd "${src_root}/lxd/debian.yaml" "${rootfs}" \
+        -o "image.architecture=${arch}" \
+        -o "image.release=${release}" \
+        -o "image.variant=${image_type}"
+
+    # TODO(jamesye): stop creating rootfs tarballs once all consumers use
+    # squashfs.
+    rm -rf "${rootfs}"
+    unsquashfs -d "${rootfs}" rootfs.squashfs
+    tar -Ipixz --xattrs --acls -cpf rootfs.tar.xz -C "${rootfs}" .
+
+    popd > /dev/null
 
     if [ "${arch}" = "amd64" ] && [ "${image_type}" == "prod" ]; then
         # Workaround the "Invalid multipart image" flake by generating a
         # single tarball.
-        tar xvf "${tempdir}/image" -C "${tempdir}"
+        tar xvf "${metadata_tarball}" -C "${tempdir}"
         tar -Ipixz -cpf "${tempdir}/unified.tar.xz" \
             -C "${tempdir}" rootfs metadata.yaml templates
         "${src_root}"/lxd/test.py "${results_dir}" \

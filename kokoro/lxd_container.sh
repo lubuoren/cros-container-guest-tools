@@ -5,6 +5,9 @@
 
 set -ex
 
+DISTROBUILDER_ARCHIVE="distrobuilder-2.0.tar.gz"
+DISTROBUILDER_SHA256SUM="9ddd9b13cbfc61b75ba8d2393df5b11be420145908f36aad7e47d464e8809147"
+
 . "$(dirname "$0")/common.sh" || exit 1
 
 get_arch() {
@@ -38,6 +41,29 @@ install_deps() {
 
     # pixz improves compression time for the rootfs significantly.
     sudo apt-get install -q -y pixz
+
+    # Debootstrap from Ubuntu 16.04 is too old. Install the version shipped
+    # with Debian 11.
+    sudo dpkg --install "${KOKORO_GFILE_DIR}/debootstrap_1.0.123_all.deb"
+
+    # Distrobuilder requires Go >= 1.13
+    go get golang.org/dl/go1.17
+
+    GOPATH="$(go env GOPATH)"
+    GO="${GOPATH}/bin/go1.17"
+    ${GO} download
+    GOROOT_1_17="$(${GO} env GOROOT)"
+
+    pushd /tmp
+
+    curl "https://linuxcontainers.org/downloads/distrobuilder/${DISTROBUILDER_ARCHIVE}" -O
+    sha256sum --check <<< "${DISTROBUILDER_SHA256SUM}  ${DISTROBUILDER_ARCHIVE}"
+    tar xf "${DISTROBUILDER_ARCHIVE}"
+    cd "$(basename -s .tar.gz "${DISTROBUILDER_ARCHIVE}")"
+    GOROOT="${GOROOT_1_17}" PATH="${GOROOT_1_17}/bin:${PATH}" make
+    # Copy the distrobuilder binary from the user's GOPATH to a system location.
+    sudo install "${GOPATH}/bin/distrobuilder" /usr/local/bin/distrobuilder
+    popd
 
     # Install python dependencies for testing.
     sudo pip3 install unittest-xml-reporting

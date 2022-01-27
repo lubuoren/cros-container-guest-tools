@@ -9,21 +9,12 @@ set -eux
 
 main() {
     local release=$1
-    apt-get update
-    apt-get -q -y install apt-transport-https ca-certificates
-
-    # Use HTTPS repos.
-    sed -i 's|http:|https:|g' /etc/apt/sources.list
 
     echo "deb [trusted=yes] file:///run/apt ${release} main" >/etc/apt/sources.list.d/cros-staging.list
 
     apt-get update
 
-    # python3 is used for integration testing.
-    apt-get -q -y --no-install-recommends install python3
-
     apt-get -q -y --allow-unauthenticated install cros-guest-tools
-    apt-get -q -y install less
 
     apt-get clean
     rm /etc/apt/sources.list.d/cros-staging.list

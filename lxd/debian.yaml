@@ -1,0 +1,213 @@
+# This file is based on the lxc-ci configuration with Crostini-specific changes:
+# https://github.com/lxc/lxc-ci/blob/31b3b194eead597e837bcdff61f3bd1944115b82/images/debian.yaml
+image:
+  distribution: "debian"
+
+source:
+  downloader: debootstrap
+  url: https://deb.debian.org/debian
+  keys:
+    # Debian Stable Release Key (10/buster)
+    # 0x6D33866EDD8FFA41C0143AEDDCC9EFBF77E11517
+  - |-
+    -----BEGIN PGP PUBLIC KEY BLOCK-----
+
+    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
+    idjr8CGNeffTyeMJbSniGisGOkhiX9TLbz8ufw==
+    =a2kx
+    -----END PGP PUBLIC KEY BLOCK-----
+  # Debian Stable Release Key (11/bullseye):
+  # 0xA4285295FC7B1A81600062A9605C66F00D6C9793
+  - |-
+    -----BEGIN PGP PUBLIC KEY BLOCK-----
+
+    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
+    e18slw8=
+    =7Dni
+    -----END PGP PUBLIC KEY BLOCK-----
+  variant: minbase
+
+files:
+- path: /etc/hostname
+  generator: hostname
+
+- path: /etc/hosts
+  generator: hosts
+
+- path: /etc/machine-id
+  generator: dump
+
+- path: /var/lib/dbus/machine-id
+  generator: remove
+
+- path: /etc/network/interfaces
+  generator: dump
+  content: |-
+    # This file describes the network interfaces available on your system
+    # and how to activate them. For more information, see interfaces(5).
+    # The loopback network interface
+    auto lo
+    iface lo inet loopback
+    auto eth0
+    iface eth0 inet dhcp
+    source /etc/network/interfaces.d/*
+
+packages:
+  manager: apt
+  update: true
+  cleanup: true
+  sets:
+  - packages:
+    - dialog
+    - ifupdown
+    - init
+    - iproute2
+    - iputils-ping
+    - isc-dhcp-client
+    - less
+    - locales
+    - netbase
+    - net-tools
+    - openssh-client
+    - procps
+    - sudo
+    - vim
+    action: install
+  # python3 is used for integration testing.
+  - packages:
+    - python3
+    action: install
+    flags:
+      - --no-install-recommends
+
+  repositories:
+  - name: sources.list
+    url: |-
+      deb https://deb.debian.org/debian {{ image.release }} main
+      deb https://deb.debian.org/debian {{ image.release }}-updates main
+      {% if image.release != "buster" %}deb https://deb.debian.org/debian-security/ {{ image.release }}-security main{% endif %}
+      {% if image.release == "buster" %}deb https://deb.debian.org/debian-security/ {{ image.release }}/updates main{% endif %}
+
+actions:
+- trigger: post-packages
+  action: |-
+    #!/bin/sh
+    set -eux
+
+    # Disable networkd (unused)
+    systemctl mask systemd-networkd.service
+    systemctl mask systemd-networkd.socket
+    systemctl mask systemd-networkd-wait-online.service
+
+    # Make sure the locale is built and functional
+    echo en_US.UTF-8 UTF-8 >> /etc/locale.gen
+    locale-gen en_US.UTF-8 UTF-8
+    update-locale LANG=en_US.UTF-8
+
+    # Cleanup underlying /run
+    mount -o bind / /mnt
+    rm -rf /mnt/run/*
+    umount /mnt
+
+    # Cleanup temporary shadow paths
+    rm -f /etc/*-
+
+mappings:
+  architecture_map: debian
