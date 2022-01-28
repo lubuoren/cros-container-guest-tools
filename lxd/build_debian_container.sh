@@ -130,6 +130,7 @@ build_and_export() {
     mkdir -p "${result_dir}"
 
     local metadata_tarball="${result_dir}/lxd.tar.xz"
+    local rootfs_image="${result_dir}/rootfs.squashfs"
 
     pushd "${result_dir}" > /dev/null
 
@@ -147,13 +148,9 @@ build_and_export() {
     popd > /dev/null
 
     if [ "${arch}" = "amd64" ] && [ "${image_type}" == "prod" ]; then
-        # Workaround the "Invalid multipart image" flake by generating a
-        # single tarball.
-        tar xvf "${metadata_tarball}" -C "${tempdir}"
-        tar -Ipixz -cpf "${tempdir}/unified.tar.xz" \
-            -C "${tempdir}" rootfs metadata.yaml templates
         "${src_root}"/lxd/test.py "${results_dir}" \
-                                  "${tempdir}/unified.tar.xz"
+                                  "${metadata_tarball}" \
+                                  "${rootfs_image}"
     fi
 }
 

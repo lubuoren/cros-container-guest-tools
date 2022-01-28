@@ -26,9 +26,9 @@ install_deps() {
 
     sudo apt-get -q update
 
-    # LXD setup. Use the latest snap version.
+    # LXD setup. Use the stable snap version.
     sudo apt-get install -q -y snapd
-    sudo snap install lxd --channel=3.0/stable
+    sudo snap install lxd --channel=4.0/stable
     sudo snap start lxd
     sudo /snap/bin/lxd waitready
 
@@ -67,18 +67,31 @@ install_deps() {
 
     # Install python dependencies for testing.
     sudo pip3 install unittest-xml-reporting
-    sudo pip3 install pylxd
+    sudo pip3 install pylxd==2.2.11
 
-    # TODO(smbarber): Install via pip once container.execute's regression is
-    # fixed. https://github.com/lxc/pylxd/pull/321
-    pushd /tmp
-
-    git clone https://github.com/lxc/pylxd.git
-    cd pylxd
-    git checkout 23cef05b0e0b0c8605deb92c070139cd8246a416
-    sudo python3 setup.py install
-
-    popd
+    # Patch pylxd incompatibility with Python 3.5.
+    pushd /usr/local/lib/python3.5/dist-packages/pylxd/models > /dev/null
+    sudo patch -p1 << EOF
+diff --git a/image.py b/image.py
+index f1e60df..00429ee 100644
+--- a/image.py
++++ b/image.py
+@@ -122,9 +122,10 @@ class Image(model.Model):
+             # Image uploaded as chunked/stream (metadata, rootfs)
+             # multipart message.
+             # Order of parts is important metadata should be passed first
+-            files = collections.OrderedDict(
+-                metadata=('metadata', metadata, 'application/octet-stream'),
+-                rootfs=('rootfs', image_data, 'application/octet-stream'))
++            files = collections.OrderedDict((
++                ('metadata', ('metadata', metadata, 'application/octet-stream')),
++                ('rootfs', ('rootfs', image_data, 'application/octet-stream'))
++            ))
+             data = MultipartEncoder(files)
+             print(data)
+             headers.update({"Content-Type": data.content_type})
+EOF
+    popd > /dev/null
 }
 
 do_preseed() {
