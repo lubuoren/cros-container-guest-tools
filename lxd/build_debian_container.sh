@@ -115,9 +115,10 @@ build_and_export() {
     unmount_all "${rootfs}"
     rm -rf "${rootfs}/opt/google"
 
-    # Repack into 2 tarballs for distribution via simplestreams.
+    # Repack into 2 tarballs + squashfs for distribution via simplestreams.
     # Combined sha256 is lxd.tar.xz | rootfs.
     # rootfs.tar.xz is raw rootfs tar'd up.
+    # rootfs.squashfs is raw rootfs squash'd.
     # lxd.tar.xz is metadata.yaml and templates dir.
     local result_dir="${results_dir}/debian/${release}/${arch}"
     if [ "${image_type}" = "test" ]; then
@@ -133,6 +134,8 @@ build_and_export() {
     local rootfs_tarball="${result_dir}/rootfs.tar.xz"
     cp "${tempdir}/image" "${metadata_tarball}"
     tar -Ipixz --xattrs --acls -cpf "${rootfs_tarball}" -C "${rootfs}" .
+    mksquashfs "${rootfs}" "${result_dir}/rootfs.squashfs" \
+        -noappend -comp xz -b 1M -no-progress -no-recovery
 
     if [ "${arch}" = "amd64" ] && [ "${image_type}" == "prod" ]; then
         # Workaround the "Invalid multipart image" flake by generating a
