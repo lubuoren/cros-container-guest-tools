@@ -39,9 +39,6 @@ install_deps() {
         sudo dpkg --install "${KOKORO_GFILE_DIR}"/qemu-user-static.deb
     fi
 
-    # pixz improves compression time for the rootfs significantly.
-    sudo apt-get install -q -y pixz
-
     # Debootstrap from Ubuntu 16.04 is too old. Install the version shipped
     # with Debian 11.
     sudo dpkg --install "${KOKORO_GFILE_DIR}/debootstrap_1.0.123_all.deb"

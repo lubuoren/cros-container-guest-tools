@@ -114,9 +114,8 @@ build_and_export() {
     unmount_all "${rootfs}"
     rm -rf "${rootfs}/opt/google"
 
-    # Pack into 2 tarballs + squashfs for distribution via simplestreams.
+    # Pack into a tarball + squashfs for distribution via simplestreams.
     # Combined sha256 is lxd.tar.xz | rootfs.
-    # rootfs.tar.xz is raw rootfs tar'd up.
     # rootfs.squashfs is raw rootfs squash'd.
     # lxd.tar.xz is metadata.yaml and templates dir.
     local result_dir="${results_dir}/debian/${release}/${arch}"
@@ -138,12 +137,6 @@ build_and_export() {
         -o "image.architecture=${arch}" \
         -o "image.release=${release}" \
         -o "image.variant=${image_type}"
-
-    # TODO(jamesye): stop creating rootfs tarballs once all consumers use
-    # squashfs.
-    rm -rf "${rootfs}"
-    unsquashfs -d "${rootfs}" rootfs.squashfs
-    tar -Ipixz --xattrs --acls -cpf rootfs.tar.xz -C "${rootfs}" .
 
     popd > /dev/null
 

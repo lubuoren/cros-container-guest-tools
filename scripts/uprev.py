@@ -62,8 +62,8 @@ def main():
                                  os.path.join(data_dir, metadata_file))
 
                 rootfs_file = f'crostini_{ctype}_container_rootfs_{release}' \
-                    f'_{file_arch}.tar.xz.external'
-                update_data_file(base_url + 'rootfs.tar.xz',
+                    f'_{file_arch}.squashfs.external'
+                update_data_file(base_url + 'rootfs.squashfs',
                                  os.path.join(data_dir, rootfs_file))
 
     print('Tast data dependencies updated')
