@@ -133,9 +133,13 @@ build_and_export() {
 
     pushd "${result_dir}" > /dev/null
 
+    local serial
+    serial="$(date --utc +%Y%m%d_%H:%M)"
+
     "${DISTROBUILDER}" pack-lxd "${src_root}/lxd/debian.yaml" "${rootfs}" \
         -o "image.architecture=${arch}" \
         -o "image.release=${release}" \
+        -o "image.serial=${serial}" \
         -o "image.variant=${image_type}"
 
     popd > /dev/null

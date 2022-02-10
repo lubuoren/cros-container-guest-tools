@@ -101,7 +101,7 @@ def main():
         print('Failed to create out directory')
         sys.exit(1)
 
-    date = datetime.datetime.today().strftime('%Y%m%d_%H:%M')
+    date = datetime.datetime.utcnow().strftime('%Y%m%d_%H:%M')
     index = index_template.copy()
     images = images_template.copy()
 
