@@ -19,7 +19,7 @@ genrule(
                  --no-default-keyring \
                  --lock-never \
                  --keyring ./tmp.keyring \
-                 --export > $@""",
+                 --export EB4C1BFD4F042F6DDDCCEC917721F63BD38B4796 > $@""",
 )
 
 pkg_tar(
@@ -66,6 +66,6 @@ pkg_deb(
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-apt-config",
     section = "misc",
-    version = "0.21",
+    version = "0.22",
     visibility = ["//cros-debs:__pkg__"],
 )
