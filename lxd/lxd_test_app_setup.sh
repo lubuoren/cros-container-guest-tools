@@ -44,6 +44,7 @@ deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https:/
 EOF
         apt-get -q update
         apt-get -q -y install "code=${VSCODE_VERSION}"
+        apt-mark hold code
     fi
 }
 
