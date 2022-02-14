@@ -9,6 +9,7 @@ set -eux
 
 main() {
     local release=$1
+    export DEBIAN_FRONTEND=noninteractive
 
     echo "deb [trusted=yes] file:///run/apt ${release} main" >/etc/apt/sources.list.d/cros-staging.list
 

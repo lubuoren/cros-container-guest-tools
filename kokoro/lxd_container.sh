@@ -27,14 +27,14 @@ install_deps() {
     sudo apt-get -q update
 
     # LXD setup. Use the stable snap version.
-    sudo apt-get install -q -y snapd
+    sudo DEBIAN_FRONTEND=noninteractive apt-get install -q -y snapd
     sudo snap install lxd --channel=4.0/stable
     sudo snap start lxd
     sudo /snap/bin/lxd waitready
 
     # qemu setup.
     if [[ $(get_arch) == "arm64" ]]; then
-        sudo apt-get install -q -y libpipeline1 lsb-base
+        sudo DEBIAN_FRONTEND=noninteractive apt-get install -q -y libpipeline1 lsb-base
         sudo dpkg --install "${KOKORO_GFILE_DIR}"/binfmt-support.deb
         sudo dpkg --install "${KOKORO_GFILE_DIR}"/qemu-user-static.deb
     fi

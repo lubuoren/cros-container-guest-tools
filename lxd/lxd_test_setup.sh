@@ -10,6 +10,7 @@ set -eux
 
 main() {
     local release=$1
+    export DEBIAN_FRONTEND=noninteractive
     # Add non-free repository to apt sources.list.
     sed -E -i 's|^(deb.*main)$|\1 non-free|g' /etc/apt/sources.list
 

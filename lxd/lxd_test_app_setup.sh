@@ -15,32 +15,35 @@ VSCODE_VERSION="1.63.0-1638855526"
 
 main() {
     local arch=$1
+    export DEBIAN_FRONTEND=noninteractive
 
     # for testing Gedit.
-    apt -q -y install gedit
+    apt-get -q -y install gedit
 
     # for testing Emacs.
-    apt -q -y install emacs
+    apt-get -q -y install emacs
 
     if [ "${arch}" = "amd64" ]; then
         # for testing Android Studio.
-        wget https://storage.googleapis.com/chromiumos-test-assets-public/crostini_test_files/android-studio-linux.tar.gz
-        tar -zxvf android-studio-linux.tar.gz
+        wget -q https://storage.googleapis.com/chromiumos-test-assets-public/crostini_test_files/android-studio-linux.tar.gz
+        tar -xf android-studio-linux.tar.gz
         rm -f android-studio-linux.tar.gz
 
         # for testing Eclipse.
         apt-get -q -y install default-jre
-        wget https://storage.googleapis.com/chromiumos-test-assets-public/crostini_test_files/eclipse.tar.gz
-        tar -zxvf eclipse.tar.gz -C /usr/
+        wget -q https://storage.googleapis.com/chromiumos-test-assets-public/crostini_test_files/eclipse.tar.gz
+        tar -xf eclipse.tar.gz -C /usr/
         ln -s /usr/eclipse/eclipse /usr/bin/eclipse
         rm -f eclipse.tar.gz
 
         # for testing Visual Studio Code.
-        apt-get -q -y install software-properties-common
-        curl -sSL https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
-        add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
-        apt update
-        apt -q -y install "code=${VSCODE_VERSION}"
+        curl -sSL https://packages.microsoft.com/keys/microsoft.asc \
+            | gpg --dearmor > /etc/apt/trusted.gpg.d/packages.microsoft.gpg
+        cat > /etc/apt/sources.list.d/vscode.list << EOF
+deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/vscode stable main
+EOF
+        apt-get -q update
+        apt-get -q -y install "code=${VSCODE_VERSION}"
     fi
 }
 
