@@ -10,17 +10,21 @@ build_guest_tools() {
     local result_dir="${src_root}"/guest_debs
     mkdir -p "${result_dir}"
 
-    # TODO(crbug.com/1060811): This is a hack to get around a kokoro bug. Remove
-    # it when it is no longer necessary.
-    rm -rf "/home/kbuilder/.cache/bazel/_bazel_kbuilder/install/4cfcf40fe067e89c8f5c38e156f8d8ca"
-
     cd "${src_root}"
 
-    # Default is 0.23, we need at least 0.27. But go all the way to 4.2.1 since
-    # (as of 2021-09-09) it's what's on our desktops.
-    use_bazel.sh 4.2.1
+    curl -sSL https://bazel.build/bazel-release.pub.gpg \
+        | gpg --dearmor \
+        | sudo tee /etc/apt/trusted.gpg.d/bazel.gpg > /dev/null
+
+    sudo tee /etc/apt/sources.list.d/bazel.list > /dev/null << EOF
+deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/bazel.gpg] https://storage.googleapis.com/bazel-apt stable jdk1.8
+EOF
+    sudo apt-get -q update
+    sudo DEBIAN_FRONTEND=noninteractive apt-get -q -y install \
+        bazel-4.2.2 python-is-python3
+
     # Build all targets.
-    bazel build //cros-debs:debs
+    bazel-4.2.2 build //cros-debs:debs
 
     # Copy resulting debs to results directory.
     chmod 644 bazel-bin/cros-debs/*/*.deb
@@ -40,11 +44,20 @@ build_mesa_shard() {
     local base_image="buildmesa_${dist}"
     local base_image_tarball="${KOKORO_GFILE_DIR}"/"${base_image}".tar.xz
 
-    if [[ -z $(docker images -q "${base_image}" 2> /dev/null) ]]; then
-        docker load -i "${base_image_tarball}"
+    sudo mkdir -p /etc/docker
+    sudo tee /etc/docker/daemon.json > /dev/null << EOF
+{
+    "data-root": "/tmpfs/docker"
+}
+EOF
+    sudo apt-get -q update
+    sudo DEBIAN_FRONTEND=noninteractive apt-get -q -y install docker.io
+
+    if [[ -z $(sudo docker images -q "${base_image}" 2> /dev/null) ]]; then
+      sudo docker load -i "${base_image_tarball}"
     fi
 
-    docker run \
+    sudo docker run \
       --rm \
       --privileged \
       --volume "${KOKORO_ARTIFACTS_DIR}/${dist}_mesa_debs":/artifacts \

@@ -16,6 +16,7 @@ get_shard_target() {
 
 main() {
     require_kokoro_artifacts
+    stop_apt_daily
 
     # This script runs in all the .deb-building shards, so we process the kokoro
     # job name to determine what this shard is supposed to build.

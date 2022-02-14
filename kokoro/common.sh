@@ -22,3 +22,12 @@ require_cros_milestone() {
         exit 1
     fi
 }
+
+# Disable automatic apt activities. As this runs after the timers are activated,
+# we must also wait for the services to finish if they already started.
+stop_apt_daily() {
+    sudo tee /etc/apt/apt.conf.d/99no-periodic > /dev/null << EOF
+APT::Periodic::Enable "0";
+EOF
+    sudo flock -w 3600 /var/lib/apt/daily_lock echo "Acquired apt daily_lock"
+}

@@ -81,7 +81,7 @@ build_and_export() {
 
     mkdir -p "${rootfs}/opt/google/cros-containers"
     mount --bind "${dummy_path}" "${rootfs}/opt/google/cros-containers"
-    mount --bind /run/resolvconf/resolv.conf "${rootfs}/etc/resolv.conf"
+    mount --bind /etc/resolv.conf "${rootfs}/etc/resolv.conf"
     mount --bind /dev "${rootfs}/dev"
     mount -t proc none "${rootfs}/proc"
     mount -t tmpfs tmpfs "${rootfs}/run"
