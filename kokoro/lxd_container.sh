@@ -3,7 +3,7 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-set -ex
+set -ex -o pipefail
 
 DISTROBUILDER_ARCHIVE="distrobuilder-2.0.tar.gz"
 DISTROBUILDER_SHA256SUM="9ddd9b13cbfc61b75ba8d2393df5b11be420145908f36aad7e47d464e8809147"

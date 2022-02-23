@@ -4,7 +4,7 @@
 # found in the LICENSE file.
 #
 # Sync crostini packages from staging to prod.
-set -e
+set -e -o pipefail
 
 PROD_URL="gs://cros-packages"
 STAGING_URL="gs://cros-packages-staging"

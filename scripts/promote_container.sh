@@ -4,7 +4,7 @@
 # found in the LICENSE file.
 #
 # Sync crostini lxd containers from staging to prod.
-set -e
+set -e -o pipefail
 
 PROD_URL="gs://cros-containers"
 STAGING_URL="gs://cros-containers-staging"

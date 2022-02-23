@@ -6,7 +6,7 @@
 # Set up a Debian container for test.
 # This is run from inside the container as root.
 
-set -eux
+set -eux -o pipefail
 
 # To update this, run apt-cache policy code on your DUT with this
 # container installed, and look at the latest version.

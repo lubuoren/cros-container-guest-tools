@@ -6,7 +6,7 @@
 # Set up a Debian container for test.
 # This is run from inside the container as root.
 
-set -eux
+set -eux -o pipefail
 
 main() {
     local release=$1
