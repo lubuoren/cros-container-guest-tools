@@ -1,0 +1,15 @@
+[Unit]
+DefaultDependencies=no
+Conflicts=umount.target
+Before=local-fs.target umount.target
+ConditionPathIsMountPoint=/mnt/chromeos
+ConditionPathExists=/mnt/chromeos/fonts
+
+[Mount]
+What=/mnt/chromeos/fonts
+Where=/usr/share/fonts/chromeos
+Type=none
+Options=bind
+
+[Install]
+WantedBy=local-fs.target

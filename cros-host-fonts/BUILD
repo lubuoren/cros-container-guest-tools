@@ -5,31 +5,38 @@
 load("@rules_pkg//:pkg.bzl", "pkg_deb", "pkg_tar")
 
 pkg_tar(
-    name = "cros-host-fonts-config",
-    srcs = ["05-cros-fonts.conf"],
+    name = "cros-host-fonts-systemd",
+    srcs = ["usr-share-fonts-chromeos.mount"],
     mode = "0644",
-    package_dir = "/etc/fonts/conf.d/",
+    package_dir = "/usr/lib/systemd/system/",
     strip_prefix = "/cros-host-fonts",
 )
 
 pkg_tar(
     name = "debian-data",
+    empty_dirs = ["/usr/share/fonts/chromeos"],
     extension = "tar.gz",
     deps = [
-        ":cros-host-fonts-config",
+        ":cros-host-fonts-systemd",
     ],
 )
 
 pkg_deb(
     name = "deb",
     architecture = "all",
-    conffiles_file = "conffiles",
     data = ":debian-data",
     description_file = "deb-description",
     homepage = "https://chromium.googlesource.com/chromiumos/docs/+/HEAD/containers_and_vms.md",
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-host-fonts",
+    # We aren't building with dh-systemd, so these scripts implement the
+    # relevant functionality to ensure that conffiles and systemd units are
+    # correctly managed upon installation or removal.
+    postinst = "postinst",
+    postrm = "postrm",
+    preinst = "preinst",
+    prerm = "prerm",
     section = "misc",
-    version = "0.1",
+    version = "0.2",
     visibility = ["//cros-debs:__pkg__"],
 )

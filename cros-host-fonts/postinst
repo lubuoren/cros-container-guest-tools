@@ -1,0 +1,18 @@
+#!/bin/sh
+set -e
+if [ "$1" = "configure" ] || [ "$1" = "abort-upgrade" ] || [ "$1" = "abort-deconfigure" ] || [ "$1" = "abort-remove" ] ; then
+	deb-systemd-helper unmask usr-share-fonts-chromeos.mount >/dev/null || true
+
+	if deb-systemd-helper --quiet was-enabled usr-share-fonts-chromeos.mount; then
+		deb-systemd-helper enable usr-share-fonts-chromeos.mount >/dev/null || true
+	else
+		deb-systemd-helper update-state usr-share-fonts-chromeos.mount >/dev/null || true
+	fi
+
+	if [ -d /run/systemd/system ]; then
+		systemctl --system daemon-reload >/dev/null || true
+		deb-systemd-invoke start usr-share-fonts-chromeos.mount >/dev/null || true
+	fi
+fi
+
+dpkg-maintscript-helper rm_conffile /etc/fonts/conf.d/05-cros-fonts.conf 2.0~ -- "$@"

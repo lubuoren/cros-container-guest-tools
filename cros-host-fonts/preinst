@@ -1,0 +1,3 @@
+#!/bin/sh
+set -e
+dpkg-maintscript-helper rm_conffile /etc/fonts/conf.d/05-cros-fonts.conf 2.0~ -- "$@"

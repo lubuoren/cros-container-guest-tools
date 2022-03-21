@@ -1,0 +1,12 @@
+#!/bin/sh
+set -e
+if [ "$1" = "remove" ]; then
+	deb-systemd-helper mask usr-share-fonts-chromeos.mount >/dev/null || true
+fi
+
+if [ "$1" = "purge" ]; then
+	deb-systemd-helper purge usr-share-fonts-chromeos.mount >/dev/null || true
+	deb-systemd-helper unmask usr-share-fonts-chromeos.mount >/dev/null || true
+fi
+
+dpkg-maintscript-helper rm_conffile /etc/fonts/conf.d/05-cros-fonts.conf 2.0~ -- "$@"
