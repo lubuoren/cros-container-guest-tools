@@ -119,8 +119,8 @@ pkg_deb(
     package = "cros-garcon",
     postinst = "postinst",
     prerm = "prerm",
+    provides = ["x-terminal-emulator"],
     section = "misc",
-    version = "0.25",
+    version = "0.26",
     visibility = ["//cros-debs:__pkg__"],
-    provides = ["x-terminal-emulator"]
 )

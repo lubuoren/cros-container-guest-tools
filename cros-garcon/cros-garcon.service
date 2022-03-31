@@ -7,6 +7,14 @@ Type=simple
 ExecStart=/opt/google/cros-containers/bin/garcon --server
 ExecStopPost=/opt/google/cros-containers/bin/guest_service_failure_notifier cros-garcon
 Restart=always
+Environment="BROWSER=/usr/bin/garcon-url-handler"
+Environment="NCURSES_NO_UTF8_ACS=1"
+Environment="PATH=/usr/local/sbin:/usr/local/bin:/usr/local/games:/usr/sbin:/usr/bin:/usr/games:/sbin:/bin"
+Environment="QT_AUTO_SCREEN_SCALE_FACTOR=1"
+Environment="QT_QPA_PLATFORMTHEME=gtk2"
+Environment="XCURSOR_THEME=Adwaita"
+Environment="XDG_CONFIG_HOME=%h/.config"
+Environment="XDG_DATA_DIRS=%h/.local/share:%h/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share"
 
 [Install]
 WantedBy=default.target
