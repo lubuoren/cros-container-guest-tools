@@ -14,6 +14,7 @@ Environment="QT_AUTO_SCREEN_SCALE_FACTOR=1"
 Environment="QT_QPA_PLATFORMTHEME=gtk2"
 Environment="XCURSOR_THEME=Adwaita"
 Environment="XDG_CONFIG_HOME=%h/.config"
+Environment="XDG_CURRENT_DESKTOP=X-Generic"
 Environment="XDG_DATA_DIRS=%h/.local/share:%h/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share"
 
 [Install]
