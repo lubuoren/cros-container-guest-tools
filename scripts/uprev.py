@@ -7,20 +7,20 @@
 """Uprev crostini tast data dependencies"""
 
 import argparse
-import subprocess
-import shlex
+import itertools
 import json
 import os
+import subprocess
+import urllib.request
 
-def update_data_file(url, filepath):
-    result = {'url': url}
-    ls = subprocess.check_output(['gsutil.py', 'ls', '-l', url])
-    result['size'] = int(ls.decode().split()[0])
+BUCKET_NAME = 'cros-containers-staging'
+ARCHES = ['amd64', 'arm64']
+CONTAINER_TYPES = ['test', 'app_test']
+RELEASES = ['buster', 'bullseye']
 
-    sha256sum = subprocess.check_output(
-        f'gsutil.py cp {shlex.quote(url)} - | sha256sum'
-    , shell=True)
-    result['sha256sum'] = sha256sum.decode().split()[0]
+
+def update_data_file(url, filepath, size, sha256sum):
+    result = {'url': url, 'size': size, 'sha256sum': sha256sum}
 
     print(f'Updated {os.path.basename(filepath)}')
     with open(filepath, 'w') as f:
@@ -39,32 +39,40 @@ def main():
     data_dir = os.path.join(tast_tests,
                             'src/chromiumos/tast/local/crostini/data')
 
-    latest_container = subprocess.check_output(
-        ['gsutil.py', 'ls', f'gs://cros-containers-staging/{milestone}'
-         '/images/debian/buster/arm64/default/']
-    ).decode().split()[-1].split('/')[-2]
+    images = json.loads(urllib.request.urlopen(
+        f'https://storage.googleapis.com/{BUCKET_NAME}/{milestone}/streams/v1/images.json'
+    ).read())
 
-    for arch in ['amd64', 'arm64']:
+    for arch, ctype, release in itertools.product(ARCHES, CONTAINER_TYPES, RELEASES):
         # The container URLs use 'arm64', but the tast data files use 'arm'
         if arch == 'arm64':
             file_arch = 'arm'
         else:
             file_arch = arch
 
-        for ctype in ['test', 'app_test']:
-            for release in ['buster', 'bullseye']:
-                base_url = f'gs://cros-containers-staging/{milestone}' \
-                    f'/images/debian/{release}/{arch}/{ctype}/{latest_container}/'
+        product = images['products'][f'debian:{release}:{arch}:{ctype}']
+        latest_container = max(product['versions'].keys())
+        items = product['versions'][latest_container]['items']
 
-                metadata_file = f'crostini_{ctype}_container_metadata_{release}' \
-                    f'_{file_arch}.tar.xz.external'
-                update_data_file(base_url + 'lxd.tar.xz',
-                                 os.path.join(data_dir, metadata_file))
+        base_url = f'gs://{BUCKET_NAME}/{milestone}/'
 
-                rootfs_file = f'crostini_{ctype}_container_rootfs_{release}' \
-                    f'_{file_arch}.squashfs.external'
-                update_data_file(base_url + 'rootfs.squashfs',
-                                 os.path.join(data_dir, rootfs_file))
+        metadata_item = items['lxd.tar.xz']
+        metadata_file = f'crostini_{ctype}_container_metadata_{release}_{file_arch}.tar.xz.external'
+        update_data_file(
+            base_url + metadata_item['path'],
+            os.path.join(data_dir, metadata_file),
+            metadata_item['size'],
+            metadata_item['sha256'],
+        )
+
+        rootfs_item = items['rootfs.squashfs']
+        rootfs_file = f'crostini_{ctype}_container_rootfs_{release}_{file_arch}.squashfs.external'
+        update_data_file(
+            base_url + rootfs_item['path'],
+            os.path.join(data_dir, rootfs_file),
+            rootfs_item['size'],
+            rootfs_item['sha256'],
+        )
 
     print('Tast data dependencies updated')
     print(f'Go to {data_dir} and create a CL')
