@@ -9,6 +9,7 @@ set -ex -o pipefail
 
 main() {
     require_kokoro_artifacts
+    stop_apt_daily
 
     sudo apt-get -q update
     sudo apt-get -q -y install reprepro
