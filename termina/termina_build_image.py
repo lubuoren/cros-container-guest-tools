@@ -163,6 +163,9 @@ def repack_rootfs(output_dir, disk_path):
     # Create vm_tools.img if /opt/google/cros-containers exists.
     tools_dir = rootfs_dir / 'opt' / 'google' / 'cros-containers'
     if tools_dir.exists():
+      # Add new etc dir for lsb-release file
+      (tools_dir / 'etc').mkdir()
+      shutil.copy(str(rootfs_dir / 'etc' / 'lsb-release'), str(tools_dir / 'etc'))
       create_fs_image(output_dir / 'vm_tools.img', tools_dir, label='cros-vm-tools')
 
       # Remove contents of tools_dir so they are not included in vm_rootfs.img.
