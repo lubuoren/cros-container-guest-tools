@@ -38,7 +38,7 @@ EOD
     fi
     apt-get update
 
-    # For crostini.AudioSanity.
+    # For crostini.AudioBasic.
     apt-get -q -y install alsa-utils
 
     # For crostini.CpuPerf.
