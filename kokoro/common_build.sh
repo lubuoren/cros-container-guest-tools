@@ -66,3 +66,16 @@ EOF
       "${base_image}" \
       ./sync-and-build.sh
 }
+
+# Builds the Crostini IME Debian package for all supported architectures.
+build_cros_im() {
+    local src_root="${KOKORO_ARTIFACTS_DIR}"/git/cros-im
+    local result_dir="${src_root}"/cros_im_debs
+    mkdir -p "${result_dir}"
+
+    cd "${src_root}"
+    ./build-packages
+
+    # Copy resulting debs to results directory.
+    cp *_cros_im_debs "${result_dir}"
+}

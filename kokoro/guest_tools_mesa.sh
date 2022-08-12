@@ -29,6 +29,8 @@ main() {
       build_mesa
     elif [[ ${shard_target} == "guest_tools" ]]; then
       build_guest_tools
+    elif [[ ${shard_target} == "cros_im" ]]; then
+      build_cros_im
     else
       # We convert the shard_target ("distro_arch_pkg1_pkg2...") into arguments
       # for building the shard.
