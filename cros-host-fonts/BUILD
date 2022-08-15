@@ -36,7 +36,12 @@ pkg_deb(
     postrm = "postrm",
     preinst = "preinst",
     prerm = "prerm",
+    provides = [
+        "fonts-roboto",
+        "fonts-roboto-hinted",
+        "fonts-roboto-unhinted",
+    ],
     section = "misc",
-    version = "0.2",
+    version = "0.3",
     visibility = ["//cros-debs:__pkg__"],
 )

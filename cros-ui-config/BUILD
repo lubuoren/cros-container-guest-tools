@@ -64,8 +64,6 @@ pkg_deb(
     depends = [
         "cros-adapta",
         "dconf-cli",
-        "fonts-croscore",
-        "fonts-roboto",
     ],
     description_file = "deb-description",
     homepage = "https://chromium.googlesource.com/chromiumos/docs/+/HEAD/containers_and_vms.md",
@@ -74,6 +72,6 @@ pkg_deb(
     postinst = "postinst",
     postrm = "postrm",
     section = "misc",
-    version = "0.13",
+    version = "0.14",
     visibility = ["//cros-debs:__pkg__"],
 )
