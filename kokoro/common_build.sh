@@ -50,8 +50,7 @@ build_mesa_shard() {
     "data-root": "/tmpfs/docker"
 }
 EOF
-    sudo apt-get -q update
-    sudo DEBIAN_FRONTEND=noninteractive apt-get -q -y install docker.io
+    sudo systemctl restart docker
 
     if [[ -z $(sudo docker images -q "${base_image}" 2> /dev/null) ]]; then
       sudo docker load -i "${base_image_tarball}"
