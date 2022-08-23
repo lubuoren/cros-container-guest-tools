@@ -30,6 +30,6 @@ pkg_deb(
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-logging",
     section = "misc",
-    version = "0.1",
+    version = "0.2",
     visibility = ["//cros-debs:__pkg__"],
 )

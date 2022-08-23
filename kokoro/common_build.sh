@@ -21,10 +21,10 @@ deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/bazel.gpg] https://storage.goog
 EOF
     sudo apt-get -q update
     sudo DEBIAN_FRONTEND=noninteractive apt-get -q -y install \
-        bazel-4.2.2 python-is-python3
+        bazel-5.3.0 python-is-python3
 
     # Build all targets.
-    bazel-4.2.2 build //cros-debs:debs
+    bazel-5.3.0 build //cros-debs:debs
 
     # Copy resulting debs to results directory.
     chmod 644 bazel-bin/cros-debs/*/*.deb

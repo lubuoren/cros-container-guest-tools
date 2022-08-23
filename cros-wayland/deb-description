@@ -1,3 +1,3 @@
-Wayland extras for virtwl in Chromium OS.
-This package provides config files and udev rules to
-improve the Wayland experience under CrOS.
+Wayland extras for virtwl in Chromium OS
+ This package provides config files and udev rules to improve the Wayland
+ experience under CrOS.

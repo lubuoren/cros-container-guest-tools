@@ -21,6 +21,6 @@ pkg_deb(
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-gpu",
     section = "misc",
-    version = "10.6",
+    version = "10.7",
     visibility = ["//cros-debs:__pkg__"],
 )

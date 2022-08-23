@@ -46,6 +46,6 @@ pkg_deb(
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-wayland",
     section = "x11",
-    version = "0.10",
+    version = "0.11",
     visibility = ["//cros-debs:__pkg__"],
 )

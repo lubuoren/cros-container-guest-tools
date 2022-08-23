@@ -46,6 +46,6 @@ pkg_deb(
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-tast-tests",
     section = "misc",
-    version = "0.4",
+    version = "0.5",
     visibility = ["//cros-debs:__pkg__"],
 )

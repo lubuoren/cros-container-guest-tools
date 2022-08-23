@@ -34,6 +34,6 @@ pkg_deb(
     postinst = "postinst",
     prerm = "prerm",
     section = "misc",
-    version = "0.2.0",
+    version = "0.2.1",
     visibility = ["//cros-debs:__pkg__"],
 )

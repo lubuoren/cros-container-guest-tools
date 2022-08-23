@@ -40,6 +40,6 @@ pkg_deb(
     maintainer = "The Chromium OS Authors <chromium-os-dev@chromium.org>",
     package = "cros-sudo-config",
     section = "misc",
-    version = "0.11",
+    version = "0.12",
     visibility = ["//cros-debs:__pkg__"],
 )

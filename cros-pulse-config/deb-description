@@ -1,6 +1,5 @@
-PulseAudio helper for Chromium OS integration.
-
-This package installs customized pulseaudio configurations to /etc/pulse.
-"default.pa" is required as a workaround for the lack of udev in
-unprivileged containers.
-"daemon.conf" contains low latency configuration.
+PulseAudio helper for Chromium OS integration
+ This package installs customized pulseaudio configurations to /etc/pulse.
+ "default.pa" is required as a workaround for the lack of udev in unprivileged
+ containers.
+ "daemon.conf" contains low latency configuration.

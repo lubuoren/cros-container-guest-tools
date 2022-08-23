@@ -42,6 +42,6 @@ pkg_deb(
         "fonts-roboto-unhinted",
     ],
     section = "misc",
-    version = "0.4",
+    version = "0.5",
     visibility = ["//cros-debs:__pkg__"],
 )
