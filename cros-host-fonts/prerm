@@ -1,5 +1,4 @@
 #!/bin/sh
 set -e
-if [ -d /run/systemd/system ]; then
-	deb-systemd-invoke stop usr-share-fonts-chromeos.mount >/dev/null || true
-fi
+# /usr/share/fonts/chromeos will be mounted externally, so this script will not
+# attempt to unmount it.

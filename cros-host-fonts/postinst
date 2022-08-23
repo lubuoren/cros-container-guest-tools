@@ -3,15 +3,17 @@ set -e
 if [ "$1" = "configure" ] || [ "$1" = "abort-upgrade" ] || [ "$1" = "abort-deconfigure" ] || [ "$1" = "abort-remove" ] ; then
 	deb-systemd-helper unmask usr-share-fonts-chromeos.mount >/dev/null || true
 
-	if deb-systemd-helper --quiet was-enabled usr-share-fonts-chromeos.mount; then
-		deb-systemd-helper enable usr-share-fonts-chromeos.mount >/dev/null || true
-	else
-		deb-systemd-helper update-state usr-share-fonts-chromeos.mount >/dev/null || true
-	fi
+	# /usr/share/fonts/chromeos will be mounted externally, so this script will
+	# not enable the unit file. If it was enabled, it will be disabled now.
+	deb-systemd-helper disable usr-share-fonts-chromeos.mount >/dev/null || true
+	deb-systemd-helper update-state usr-share-fonts-chromeos.mount >/dev/null || true
 
 	if [ -d /run/systemd/system ]; then
+		# Unconditionally start the unit file for this boot only, in case it was
+		# stopped during removal of the previous version.
+		# If /usr/share/fonts/chromeos is mounted externally, this does nothing.
 		systemctl --system daemon-reload >/dev/null || true
-		deb-systemd-invoke start usr-share-fonts-chromeos.mount >/dev/null || true
+		systemctl start usr-share-fonts-chromeos.mount >/dev/null || true
 	fi
 fi
 
