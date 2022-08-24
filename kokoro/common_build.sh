@@ -69,7 +69,7 @@ EOF
 
 # Builds the Crostini IME Debian package for all supported architectures.
 build_cros_im() {
-    local src_root="${KOKORO_ARTIFACTS_DIR}"/git/cros-im
+    local src_root="${KOKORO_ARTIFACTS_DIR}"/git/vm_tools/cros_im
     local result_dir="${src_root}"/cros_im_debs
     mkdir -p "${result_dir}"
 
