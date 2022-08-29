@@ -144,11 +144,12 @@ build_and_export() {
 
     popd > /dev/null
 
-    if [ "${arch}" = "amd64" ] && [ "${image_type}" == "prod" ]; then
-        "${src_root}"/lxd/test.py "${results_dir}" \
-                                  "${metadata_tarball}" \
-                                  "${rootfs_image}"
-    fi
+    # TODO(b/245841755): Re-enable tests when bug has been resolved.
+    # if [ "${arch}" = "amd64" ] && [ "${image_type}" == "prod" ]; then
+    #     "${src_root}"/lxd/test.py "${results_dir}" \
+    #                               "${metadata_tarball}" \
+    #                               "${rootfs_image}"
+    # fi
 }
 
 main() {
