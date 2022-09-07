@@ -3,7 +3,8 @@
 ## Overview
 
 This is the Docker image to build mesa-related Debian packages for the Chrome
-OS container.
+OS container. As of M107 this image is no longer used but this information is
+kept for reference.
 
 ## Configuration
 

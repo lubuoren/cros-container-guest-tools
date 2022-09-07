@@ -40,34 +40,23 @@ build_mesa_shard() {
     local dist="$1"
     local arch="$2"
     shift 2
-    local pkg="$@"
-    local base_image="buildmesa_${dist}"
-    local base_image_tarball="${KOKORO_GFILE_DIR}"/"${base_image}".tar.xz
+    local packages=( "$@" )
+    local src_root="${KOKORO_ARTIFACTS_DIR}"/git/cros-container-guest-tools
+    local buildresult="${KOKORO_ARTIFACTS_DIR}/${dist}_mesa_debs"
+    mkdir -p "${buildresult}"
 
-    sudo mkdir -p /etc/docker
-    sudo tee /etc/docker/daemon.json > /dev/null << EOF
-{
-    "data-root": "/tmpfs/docker"
-}
-EOF
-    sudo systemctl restart docker
+    sudo apt-get -q update
+    sudo DEBIAN_FRONTEND=noninteractive apt-get -q -y install \
+      debhelper debian-archive-keyring libva-dev pbuilder quilt qemu-user-static
 
-    if [[ -z $(sudo docker images -q "${base_image}" 2> /dev/null) ]]; then
-      sudo docker load -i "${base_image_tarball}"
-    fi
+    sudo mv "${src_root}/mesa/buster/"{.pbuilder,.pbuilderrc} /root/
 
-    sudo docker run \
-      --rm \
-      --privileged \
-      --volume "${KOKORO_ARTIFACTS_DIR}/${dist}_mesa_debs":/artifacts \
-      --volume "${KOKORO_ARTIFACTS_DIR}/git/apitrace":/scratch/apitrace \
-      --volume "${KOKORO_ARTIFACTS_DIR}/git/glbench":/scratch/glbench \
-      --volume "${KOKORO_ARTIFACTS_DIR}/git/libdrm":/scratch/libdrm \
-      --volume "${KOKORO_ARTIFACTS_DIR}/git/mesa":/scratch/mesa \
-      --env ARCHES="${arch}" \
-      --env PACKAGES="${pkg}" \
-      "${base_image}" \
-      ./sync-and-build.sh
+    pushd "${KOKORO_ARTIFACTS_DIR}/git" > /dev/null
+
+    sudo "${src_root}/mesa/buster/sync-and-build.sh" "${dist}" "${arch}" \
+      "${buildresult}" "${packages[@]}"
+
+    popd > /dev/null
 }
 
 # Builds the Crostini IME Debian package for all supported architectures.

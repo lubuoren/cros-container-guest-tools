@@ -5,12 +5,12 @@
 set -e
 
 HOOKDIR="${HOME}/.pbuilder/hooks/"
-export DEPSBASE="${ARTIFACTS}"
 BINDMOUNTS="${HOME} ${DEPSBASE}"
-PBUILDERSATISFYDEPSCMD=/usr/lib/puilder/pbuilder-satisfydepends-apt
+PBUILDERSATISFYDEPENDSCMD=/usr/lib/pbuilder/pbuilder-satisfydepends-apt
 
 OS="debian"
 NAME="${OS}-${DIST}-${ARCH}"
+COMPONENTS="main"
 
 if [[ "${ARCH}" =~ arm ]]; then
     DEBOOTSTRAP="qemu-debootstrap"

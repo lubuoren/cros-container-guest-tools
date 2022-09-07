@@ -3,17 +3,21 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-set -ex
-
-# A number of environment variables are defined in the Dockerfile and used
-# by the resulting scripts to allow this same docker image to optionally
-# cache the setupchroot step and keep all the configuration in a singular
-# place.
+set -eux
 
 main() {
-    ./setupchroot.sh
-    ./sync.sh
-    ./buildpackages.sh
+  local dist="$1"
+  local arch="$2"
+  local buildresult="$3"
+  shift 3
+  local packages=( "$@" )
+  local script_dir
+  script_dir="$(dirname "$0")"
+
+  "${script_dir}/setupchroot.sh" "${dist}" "${arch}" "${buildresult}"
+  "${script_dir}/sync.sh" "${packages[@]}"
+  "${script_dir}/buildpackages.sh" "${dist}" "${arch}" "${buildresult}" \
+    "${packages[@]}"
 }
 
 main "$@"

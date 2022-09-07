@@ -3,48 +3,15 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-set -ex
+set -eux
 
-# This script makes use of the following environment variables defined
-# in the Dockerfile:
-# - MESA_BUILD_BRANCH - The name of the branch created to build
-# - MESA_CHECKOUT_BRANCH - The branch checked out from the origin if cloning
-# - PACKAGES
-
-clone_repo() {
+ensure_repo() {
     local package="$1"
-    local branch="$2"
-
-    local repo
-
-    local CHROMIUMOS="https://chromium.googlesource.com/chromiumos/"
-    local THIRD_PARTY="${CHROMIUMOS}/third_party"
-    local PLATFORM="${CHROMIUMOS}/platform"
 
     if [[ ! -d "${package}" ]]; then
-        case "${package}" in
-          apitrace|libdrm|mesa)
-            repo="${THIRD_PARTY}/${package}"
-            ;;
-          glbench)
-            repo="${PLATFORM}/${package}"
-            ;;
-          *)
-            echo "ERROR: unable to sync unknown package ${package}"
-            exit 1
-            ;;
-        esac
-
-        git clone "${repo}"
-        (cd "${package}" && git checkout origin/"${branch}")
+        echo "ERROR: repository ${package} is missing." >& 2
+        exit 1
     fi
-}
-
-create_branch() {
-    local package="$1"
-    local branch="$2"
-
-    (cd "${package}" && git checkout -B "${branch}")
 }
 
 untar_package() {
@@ -78,15 +45,13 @@ untar_package() {
 main() {
     local package
 
-    # PACKAGES is passed by docker environment as scalar.
-    for package in ${PACKAGES}; do
+    for package in "$@"; do
         case "${package}" in
           waffle)
             untar_package "${package}"
             ;;
           *)
-            clone_repo "${package}" "${MESA_CHECKOUT_BRANCH}"
-            create_branch "${package}" "${MESA_BUILD_BRANCH}"
+            ensure_repo "${package}"
             ;;
         esac
     done
