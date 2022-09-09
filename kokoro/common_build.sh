@@ -60,6 +60,9 @@ EOF
       --rm \
       --privileged \
       --volume "${KOKORO_ARTIFACTS_DIR}/${dist}_mesa_debs":/artifacts \
+      --volume "${KOKORO_ARTIFACTS_DIR}/git/apitrace":/scratch/apitrace \
+      --volume "${KOKORO_ARTIFACTS_DIR}/git/glbench":/scratch/glbench \
+      --volume "${KOKORO_ARTIFACTS_DIR}/git/libdrm":/scratch/libdrm \
       --volume "${KOKORO_ARTIFACTS_DIR}/git/mesa":/scratch/mesa \
       --env ARCHES="${arch}" \
       --env PACKAGES="${pkg}" \
