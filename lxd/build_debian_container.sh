@@ -144,12 +144,11 @@ build_and_export() {
 
     popd > /dev/null
 
-    # TODO(b/245841755): Re-enable tests when bug has been resolved.
-    # if [ "${arch}" = "amd64" ] && [ "${image_type}" == "prod" ]; then
-    #     "${src_root}"/lxd/test.py "${results_dir}" \
-    #                               "${metadata_tarball}" \
-    #                               "${rootfs_image}"
-    # fi
+    if [ "${arch}" = "amd64" ] && [ "${image_type}" == "prod" ]; then
+        "${src_root}"/lxd/test.py "${results_dir}" \
+                                  "${metadata_tarball}" \
+                                  "${rootfs_image}"
+    fi
 }
 
 main() {
@@ -158,6 +157,7 @@ main() {
     local apt_dir=$3
     local arch=$4
     local release=$5
+    local test_venv=$6
 
     if [ -z "${results_dir}" -o ! -d "${results_dir}" ]; then
         echo "Results directory '${results_dir}' doesn't exist."
@@ -179,11 +179,16 @@ main() {
         return 1
     fi
 
+    if [[ -e "${test_venv}/bin/activate" ]]; then
+        source "${test_venv}/bin/activate"
+    fi
+
     build_containers "${arch}" \
                      "${src_root}" \
                      "${results_dir}" \
                      "${apt_dir}" \
-                     "${release}"
+                     "${release}" \
+                     "${test_venv}"
 }
 
 main "$@"

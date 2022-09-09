@@ -1,0 +1,16 @@
+certifi==2022.6.15
+cffi==1.15.1
+charset-normalizer==2.1.1
+cryptography==38.0.1
+idna==3.3
+lxml==4.9.1
+pycparser==2.21
+pylxd==2.3.1
+python-dateutil==2.8.2
+requests==2.28.1
+requests-toolbelt==0.9.1
+requests-unixsocket==0.3.0
+six==1.16.0
+unittest-xml-reporting==3.2.0
+urllib3==1.26.12
+ws4py==0.5.1

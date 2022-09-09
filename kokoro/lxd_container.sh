@@ -24,11 +24,13 @@ install_deps() {
     sudo apt-get -q update
 
     local -a build_dependencies
-    build_dependencies=( debootstrap golang-go python3-pip )
+    build_dependencies=( debootstrap golang-go )
 
     # qemu setup.
-    if [[ $(get_arch) == "arm64" ]]; then
+    if [[ "$(get_arch)" == "arm64" ]]; then
         build_dependencies+=( binfmt-support qemu-user-static )
+    elif [[ "$(get_arch)" == "amd64" ]]; then
+        build_dependencies+=( python3-venv )
     fi
 
     sudo DEBIAN_FRONTEND=noninteractive apt-get -q -y install \
@@ -44,9 +46,17 @@ install_deps() {
     # Copy the distrobuilder binary from the user's GOPATH to a system location.
     sudo install "${GOPATH}/bin/distrobuilder" /usr/local/bin/distrobuilder
     popd
+}
 
-    # Install python dependencies for testing.
-    sudo pip3 install unittest-xml-reporting pylxd
+setup_test_venv() {
+    local src_root="$1"
+    local venv="$2"
+
+    python3 -m venv "${venv}"
+    source "${venv}/bin/activate"
+    pip install "wheel==0.37.1"
+    pip install -r "${src_root}/lxd/requirements.txt"
+    deactivate
 }
 
 do_preseed() {
@@ -94,7 +104,6 @@ main() {
     mkdir -p "${result_dir}"
 
     install_deps
-    do_preseed
 
     local apt_dir=""
 
@@ -106,12 +115,20 @@ main() {
 
     arch="$(get_arch)"
     release="$(get_release)"
+    test_venv="${TMPDIR:-/tmp}/testenv"
+
+    # Container tests only run on x86
+    if [[ "${arch}" == "amd64" ]]; then
+        do_preseed
+        setup_test_venv "${src_root}" "${test_venv}"
+    fi
 
     sudo "${src_root}/lxd/build_debian_container.sh" "${src_root}" \
                                                      "${result_dir}" \
                                                      "${apt_dir}" \
                                                      "${arch}" \
-                                                     "${release}"
+                                                     "${release}" \
+                                                     "${test_venv}"
 }
 
 main "$@"
