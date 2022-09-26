@@ -2,144 +2,54 @@
 
 ## Overview
 
-This is the Docker image to build mesa-related Debian packages for the Chrome
-OS container. As of M107 this image is no longer used but this information is
-kept for reference.
+These are the scripts used to build mesa-related Debian packages for Crostini.
 
-## Configuration
+## Prerequisites
 
-Configuration is handled via environment variables in the `Dockerfile`.
-After changes are made the image will need to be regenerated.
+These scripts are designed to run on a Debian-based system. The following
+packages must be installed:
+* `debhelper`
+* `debian-archive-keyring`
+* `libva-dev` (for mesa)
+* `pbuilder`
+* `quilt`
+* `qemu-user-static` (if building for a non-native architecture)
 
-The values of these environment variables can be overridden during the
-Docker invocation to limit what is being built.  Of note are the following
-variables:
-- ARCHES - The architectures to build for (amd64, i386, arm64, armhf)
-- DISTRIBUTIONS - The distributions to build for (currently just buster)
-- PACCKAGES - The packages to build for (apitrace, mesa)
+## pbuilder setup
 
-## Generating Docker image
-
-The Docker image can be created from platform/container-guest-tools/mesa/buster
-with:
+Copy the pbuilder configuration from this directory to `/root`:
 ```sh
-sudo docker build --tag=buildmesa_buster .
+sudo cp -r .pbuilder{,rc} /root
 ```
 
-To export the base Docker image to use within the continuous build system:
+Create a directory to store build artifacts, e.g. `artifacts`:
 ```sh
-sudo docker save buildmesa_buster:latest | xz -T 0 -z > buildmesa_buster.tar.xz
+mkdir artifacts
 ```
 
-The packages are built with `pdebuild` within a chroot of the Docker
-container.  The chroots for each architecture can be pre-generated and
-cached with:
+To create a chroot:
 ```sh
-name=bm$(date +%s)
-sudo docker run --privileged --name=$name -it buildmesa_buster ./setupchroot.sh
-sudo docker commit $name buildmesa_buster:setup
+sudo ./setupchroot.sh buster amd64 "$(realpath artifacts)"
 ```
 
-To export the Docker image with cached chroot.  This image is too large
-to use within the continuous build system and is mainly useful for testing:
-```sh
-sudo docker save buildmesa_buster:setup | \
-    xz -T 0 -z > buildmesa_buster-setup.tar.xz
-```
+An existing chroot will not be overwritten, to force creation of a new chroot
+delete any existing chroots, e.g. `/var/cache/pbuilder/debian-buster-amd64.tgz`
+Replace `buster` and `amd64` with the desired Debian version and architecture.
 
 ## Building packages
 
-To build the packages using the image with cached chroot with artifacts
-written to `$PWD/artifacts`:
+The source packages being built must be located in the working directory.
+Multiple packages can be built in one command. If one source package depends on
+another, they must be built in order. e.g. to build mesa for amd64 buster:
+
 ```sh
-sudo docker run \
-    --privileged \
-    --volume=$PWD/artifacts:/artifacts \
-    -it buildmesa_buster:setup ./sync-and-build.sh
+git clone https://chromium.googlesource.com/chromiumos/third_party/libdrm -b debian --depth 1
+git clone https://chromium.googlesource.com/chromiumos/third_party/mesa -b debian --depth 1
+
+sudo ./buildpackages.sh buster amd64 "$(realpath artifacts)" libdrm mesa
 ```
 
-To build the packages using the base image with artifacts written to
-`$PWD/artifacts`:
-```sh
-sudo docker run \
-    --privileged \
-    --volume=$PWD/artifacts:/artifacts \
-    -it buildmesa_buster
-```
-
-To build only for specified architectures specify `ARCHES` environment
-variable:
-```sh
-sudo docker run \
-    --privileged \
-    --volume=$PWD/artifacts:/artifacts \
-    -e ARCHES='amd64' \
-    -it buildmesa_buster
-```
-
-To import the tarball Docker image on another machine:
-```sh
-sudo docker load -i buildmesa_buster.tar.xz
-```
-
-### Building packages from untested changes
-
-The Debian packages will be available in `$PWD/artifacts` to test.
-
-#### Using Chrome OS checkout
-
-These following steps are run from the top of a Chrome OS checkout.
-
-Build packages using an existing mesa git repo within a Chrome OS checkout:
-```sh
-sudo docker run \
-    --privileged \
-    --volume=$PWD/src/platform/container-guest-tools/mesa/buster/artifacts:/artifacts \
-    --volume=$PWD/.repo:/.repo \
-    --volume=$PWD/src/third_party/mesa-debian:/scratch/mesa \
-    -e PACKAGES='mesa' \
-    -it buildmesa_buster:latest
-```
-
-#### Using sandbox branch
-
-These following steps are run from third_party/mesa.
-
-To test new mesa changes, prepare a local branch based off of
-`debian`:
-```sh
-git remote add upstream git://anongit.freedesktop.org/mesa/mesa
-git remote update upstream
-git checkout -b debian cros/debian
-git merge upstream/main
-debchange -i
-git add debian/changelog
-git commit
-```
-
-Upload a sandbox branch to test with Docker and start a container.
-`buildmesa_buster:latest` can be changed to `buildmesa_buster:setup` if it is
-available.
-```sh
-git push cros HEAD:refs/sandbox/"${USER}"/debian-buster-test
-sudo docker run \
-    --privileged \
-    --volume=$PWD/artifacts:/artifacts \
-    -it buildmesa_buster:latest \
-    bash
-```
-
-Within the Docker container, perform a build.  $USER will need to be
-set manually within the container.
-```sh
-./setupchroot.sh
-./sync.sh
-(cd mesa &&
- git fetch origin refs/sandbox/$USER/debian-buster-test &&
- git checkout -B "${MESA_BUILD_BRANCH}" FETCH_HEAD)
-./buildpackages.sh
-exit
-```
+The build artifacts will be located in the `artifacts` directory.
 
 #### Gerrit merge commits
 
@@ -150,19 +60,6 @@ git add debian/changelog
 git commit
 git push cros upstream/main:refs/heads/temporary_upstream
 repo upload . --cbr
-```
-
-## Kokoro
-
-The exported Docker image tarball must be copied to x20 under the path
-`/x20/teams/chromeos-vm/docker/buildmesa_buster.tar.xz`:
-```sh
-prodaccess
-cp buildmesa_buster.tar.xz /google/data/rw/teams/chromeos-vm/docker
-```
-
-The owner of the tarball must be set to `chromeos-vm-ci-read-write` to
-allows Kokoro to have access to it.
 ```
 
 ## Versioning
