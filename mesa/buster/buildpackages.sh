@@ -34,7 +34,7 @@ build_packages() {
             -- \
             --distribution "${dist}" \
             --architecture "${arch}" \
-            --basetgz "/var/cache/pbuilder/base-${arch}.tgz"
+            --basetgz "/var/cache/pbuilder/debian-${dist}-${arch}.tgz"
 
     popd >/dev/null
 }
@@ -58,7 +58,7 @@ build_packages_binnmu() {
             -- \
             --distribution "${dist}" \
             --architecture "${arch}" \
-            --basetgz "/var/cache/pbuilder/base-${arch}.tgz" \
+            --basetgz "/var/cache/pbuilder/debian-${dist}-${arch}.tgz" \
             --bin-nmu "${nmu}" \
             --bin-nmu-maintainer "${nmu_maintainer}" \
             --bin-nmu-version "${nmu_version}" \

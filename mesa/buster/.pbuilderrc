@@ -18,7 +18,7 @@ if [[ "${ARCH}" =~ arm ]]; then
 fi
 
 DEBOOTSTRAPOPTS=("${DEBOOTSTRAPOPTS[@]}" "--arch=${ARCH}")
-BASETGZ="/var/cache/pbuilder/base-${ARCH}.tgz"
+BASETGZ="/var/cache/pbuilder/${NAME}.tgz"
 BUILDRESULT="/var/cache/pbuilder/${NAME}/result/"
 APTCACHE="/var/cache/pbuilder/${NAME}/aptcache/"
 BUILDPLACE="/var/cache/pbuilder/build"
