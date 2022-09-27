@@ -12,11 +12,6 @@ OS="debian"
 NAME="${OS}-${DIST}-${ARCH}"
 COMPONENTS="main"
 
-if [[ "${ARCH}" =~ arm ]]; then
-    DEBOOTSTRAP="qemu-debootstrap"
-    echo "${DEBOOTSTRAP} used for foreign architecture ${ARCH}"
-fi
-
 DEBOOTSTRAPOPTS=("${DEBOOTSTRAPOPTS[@]}" "--arch=${ARCH}")
 BASETGZ="/var/cache/pbuilder/${NAME}.tgz"
 BUILDRESULT="/var/cache/pbuilder/${NAME}/result/"
