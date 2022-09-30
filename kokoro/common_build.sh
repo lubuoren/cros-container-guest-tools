@@ -76,5 +76,5 @@ build_cros_im() {
     sudo ./build-packages
 
     # Copy resulting debs to results directory.
-    cp *_cros_im_debs/* "${result_dir}"
+    cp -r *_cros_im_debs "${result_dir}"
 }
