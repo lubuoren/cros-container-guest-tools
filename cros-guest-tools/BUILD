@@ -57,6 +57,6 @@ pkg_deb(
         "xz-utils",
     ],
     section = "misc",
-    version = "0.31",
+    version = "0.32",
     visibility = ["//cros-debs:__pkg__"],
 )
