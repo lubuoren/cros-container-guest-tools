@@ -49,11 +49,11 @@ build_mesa_shard() {
     sudo DEBIAN_FRONTEND=noninteractive apt-get -q -y install \
       debhelper debian-archive-keyring libva-dev pbuilder quilt qemu-user-static
 
-    sudo mv "${src_root}/mesa/buster/"{.pbuilder,.pbuilderrc} /root/
+    sudo mv "${src_root}/mesa/"{.pbuilder,.pbuilderrc} /root/
 
     pushd "${KOKORO_ARTIFACTS_DIR}/git" > /dev/null
 
-    sudo "${src_root}/mesa/buster/sync-and-build.sh" "${dist}" "${arch}" \
+    sudo "${src_root}/mesa/sync-and-build.sh" "${dist}" "${arch}" \
       "${buildresult}" "${packages[@]}"
 
     popd > /dev/null
