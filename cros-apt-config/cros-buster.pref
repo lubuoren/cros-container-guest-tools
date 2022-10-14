@@ -1,0 +1,4 @@
+Package: libegl-dev libegl1 libgl-dev libgl1 libgles-dev libgles1 libgles2 libglvnd-core-dev libglvnd-dev libglvnd0 libglx-dev libglx0 libopengl-dev libopengl0
+Pin: release a=buster-backports
+Pin-Priority: 995
+Explanation: libglvnd backports for cros-containers packages

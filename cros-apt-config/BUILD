@@ -47,6 +47,14 @@ pkg_tar(
 )
 
 pkg_tar(
+    name = "cros-apt-prefs-buster",
+    srcs = ["cros-buster.pref"],
+    mode = "0644",
+    package_dir = "/etc/apt/preferences.d",
+    strip_prefix = "/cros-apt-config",
+)
+
+pkg_tar(
     name = "debian-data",
     extension = "tar.gz",
     deps = [
@@ -56,16 +64,39 @@ pkg_tar(
     ],
 )
 
+pkg_tar(
+    name = "debian-data-buster",
+    extension = "tar.gz",
+    deps = [
+        ":cros-apt-prefs",
+        ":cros-apt-prefs-buster",
+        ":cros-keyring",
+        ":cros-keyring-new",
+    ],
+)
+
 pkg_deb(
     name = "deb",
     architecture = "all",
     data = ":debian-data",
-    depends = ["apt-transport-https"],
     description_file = "deb-description",
     homepage = "https://chromium.googlesource.com/chromiumos/docs/+/HEAD/containers_and_vms.md",
     maintainer = "The ChromiumOS Authors <chromium-os-dev@chromium.org>",
     package = "cros-apt-config",
     section = "misc",
-    version = "0.23",
+    version = "0.24",
+    visibility = ["//cros-debs:__pkg__"],
+)
+
+pkg_deb(
+    name = "deb-buster",
+    architecture = "all",
+    data = ":debian-data-buster",
+    description_file = "deb-description",
+    homepage = "https://chromium.googlesource.com/chromiumos/docs/+/HEAD/containers_and_vms.md",
+    maintainer = "The ChromiumOS Authors <chromium-os-dev@chromium.org>",
+    package = "cros-apt-config",
+    section = "misc",
+    version = "0.24~cros10",  # This version should sort before the :deb version.
     visibility = ["//cros-debs:__pkg__"],
 )

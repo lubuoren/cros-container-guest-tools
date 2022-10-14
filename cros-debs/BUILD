@@ -9,7 +9,6 @@ filegroup(
     name = "cros-debs-common",
     srcs = [
         "//cros-adapta:deb",
-        "//cros-apt-config:deb",
         "//cros-garcon:deb",
         "//cros-guest-tools:deb",
         "//cros-host-fonts:deb",
@@ -31,6 +30,7 @@ filegroup(
     name = "bullseye-files",
     srcs = [
         ":cros-debs-common",
+        "//cros-apt-config:deb",
     ],
 )
 
@@ -38,6 +38,7 @@ filegroup(
     name = "buster-files",
     srcs = [
         ":cros-debs-common",
+        "//cros-apt-config:deb-buster",
         "//cros-gpu-buster:deb",
     ],
 )
