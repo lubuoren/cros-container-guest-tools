@@ -15,7 +15,7 @@ main() {
   script_dir="$(dirname "$0")"
 
   "${script_dir}/setupchroot.sh" "${dist}" "${arch}" "${buildresult}"
-  "${script_dir}/sync.sh" "${packages[@]}"
+  "${script_dir}/sync.sh" "${dist}" "${packages[@]}"
   "${script_dir}/buildpackages.sh" "${dist}" "${arch}" "${buildresult}" \
     "${packages[@]}"
 }

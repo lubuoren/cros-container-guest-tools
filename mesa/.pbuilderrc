@@ -18,4 +18,9 @@ BUILDRESULT="/var/cache/pbuilder/${NAME}/result/"
 APTCACHE="/var/cache/pbuilder/${NAME}/aptcache/"
 BUILDPLACE="/var/cache/pbuilder/build"
 
+MIRRORSITE="http://deb.debian.org/debian"
+if [[ "${DIST}" = "buster" ]]; then
+        OTHERMIRROR="${OTHERMIRROR} | deb ${MIRRORSITE} ${DIST}-backports main"
+fi
+
 mkdir -p "${APTCACHE}"

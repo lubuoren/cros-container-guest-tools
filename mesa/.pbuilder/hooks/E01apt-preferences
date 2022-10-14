@@ -1,0 +1,15 @@
+#!/bin/sh
+# Copyright 2022 The ChromiumOS Authors
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+set -e
+
+BUSTER_VERSION_REGEX='^10\.[0-9]+$'
+
+if grep -q -E "$BUSTER_VERSION_REGEX" "/etc/debian_version"; then
+  cat > "/etc/apt/preferences" << EOF
+Package: libegl-dev libegl1 libgl-dev libgl1 libgles-dev libgles1 libgles2 libglvnd-core-dev libglvnd-dev libglvnd0 libglx-dev libglx0 libopengl-dev libopengl0 debhelper dwz meson ninja-build
+Pin: release a=buster-backports
+Pin-Priority: 999
+EOF
+fi

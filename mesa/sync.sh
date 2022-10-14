@@ -6,11 +6,18 @@
 set -eux
 
 ensure_repo() {
-    local package="$1"
+    local dist="$1"
+    local package="$2"
 
+    # Use the bare package name for the checkout if it exists, otherwise
+    # package-dist for per-release checkouts.
     if [[ ! -d "${package}" ]]; then
-        echo "ERROR: repository ${package} is missing." >& 2
-        exit 1
+        if [[ ! -d "${package}-${dist}" ]]; then
+            echo "ERROR: repository ${package} is missing." >& 2
+            exit 1
+        fi
+
+        ln -s "${package}-${dist}" "${package}"
     fi
 }
 
@@ -43,6 +50,8 @@ untar_package() {
 }
 
 main() {
+    local dist="$1"
+    shift
     local package
 
     for package in "$@"; do
@@ -51,7 +60,7 @@ main() {
             untar_package "${package}"
             ;;
           *)
-            ensure_repo "${package}"
+            ensure_repo "${dist}" "${package}"
             ;;
         esac
     done

@@ -47,7 +47,7 @@ build_mesa_shard() {
 
     sudo apt-get -q update
     sudo DEBIAN_FRONTEND=noninteractive apt-get -q -y install \
-      debhelper debian-archive-keyring libva-dev pbuilder quilt qemu-user-static
+      debhelper debian-archive-keyring pbuilder quilt qemu-user-static
 
     local cache_url="gs://pbuilder-apt-cache/debian-${dist}-${arch}"
     local cache_dir="/var/cache/pbuilder/debian-${dist}-${arch}/aptcache"
@@ -55,6 +55,11 @@ build_mesa_shard() {
     sudo gsutil -m -q rsync "${cache_url}" "${cache_dir}"
 
     sudo mv "${src_root}/mesa/"{.pbuilder,.pbuilderrc} /root/
+    # Backported build dependencies are needed for newer libdrm and mesa.
+    # This hack omits them for other builds.
+    if [[ "${packages[*]}" != "libdrm mesa" ]]; then
+        sudo rm -f /root/.pbuilder/hooks/E01apt-preferences
+    fi
 
     pushd "${KOKORO_ARTIFACTS_DIR}/git" > /dev/null
 

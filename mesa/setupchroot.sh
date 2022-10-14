@@ -15,7 +15,6 @@ main() {
         # Create the pbuilder chroot. .pbuilderrc uses ARCH, DIST and DEPSBASE.
         DIST="${dist}" ARCH="${arch}" DEPSBASE="${buildresult}" \
             pbuilder create \
-            --mirror http://deb.debian.org/debian \
             --distribution "${dist}" \
             --architecture "${arch}"
     fi
