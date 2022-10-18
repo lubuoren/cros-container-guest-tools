@@ -49,12 +49,19 @@ build_mesa_shard() {
     sudo DEBIAN_FRONTEND=noninteractive apt-get -q -y install \
       debhelper debian-archive-keyring libva-dev pbuilder quilt qemu-user-static
 
+    local cache_url="gs://pbuilder-apt-cache/debian-${dist}-${arch}"
+    local cache_dir="/var/cache/pbuilder/debian-${dist}-${arch}/aptcache"
+    sudo mkdir -p "${cache_dir}"
+    sudo gsutil -m -q rsync "${cache_url}" "${cache_dir}"
+
     sudo mv "${src_root}/mesa/"{.pbuilder,.pbuilderrc} /root/
 
     pushd "${KOKORO_ARTIFACTS_DIR}/git" > /dev/null
 
     sudo "${src_root}/mesa/sync-and-build.sh" "${dist}" "${arch}" \
       "${buildresult}" "${packages[@]}"
+
+    sudo gsutil -m -q rsync "${cache_dir}" "${cache_url}"
 
     popd > /dev/null
 }
@@ -73,6 +80,7 @@ build_cros_im() {
         "${KOKORO_GFILE_DIR}"/qemu-user-static_ubuntu6.2_amd64.deb \
         binfmt-support
 
+    # TODO(b/254147322): set up apt cache for cros_im as well.
     sudo ./build-packages
 
     # Copy resulting debs to results directory.
