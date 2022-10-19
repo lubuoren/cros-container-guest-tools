@@ -123,12 +123,24 @@ main() {
         setup_test_venv "${src_root}" "${test_venv}"
     fi
 
-    sudo "${src_root}/lxd/build_debian_container.sh" "${src_root}" \
-                                                     "${result_dir}" \
-                                                     "${apt_dir}" \
-                                                     "${arch}" \
-                                                     "${release}" \
-                                                     "${test_venv}"
+    local cache_url="gs://pbuilder-apt-cache/debian-${release}-${arch}"
+    local cache_dir="/tmpfs/debian-${release}-${arch}"
+    sudo mkdir -p "${cache_dir}"
+    sudo gsutil -m -q rsync "${cache_url}" "${cache_dir}"
+
+    # Install a wrapper for debootstrap, since distrobuilder doesn't support
+    # specifying a cache directory.
+    sudo mkdir -p /tmpfs/bin
+    sudo tee /tmpfs/bin/debootstrap > /dev/null << EOF
+#!/bin/bash
+exec /usr/sbin/debootstrap --cache-dir "${cache_dir}" "\$@"
+EOF
+    sudo chmod 0755 /tmpfs/bin/debootstrap
+
+    sudo PATH="/tmpfs/bin:${PATH}" \
+        "${src_root}/lxd/build_debian_container.sh" "${src_root}" \
+        "${result_dir}" "${apt_dir}" "${arch}" "${release}" "${test_venv}"
+    sudo gsutil -m -q rsync "${cache_dir}" "${cache_url}"
 }
 
 main "$@"
