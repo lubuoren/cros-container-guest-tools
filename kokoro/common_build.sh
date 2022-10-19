@@ -80,8 +80,18 @@ build_cros_im() {
         "${KOKORO_GFILE_DIR}"/qemu-user-static_ubuntu6.2_amd64.deb \
         binfmt-support
 
-    # TODO(b/254147322): set up apt cache for cros_im as well.
+    # This job builds multiple architectures of bullseye. Download caches for
+    # all these arches.
+    local cache_url="gs://pbuilder-apt-cache"
+    local cache_dir="/var/cache/pbuilder/aptcache"
+    sudo mkdir -p "${cache_dir}"
+    sudo gsutil -m -q rsync -r -x 'debian-(?!bullseye).*$' "${cache_url}" \
+        "${cache_dir}"
+
     sudo ./build-packages
+
+    sudo gsutil -m -q rsync -r -x 'debian-(?!bullseye).*$' "${cache_dir}" \
+        "${cache_url}"
 
     # Copy resulting debs to results directory.
     cp -r *_cros_im_debs "${result_dir}"
