@@ -45,9 +45,16 @@ build_mesa_shard() {
     local buildresult="${KOKORO_ARTIFACTS_DIR}/${dist}_mesa_debs"
     mkdir -p "${buildresult}"
 
+    local -a build_deps
+    build_deps=( debhelper debian-archive-keyring pbuilder quilt )
     sudo apt-get -q update
-    sudo DEBIAN_FRONTEND=noninteractive apt-get -q -y install \
-      debhelper debian-archive-keyring pbuilder quilt qemu-user-static
+
+    if [[ "${arch}" = "arm"* ]]; then
+         build_deps+=(
+            "${KOKORO_GFILE_DIR}/qemu-user-static_ubuntu6.2_amd64.deb"
+        )
+    fi
+    sudo DEBIAN_FRONTEND=noninteractive apt-get -q -y install "${build_deps[@]}"
 
     local cache_url="gs://pbuilder-apt-cache/debian-${dist}-${arch}"
     local cache_dir="/var/cache/pbuilder/debian-${dist}-${arch}/aptcache"
