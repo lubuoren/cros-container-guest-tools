@@ -11,14 +11,20 @@ main() {
     local release=$1
     export DEBIAN_FRONTEND=noninteractive
 
-    echo "deb [trusted=yes] file:///run/apt ${release} main" >/etc/apt/sources.list.d/cros-staging.list
+    local cros_staging_list="/etc/apt/sources.list.d/cros-staging.list"
+    echo "deb [trusted=yes] file:///run/apt ${release} main" > "${cros_staging_list}"
+    if [[ "${release}" = "buster" ]]; then
+        echo "deb https://deb.debian.org/debian buster-backports main" >> "${cros_staging_list}"
+    fi
 
     apt-get update
 
     apt-get -q -y --allow-unauthenticated install cros-guest-tools
+    # Upgrade packages again to ensure cros-apt-config changes are picked up.
+    apt-get -q -y upgrade
 
     apt-get clean
-    rm /etc/apt/sources.list.d/cros-staging.list
+    rm "${cros_staging_list}"
     apt-get update
 
     # Don't run sshd out of the box.
