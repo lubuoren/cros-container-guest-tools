@@ -17,11 +17,13 @@ main() {
     local arch=$1
     export DEBIAN_FRONTEND=noninteractive
 
-    # for testing Gedit.
-    apt-get -q -y install gedit
-
-    # for testing Emacs.
-    apt-get -q -y install emacs
+    local -a packages
+    packages=(
+        # for testing Gedit.
+        gedit
+        # for testing Emacs.
+        emacs
+    )
 
     if [ "${arch}" = "amd64" ]; then
         # for testing Android Studio.
@@ -30,7 +32,7 @@ main() {
         rm -f android-studio-linux.tar.gz
 
         # for testing Eclipse.
-        apt-get -q -y install default-jre
+        packages+=( default-jre )
         wget -q https://storage.googleapis.com/chromiumos-test-assets-public/crostini_test_files/eclipse.tar.gz
         tar -xf eclipse.tar.gz -C /usr/
         ln -s /usr/eclipse/eclipse /usr/bin/eclipse
@@ -43,9 +45,10 @@ main() {
 deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/vscode stable main
 EOF
         apt-get -q update
-        apt-get -q -y install "code=${VSCODE_VERSION}"
-        apt-mark hold code
+        packages+=( "code=${VSCODE_VERSION}" )
     fi
+
+    apt-get -q -y install "${packages[@]}"
 }
 
 main "$@"
