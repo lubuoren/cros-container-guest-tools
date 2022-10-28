@@ -38,13 +38,16 @@ Description: CrOS containers guest tools
             "${release}_mesa_debs" \
             "${release}_cros_im_debs")
 
-        local deb
         for subdir in "${deb_dirs[@]}"; do
             local debdir="${KOKORO_GFILE_DIR}"/"${subdir}"
             if [ -d "${debdir}" ]; then
-                for deb in "${debdir}"/*.deb; do
-                    reprepro -b "${repo_dir}" includedeb "${release}" "${deb}"
-                done
+                pushd "${debdir}" > /dev/null
+                # Note: the maximum total length of command line arguments is
+                # in practice limited to 1/4 the stack size, which is typically
+                # 8 MiB. The names of all the debs should be well under this
+                # size.
+                reprepro -b "${repo_dir}" includedeb "${release}" ./*.deb
+                popd > /dev/null
             fi
         done
     done
