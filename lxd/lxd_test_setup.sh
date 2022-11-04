@@ -23,7 +23,7 @@ main() {
         # For crostini.DiskIOPerf.
         fio
         # For crostini.InputLatency.
-        python2.7 xterm
+        xterm
         # For crostini.NetworkPerf.
         iperf3 iputils-ping
         # For crostini.Toolkit.*.
