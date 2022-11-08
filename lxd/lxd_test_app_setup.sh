@@ -19,10 +19,10 @@ main() {
 
     local -a packages
     packages=(
-        # for testing Gedit.
-        gedit
-        # for testing Emacs.
+        audacity
         emacs
+        firefox-esr
+        gedit
     )
 
     if [ "${arch}" = "amd64" ]; then
