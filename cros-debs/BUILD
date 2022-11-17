@@ -31,6 +31,7 @@ filegroup(
     srcs = [
         ":cros-debs-common",
         "//cros-apt-config:deb",
+        "//cros-xdg-desktop-portal:deb",
     ],
 )
 

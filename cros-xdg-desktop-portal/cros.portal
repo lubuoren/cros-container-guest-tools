@@ -1,0 +1,4 @@
+[portal]
+DBusName=org.freedesktop.impl.portal.desktop.cros
+Interfaces=org.freedesktop.impl.portal.FileChooser;
+UseIn=cros

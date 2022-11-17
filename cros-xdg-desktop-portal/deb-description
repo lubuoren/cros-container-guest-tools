@@ -1,0 +1,4 @@
+ChromeOS FileChooser backend for xdg-desktop-portal
+ cros-xdg-desktop-portal provides a ChromeOS system FileChooser implementation
+ for the xdg-desktop-portal service. This allows linux apps to use the system
+ FileChooser. This implementation is currently experimental.
