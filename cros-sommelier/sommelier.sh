@@ -3,7 +3,7 @@
 # found in the LICENSE file.
 
 # Not running under sommelier?
-if ! systemctl --user show-environment | grep -q ^SOMMELIER_VERSION=; then
+if ! systemctl --user show-environment | grep -q '^SOMMELIER_VERSION='; then
   return 0
 fi
 
