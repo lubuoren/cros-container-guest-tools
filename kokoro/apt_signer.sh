@@ -30,15 +30,6 @@ main() {
 
         mv "${release_file}.asc" "${release_file}.gpg"
     done
-
-    # Sign the debs.
-    local deb
-    find "${repo_dir}/pool" -name "*.deb" -exec \
-        /escalated_sign/escalated_sign.py --tool=linux_gpg_sign \
-                                          --job-dir=/escalated_sign_jobs -- \
-                                          --signing_key="${key_ids}" \
-                                          --loglevel=debug \
-                                          {} \;
 }
 
 main "$@"
