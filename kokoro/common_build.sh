@@ -56,6 +56,9 @@ build_mesa_shard() {
     fi
     sudo DEBIAN_FRONTEND=noninteractive apt-get -q -y install "${build_deps[@]}"
 
+    sudo mkdir /tmpfs/pbuilder
+    sudo mount --bind /tmpfs/pbuilder /var/cache/pbuilder
+
     local cache_url="gs://pbuilder-apt-cache/debian-${dist}-${arch}"
     local cache_dir="/var/cache/pbuilder/debian-${dist}-${arch}/aptcache"
     sudo mkdir -p "${cache_dir}"
@@ -91,6 +94,10 @@ build_cros_im() {
     sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
         "${KOKORO_GFILE_DIR}"/qemu-user-static_ubuntu6.2_amd64.deb \
         binfmt-support
+
+    # pbuilder is not installed yet, so create both directories.
+    sudo mkdir /tmpfs/pbuilder /var/cache/pbuilder
+    sudo mount --bind /tmpfs/pbuilder /var/cache/pbuilder
 
     # This job builds multiple architectures of bullseye. Download caches for
     # all these arches.
