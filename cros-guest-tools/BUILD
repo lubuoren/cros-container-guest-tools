@@ -24,7 +24,6 @@ RECOMMENDS = [
     "cros-apt-config",
     "cros-gpu",
     "cros-logging",
-    "cros-pulse-config",
     "cros-sommelier-config",
     "cros-sudo-config",
     "cros-systemd-overrides",
@@ -41,7 +40,6 @@ RECOMMENDS = [
     "less",
     "libxss1",
     "man-db",
-    "pulseaudio",
     "udev",
     "unzip",
     "usbutils",
@@ -59,9 +57,9 @@ pkg_deb(
     homepage = "https://chromium.googlesource.com/chromiumos/containers/cros-container-guest-tools/",
     maintainer = "The ChromiumOS Authors <chromium-os-dev@chromium.org>",
     package = "cros-guest-tools",
-    recommends = RECOMMENDS,
+    recommends = RECOMMENDS + ["cros-pipe-config"],
     section = "misc",
-    version = "0.33",
+    version = "0.34",
     visibility = ["//cros-debs:__pkg__"],
 )
 
@@ -74,10 +72,10 @@ pkg_deb(
     homepage = "https://chromium.googlesource.com/chromiumos/containers/cros-container-guest-tools/",
     maintainer = "The ChromiumOS Authors <chromium-os-dev@chromium.org>",
     package = "cros-guest-tools",
-    recommends = RECOMMENDS,
+    recommends = RECOMMENDS + ["cros-pulse-config"],
     section = "misc",
     # This version should sort before the :deb version. This ensures that if
     # the container is upgraded, the :deb version is installed as an update.
-    version = "0.33~cros10",
+    version = "0.34~cros10",
     visibility = ["//cros-debs:__pkg__"],
 )

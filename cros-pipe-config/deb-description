@@ -1,0 +1,6 @@
+PipeWire helper for ChromiumOS integration
+ This package installs customized pipewire and pipewire-pulse configurations
+ to /etc/pipewire/pipewire.conf.d and /etc/pipewire/pipewire-pulse.conf.d.
+ The custom configurations are:
+  * Set a higher minimum buffer size to avoid audio glitches.
+  * Load audio sink and source manually because of the lack of udev.

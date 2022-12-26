@@ -84,7 +84,7 @@ pkg_deb(
     maintainer = "The ChromiumOS Authors <chromium-os-dev@chromium.org>",
     package = "cros-apt-config",
     section = "misc",
-    version = "0.24",
+    version = "0.25",
     visibility = ["//cros-debs:__pkg__"],
 )
 
@@ -97,6 +97,6 @@ pkg_deb(
     maintainer = "The ChromiumOS Authors <chromium-os-dev@chromium.org>",
     package = "cros-apt-config",
     section = "misc",
-    version = "0.24~cros10",  # This version should sort before the :deb version.
+    version = "0.25~cros10",  # This version should sort before the :deb version.
     visibility = ["//cros-debs:__pkg__"],
 )

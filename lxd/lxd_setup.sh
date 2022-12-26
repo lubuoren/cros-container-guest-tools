@@ -15,13 +15,16 @@ main() {
     echo "deb [trusted=yes] file:///run/apt ${release} main" > "${cros_staging_list}"
     if [[ "${release}" = "buster" ]]; then
         echo "deb https://deb.debian.org/debian buster-backports main" >> "${cros_staging_list}"
+    elif [[ "${release}" = "bullseye" ]]; then
+        echo "deb https://deb.debian.org/debian bullseye-backports main" >> "${cros_staging_list}"
     fi
 
     apt-get -o Acquire::Retries=3 update
 
+    apt-get -o Acquire::Retries=3 -q -y --allow-unauthenticated install cros-apt-config
     apt-get -o Acquire::Retries=3 -q -y --allow-unauthenticated install cros-guest-tools
     # Upgrade packages again to ensure cros-apt-config changes are picked up.
-    apt-get -o Acquire::Retries=3 -q -y upgrade
+    apt-get -o Acquire::Retries=3 -q -y dist-upgrade
 
     apt-get clean
     rm "${cros_staging_list}"

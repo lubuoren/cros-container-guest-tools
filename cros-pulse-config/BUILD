@@ -26,6 +26,22 @@ pkg_deb(
     name = "deb",
     architecture = "all",
     data = ":debian-data",
+    depends = ["cros-pipe-config"],
+    description_file = "deb-description",
+    homepage = "https://chromium.googlesource.com/chromiumos/docs/+/HEAD/containers_and_vms.md",
+    maintainer = "The ChromiumOS Authors <chromium-os-dev@chromium.org>",
+    package = "cros-pulse-config",
+    postinst = "postinst",
+    prerm = "prerm",
+    section = "misc",
+    version = "0.3.0",
+    visibility = ["//cros-debs:__pkg__"],
+)
+
+pkg_deb(
+    name = "deb-buster",
+    architecture = "all",
+    data = ":debian-data",
     depends = ["pulseaudio"],
     description_file = "deb-description",
     homepage = "https://chromium.googlesource.com/chromiumos/docs/+/HEAD/containers_and_vms.md",
@@ -34,6 +50,6 @@ pkg_deb(
     postinst = "postinst",
     prerm = "prerm",
     section = "misc",
-    version = "0.2.1",
+    version = "0.3.0~cros10",
     visibility = ["//cros-debs:__pkg__"],
 )

@@ -13,7 +13,6 @@ filegroup(
         "//cros-host-fonts:deb",
         "//cros-logging:deb",
         "//cros-notificationd:deb",
-        "//cros-pulse-config:deb",
         "//cros-sftp:deb",
         "//cros-sommelier:deb",
         "//cros-sommelier-config:deb",
@@ -32,6 +31,8 @@ filegroup(
         ":cros-debs-common",
         "//cros-guest-tools:deb",
         "//cros-apt-config:deb",
+        "//cros-pipe-config:deb",
+        "//cros-pulse-config:deb",
         "//cros-xdg-desktop-portal:deb",
     ],
 )
@@ -43,6 +44,7 @@ filegroup(
         "//cros-guest-tools:deb-buster",
         "//cros-apt-config:deb-buster",
         "//cros-gpu-buster:deb",
+        "//cros-pulse-config:deb-buster",
     ],
 )
 
