@@ -49,7 +49,7 @@ build_mesa_shard() {
     build_deps=( debhelper debian-archive-keyring pbuilder quilt )
     sudo apt-get -q update
 
-    if [[ "${arch}" = "arm"* ]]; then
+    if [[ "${arch}" = "arm"* && "$(uname -m)" != "aarch64" ]]; then
          build_deps+=(
             "${KOKORO_GFILE_DIR}/qemu-user-static_ubuntu6.2_amd64.deb"
         )
