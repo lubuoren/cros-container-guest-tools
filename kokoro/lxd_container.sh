@@ -96,6 +96,7 @@ EOF
 }
 
 main() {
+    print_instance_details
     require_kokoro_artifacts
     stop_apt_daily
 

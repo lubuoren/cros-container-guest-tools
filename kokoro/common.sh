@@ -31,3 +31,20 @@ APT::Periodic::Enable "0";
 EOF
     sudo flock -w 3600 /var/lib/apt/daily_lock echo "Acquired apt daily_lock"
 }
+
+function get_metadata() {
+    key="$1"
+    curl -fsS "http://metadata.google.internal/computeMetadata/v1/instance/$key" -H "Metadata-Flavor:Google"
+}
+
+print_instance_details() {
+    cat << EOF || true
+Instance name: $(get_metadata name)
+Instance ID: $(get_metadata id)
+Machine type: $(get_metadata machine-type)
+CPU platform: $(get_metadata cpu-platform)
+Zone: $(get_metadata zone)
+OS image: $(get_metadata image)
+Default service account: $(get_metadata service-accounts/default/email)
+EOF
+}

@@ -8,6 +8,7 @@ set -ex -o pipefail
 . "$(dirname "$0")/common.sh" || exit 1
 
 main() {
+    print_instance_details
     require_kokoro_artifacts
     require_cros_milestone
 
