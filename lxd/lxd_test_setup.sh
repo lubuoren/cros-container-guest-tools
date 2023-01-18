@@ -56,13 +56,13 @@ main() {
     echo "samba-common samba-common/do_debconf boolean true" \
       | debconf-set-selections
 
-    apt-get update
-    apt-get -q -y install "${packages[@]}"
+    apt-get -o Acquire::Retries=3 update
+    apt-get -o Acquire::Retries=3 -q -y install "${packages[@]}"
 
     if [ "${release}" = "buster" ]; then
         apt-get clean
         rm /etc/apt/sources.list.d/cros-mesa.list
-        apt-get update
+        apt-get -o Acquire::Retries=3 update
     fi
 }
 

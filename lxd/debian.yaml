@@ -172,12 +172,17 @@ packages:
     - vim
     - whiptail
     action: install
+    flags:
+      - -o
+      - Acquire::Retries=3
   # python3 is used for integration testing.
   - packages:
     - python3
     action: install
     flags:
       - --no-install-recommends
+      - -o
+      - Acquire::Retries=3
 
   repositories:
   - name: sources.list

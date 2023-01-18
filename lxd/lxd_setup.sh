@@ -17,15 +17,15 @@ main() {
         echo "deb https://deb.debian.org/debian buster-backports main" >> "${cros_staging_list}"
     fi
 
-    apt-get update
+    apt-get -o Acquire::Retries=3 update
 
-    apt-get -q -y --allow-unauthenticated install cros-guest-tools
+    apt-get -o Acquire::Retries=3 -q -y --allow-unauthenticated install cros-guest-tools
     # Upgrade packages again to ensure cros-apt-config changes are picked up.
-    apt-get -q -y upgrade
+    apt-get -o Acquire::Retries=3 -q -y upgrade
 
     apt-get clean
     rm "${cros_staging_list}"
-    apt-get update
+    apt-get -o Acquire::Retries=3 update
 
     # Don't run sshd out of the box.
     touch /etc/ssh/sshd_not_to_be_run

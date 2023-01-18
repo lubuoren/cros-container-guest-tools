@@ -52,8 +52,8 @@ EOF
         packages+=( "code=${VSCODE_VERSION_ARM64}" )
     fi
 
-    apt-get -q update
-    apt-get -q -y install "${packages[@]}"
+    apt-get -o Acquire::Retries=3 -q update
+    apt-get -o Acquire::Retries=3 -q -y install "${packages[@]}"
 }
 
 main "$@"
