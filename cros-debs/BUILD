@@ -21,6 +21,7 @@ filegroup(
         "//cros-systemd-overrides:deb",
         "//cros-tast-tests:deb",
         "//cros-ui-config:deb",
+        "//cros-vmstat-metrics:deb",
         "//cros-wayland:deb",
     ],
 )

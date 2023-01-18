@@ -1,0 +1,3 @@
+Chromium OS VMStat Metrics Reporting Daemon
+  This package installs a systemd service which monitors /proc/vmstat and
+  reports metrics via garcon
