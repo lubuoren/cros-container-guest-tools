@@ -47,7 +47,7 @@ def build_slim_rootfs(board, destination):
       )
 
     # Create mount points needed by a guest image.
-    mounts = ['mnt', 'run', 'dev', 'proc', 'sys', 'tmp', 'mnt/external', 'mnt/shared']
+    mounts = ['mnt', 'var', 'run', 'dev', 'proc', 'sys', 'tmp', 'mnt/external', 'mnt/shared']
     for mount in mounts:
       (slim_rootfs_path / mount).mkdir()
 
