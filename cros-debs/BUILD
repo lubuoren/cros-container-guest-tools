@@ -25,15 +25,34 @@ filegroup(
     ],
 )
 
+# Packages introduced in bullseye
+filegroup(
+    name = "cros-debs-bullseye",
+    srcs = [
+        "//cros-pipe-config:deb",
+        "//cros-xdg-desktop-portal:deb",
+    ],
+)
+
+filegroup(
+    name = "bookworm-files",
+    srcs = [
+        ":cros-debs-bullseye",
+        ":cros-debs-common",
+        "//cros-apt-config:deb-bookworm",
+        "//cros-guest-tools:deb-bookworm",
+        "//cros-pulse-config:deb",
+    ],
+)
+
 filegroup(
     name = "bullseye-files",
     srcs = [
+        ":cros-debs-bullseye",
         ":cros-debs-common",
-        "//cros-guest-tools:deb",
-        "//cros-apt-config:deb",
-        "//cros-pipe-config:deb",
+        "//cros-apt-config:deb-bullseye",
+        "//cros-guest-tools:deb-bullseye",
         "//cros-pulse-config:deb",
-        "//cros-xdg-desktop-portal:deb",
     ],
 )
 
@@ -41,17 +60,17 @@ filegroup(
     name = "buster-files",
     srcs = [
         ":cros-debs-common",
-        "//cros-guest-tools:deb-buster",
         "//cros-apt-config:deb-buster",
         "//cros-gpu-buster:deb",
+        "//cros-guest-tools:deb-buster",
         "//cros-pulse-config:deb-buster",
     ],
 )
 
 copy_debs_to_folder(
-    name = "buster-debs",
-    srcs = [":buster-files"],
-    out_dir = "buster-debs",
+    name = "bookworm-debs",
+    srcs = [":bookworm-files"],
+    out_dir = "bookworm-debs",
 )
 
 copy_debs_to_folder(
@@ -60,9 +79,16 @@ copy_debs_to_folder(
     out_dir = "bullseye-debs",
 )
 
+copy_debs_to_folder(
+    name = "buster-debs",
+    srcs = [":buster-files"],
+    out_dir = "buster-debs",
+)
+
 filegroup(
     name = "debs",
     srcs = [
+        ":bookworm-debs",
         ":bullseye-debs",
         ":buster-debs",
     ],

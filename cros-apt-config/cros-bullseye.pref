@@ -1,0 +1,4 @@
+Package: src:pipewire src:wireplumber
+Pin: release a=bullseye-backports
+Pin-Priority: 900
+Explanation: Use bullseye-backports for pipewire packages

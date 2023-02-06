@@ -47,6 +47,14 @@ pkg_tar(
 )
 
 pkg_tar(
+    name = "cros-apt-prefs-bullseye",
+    srcs = ["cros-bullseye.pref"],
+    mode = "0644",
+    package_dir = "/etc/apt/preferences.d",
+    strip_prefix = "/cros-apt-config",
+)
+
+pkg_tar(
     name = "cros-apt-prefs-buster",
     srcs = ["cros-buster.pref"],
     mode = "0644",
@@ -55,10 +63,21 @@ pkg_tar(
 )
 
 pkg_tar(
-    name = "debian-data",
+    name = "debian-data-bookworm",
     extension = "tar.gz",
     deps = [
         ":cros-apt-prefs",
+        ":cros-keyring",
+        ":cros-keyring-new",
+    ],
+)
+
+pkg_tar(
+    name = "debian-data-bullseye",
+    extension = "tar.gz",
+    deps = [
+        ":cros-apt-prefs",
+        ":cros-apt-prefs-bullseye",
         ":cros-keyring",
         ":cros-keyring-new",
     ],
@@ -76,15 +95,30 @@ pkg_tar(
 )
 
 pkg_deb(
-    name = "deb",
+    name = "deb-bookworm",
     architecture = "all",
-    data = ":debian-data",
+    data = ":debian-data-bookworm",
     description_file = "deb-description",
     homepage = "https://chromium.googlesource.com/chromiumos/docs/+/HEAD/containers_and_vms.md",
     maintainer = "The ChromiumOS Authors <chromium-os-dev@chromium.org>",
     package = "cros-apt-config",
     section = "misc",
-    version = "0.25",
+    version = "0.26",
+    visibility = ["//cros-debs:__pkg__"],
+)
+
+pkg_deb(
+    name = "deb-bullseye",
+    architecture = "all",
+    data = ":debian-data-bullseye",
+    description_file = "deb-description",
+    homepage = "https://chromium.googlesource.com/chromiumos/docs/+/HEAD/containers_and_vms.md",
+    maintainer = "The ChromiumOS Authors <chromium-os-dev@chromium.org>",
+    package = "cros-apt-config",
+    section = "misc",
+    # To maintain a clean upgrade path, the version should sort before the
+    # :deb-bookworm versions.
+    version = "0.26~cros11",
     visibility = ["//cros-debs:__pkg__"],
 )
 
@@ -97,6 +131,8 @@ pkg_deb(
     maintainer = "The ChromiumOS Authors <chromium-os-dev@chromium.org>",
     package = "cros-apt-config",
     section = "misc",
-    version = "0.25~cros10",  # This version should sort before the :deb version.
+    # To maintain a clean upgrade path, the version should sort before the
+    # :deb-bookworm and :deb-bullseye versions.
+    version = "0.26~cros10",
     visibility = ["//cros-debs:__pkg__"],
 )

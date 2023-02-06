@@ -8,7 +8,6 @@ pkg_tar(
     name = "debian-data",
 )
 
-
 DEPENDS = [
     "cros-garcon",
     "cros-host-fonts",
@@ -49,7 +48,26 @@ RECOMMENDS = [
 ]
 
 pkg_deb(
-    name = "deb", #TODO(b/266349390): Rename this to be deb-bullseye.
+    name = "deb-bookworm",
+    architecture = "all",
+    data = ":debian-data",
+    depends = DEPENDS,
+    description_file = "deb-description",
+    homepage = "https://chromium.googlesource.com/chromiumos/containers/cros-container-guest-tools/",
+    maintainer = "The ChromiumOS Authors <chromium-os-dev@chromium.org>",
+    package = "cros-guest-tools",
+    # TODO(b/267954959): cros-im is not yet packaged for bookworm.
+    recommends = RECOMMENDS + [
+        "cros-pipe-config",
+        "cros-im",
+    ],
+    section = "misc",
+    version = "0.35",
+    visibility = ["//cros-debs:__pkg__"],
+)
+
+pkg_deb(
+    name = "deb-bullseye",
     architecture = "all",
     data = ":debian-data",
     depends = DEPENDS + ["cros-im"],
@@ -59,6 +77,8 @@ pkg_deb(
     package = "cros-guest-tools",
     recommends = RECOMMENDS + ["cros-pipe-config"],
     section = "misc",
+    # To maintain a clean upgrade path, the version should sort before the
+    # :deb-bookworm versions.
     version = "0.34",
     visibility = ["//cros-debs:__pkg__"],
 )
@@ -74,8 +94,8 @@ pkg_deb(
     package = "cros-guest-tools",
     recommends = RECOMMENDS + ["cros-pulse-config"],
     section = "misc",
-    # This version should sort before the :deb version. This ensures that if
-    # the container is upgraded, the :deb version is installed as an update.
+    # To maintain a clean upgrade path, the version should sort before the
+    # :deb-bookworm and :deb-bullseye versions.
     version = "0.34~cros10",
     visibility = ["//cros-debs:__pkg__"],
 )
