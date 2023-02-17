@@ -1,0 +1,10 @@
+#!/bin/sh
+set -e
+
+# If upgrading from a version prior to 0.16, delete the /usr/lib64/dri that was
+# created in postinst as long as it is empty.
+if { [ "$1" = "upgrade" ] || [ "$1" = "install" ] ; } && \
+    [ "$#" -ge 3 ] && \
+    dpkg --compare-versions "$2" lt "0.16"; then
+  rmdir --ignore-fail-on-non-empty /usr/lib64/dri
+fi

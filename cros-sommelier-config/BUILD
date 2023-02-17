@@ -67,8 +67,9 @@ pkg_deb(
     maintainer = "The ChromiumOS Authors <chromium-os-dev@chromium.org>",
     package = "cros-sommelier-config",
     postinst = "postinst",
+    preinst = "preinst",
     prerm = "prerm",
     section = "misc",
-    version = "0.15",
+    version = "0.16",
     visibility = ["//cros-debs:__pkg__"],
 )

@@ -1,10 +1,8 @@
 #!/bin/sh
+set -e
+
 rm -f /etc/systemd/user/default.target.wants/sommelier@0.service
 rm -f /etc/systemd/user/default.target.wants/sommelier@1.service
 rm -f /etc/systemd/user/default.target.wants/sommelier-x@0.service
 rm -f /etc/systemd/user/default.target.wants/sommelier-x@1.service
 update-alternatives --remove sommelier /opt/google/cros-containers/bin/sommelier
-
-# TODO(crbug.com/966744): Remove this once we fix sommelier/xwayland.
-update-alternatives --remove swrast_dri /opt/google/cros-containers/lib/swrast_dri.so
-update-alternatives --remove virtio_gpu_dri /opt/google/cros-containers/lib/virtio_gpu_dri.so
