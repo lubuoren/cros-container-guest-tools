@@ -12,7 +12,6 @@ DEPENDS = [
     "cros-garcon",
     "cros-host-fonts",
     "cros-notificationd",
-    "cros-sftp",
     "cros-sommelier",
     "cros-ui-config",
 ]
@@ -62,7 +61,7 @@ pkg_deb(
         "cros-im",
     ],
     section = "misc",
-    version = "0.35",
+    version = "0.36",
     visibility = ["//cros-debs:__pkg__"],
 )
 
@@ -79,7 +78,7 @@ pkg_deb(
     section = "misc",
     # To maintain a clean upgrade path, the version should sort before the
     # :deb-bookworm versions.
-    version = "0.34",
+    version = "0.36~cros11",
     visibility = ["//cros-debs:__pkg__"],
 )
 
@@ -96,6 +95,6 @@ pkg_deb(
     section = "misc",
     # To maintain a clean upgrade path, the version should sort before the
     # :deb-bookworm and :deb-bullseye versions.
-    version = "0.34~cros10",
+    version = "0.36~cros10",
     visibility = ["//cros-debs:__pkg__"],
 )

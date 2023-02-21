@@ -112,15 +112,6 @@ class LxdTestCase(unittest.TestCase):
       self.container.stop(wait=True)
     self.container.delete(wait=True)
 
-  def test_system_services(self):
-    self.container.start(wait=True)
-    time.sleep(10)
-    self.container.sync()
-    self.assertEqual(self.container.status_code, RUNNING)
-    ret, _, _ = self.container.execute(
-        ['systemctl', 'is-active', 'cros-sftp.service'])
-    self.assertEqual(ret, 0)
-
   def test_user_services_no_gpu(self):
     self.container.start(wait=True)
     time.sleep(10)
