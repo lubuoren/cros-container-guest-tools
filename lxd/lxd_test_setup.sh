@@ -18,6 +18,7 @@ main() {
     packages=(
         # For crostini.AudioBasic.
         alsa-utils
+        pulseaudio-utils
         # For crostini.CpuPerf.
         lmbench
         # For crostini.DiskIOPerf.
