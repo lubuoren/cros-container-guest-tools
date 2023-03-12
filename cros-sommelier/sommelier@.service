@@ -1,5 +1,5 @@
 [Unit]
-Description=Master sommelier listening on socket wayland-%i
+Description=Parent sommelier listening on socket wayland-%i
 
 [Service]
 Environment="WAYLAND_DISPLAY_VAR=WAYLAND_DISPLAY"
@@ -11,7 +11,7 @@ ExecStartPre=/bin/sh -c \
                           SOMMELIER_DRM_DEVICE=/dev/dri/renderD128; \
                   /bin/true"
 ExecStart=/usr/bin/sommelier \
-              --master \
+              --parent \
               --sd-notify="READY=1" \
               --socket=wayland-%i \
               /bin/sh -c \

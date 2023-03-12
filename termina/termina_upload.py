@@ -42,7 +42,7 @@ def upload_termina(termina_dir, milestone, build):
     subprocess.check_call(
         ["gsutil.py", "--", "cp", "-a", "public-read", local_copy, remote_copy])
 
-  subprocess.check_call(["gsutil.py", "--", "cp", "-r", omaha_url, testing_url])
+  subprocess.check_call(["gsutil.py", "--", "cp", "-r", omaha_url, '{}/{}'.format(testing_url, build)])
 
   with tempfile.NamedTemporaryFile(mode="w", delete=False) as tmp:
     tmp.write("{}\n".format(build))
