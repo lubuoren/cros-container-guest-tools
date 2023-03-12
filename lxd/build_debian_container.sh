@@ -8,19 +8,55 @@ set -ex
 LXD="/snap/bin/lxd"
 LXC="/snap/bin/lxc"
 
+cleanup() {
+    local tempdir="$1"
+    local rootfs="$2"
+
+    unmount_all "${rootfs}" || true
+    # Unmounting may fail because paths were not mounted.
+    # Cleanup is skipped if any mounted paths remain in the rootfs.
+    if grep -F -q "${rootfs}" /proc/self/mounts; then
+        echo "Failed to unmount filesystems, skipping cleanup of ${tempdir}."
+        exit 1
+    fi
+
+    rm -rf "${tempdir}"
+}
+
+unmount_all() {
+    local rootfs="$1"
+
+    umount "${rootfs}/tmp"
+    umount "${rootfs}/run"
+    umount "${rootfs}/proc"
+    umount "${rootfs}/dev"
+    umount "${rootfs}/etc/resolv.conf"
+    umount "${rootfs}/opt/google/cros-containers"
+}
+
 build_containers() {
     local arch=$1
     local src_root=$2
     local results_dir=$3
     local apt_dir=$4
     local release=$5
-    local job_name=$6
 
     local base_image="images:debian/${release}/${arch}"
-    local tempdir="$(mktemp -d)"
-    ${LXC} image export "${base_image}" "${tempdir}/image"
+    local tempdir
+    tempdir="$(mktemp -d)"
 
     local rootfs="${tempdir}/rootfs"
+    trap "cleanup \"${tempdir}\" \"${rootfs}\"" EXIT
+
+    # Make dummy sommelier paths for update-alternatives.
+    local dummy_path="${tempdir}/cros-containers"
+    mkdir -p "${dummy_path}"/{bin,lib}
+    touch "${dummy_path}"/bin/sommelier
+    touch "${dummy_path}"/lib/swrast_dri.so
+    touch "${dummy_path}"/lib/virtio_gpu_dri.so
+
+    ${LXC} image export "${base_image}" "${tempdir}/image"
+
     unsquashfs -d "${rootfs}" "${tempdir}/image.root"
     chmod 0755 "${rootfs}"
 
@@ -30,13 +66,9 @@ build_containers() {
                          "${rootfs}" \
                          "${image_type}" \
                          "${release}" \
-                         "${job_name}" \
                          "${results_dir}" \
                          "${apt_dir}"
     done
-
-    rm -rf "${tempdir}"
-
 }
 
 build_and_export() {
@@ -45,18 +77,12 @@ build_and_export() {
     local rootfs=$3
     local image_type=$4
     local release=$5
-    local job_name=$6
-    local results_dir=$7
-    local apt_dir=$8
+    local results_dir=$6
+    local apt_dir=$7
 
-    if [ "${arch}" = "arm64" ]; then
-        cp /usr/bin/qemu-aarch64-static "${rootfs}/usr/bin/"
-    fi
     mkdir -p "${rootfs}/opt/google/cros-containers"
-    mount --bind /tmp/cros-containers "${rootfs}/opt/google/cros-containers"
+    mount --bind "${dummy_path}" "${rootfs}/opt/google/cros-containers"
     mount --bind /run/resolvconf/resolv.conf "${rootfs}/etc/resolv.conf"
-    mkdir -p "${rootfs}/extra-debs"
-    mount --bind /tmp/extra-debs "${rootfs}/extra-debs"
     mount --bind /dev "${rootfs}/dev"
     mount -t proc none "${rootfs}/proc"
     mount -t tmpfs tmpfs "${rootfs}/run"
@@ -69,14 +95,14 @@ build_and_export() {
         local setup_script="${src_root}"/lxd/lxd_setup.sh
         cp "${setup_script}" "${rootfs}/run/"
         chroot "${rootfs}" /run/"$(basename ${setup_script})" \
-            "${release}" "${job_name}"
+            "${release}"
     fi
 
     if [ "${image_type}" = "test" ]; then
         local setup_test_script="${src_root}"/lxd/lxd_test_setup.sh
         cp "${setup_test_script}" "${rootfs}/run/"
         chroot "${rootfs}" /run/"$(basename ${setup_test_script})" \
-            "${release}" "${job_name}"
+            "${release}"
     fi
 
     if [ "${image_type}" = "app_test" ]; then
@@ -86,23 +112,12 @@ build_and_export() {
             "${arch}"
     fi
 
-    umount "${rootfs}/tmp"
-    umount "${rootfs}/run"
-    umount "${rootfs}/proc"
-    umount "${rootfs}/dev"
-    umount "${rootfs}/extra-debs"
-    rm -rf "${rootfs}/extra-debs"
-    umount "${rootfs}/etc/resolv.conf"
-    umount "${rootfs}/opt/google/cros-containers"
+    unmount_all "${rootfs}"
     rm -rf "${rootfs}/opt/google"
-    if [ "${arch}" = "arm64" ]; then
-        rm "${rootfs}/usr/bin/qemu-aarch64-static"
-    fi
 
-    # Repack into 2 tarballs + squashfs for distribution via simplestreams.
+    # Repack into 2 tarballs for distribution via simplestreams.
     # Combined sha256 is lxd.tar.xz | rootfs.
     # rootfs.tar.xz is raw rootfs tar'd up.
-    # rootfs.squashfs is raw rootfs squash'd.
     # lxd.tar.xz is metadata.yaml and templates dir.
     local result_dir="${results_dir}/debian/${release}/${arch}"
     if [ "${image_type}" = "test" ]; then
@@ -118,7 +133,6 @@ build_and_export() {
     local rootfs_tarball="${result_dir}/rootfs.tar.xz"
     cp "${tempdir}/image" "${metadata_tarball}"
     tar -Ipixz --xattrs --acls -cpf "${rootfs_tarball}" -C "${rootfs}" .
-    mksquashfs "${rootfs}"/* "${result_dir}/rootfs.squashfs"
 
     if [ "${arch}" = "amd64" ] && [ "${image_type}" == "prod" ]; then
         # Workaround the "Invalid multipart image" flake by generating a
@@ -135,7 +149,8 @@ main() {
     local src_root=$1
     local results_dir=$2
     local apt_dir=$3
-    local job_name=$4
+    local arch=$4
+    local release=$5
 
     if [ -z "${results_dir}" -o ! -d "${results_dir}" ]; then
         echo "Results directory '${results_dir}' doesn't exist."
@@ -152,34 +167,16 @@ main() {
         return 1
     fi
 
-    if [ -z "${job_name}" ]; then
-        echo "Job name should be specified"
-        return 1
-    fi
-
     if [ "$(id -u)" -ne 0 ]; then
         echo "This script must be run as root to repack rootfs tarballs."
         return 1
     fi
 
-    # Make dummy sommelier paths for update-alternatives.
-    local dummy_path="/tmp/cros-containers"
-    mkdir -p "${dummy_path}"/{bin,lib}
-    touch "${dummy_path}"/bin/sommelier
-    touch "${dummy_path}"/lib/swrast_dri.so
-    touch "${dummy_path}"/lib/virtio_gpu_dri.so
-
-    # Build the normal and test images for each arch.
-    for arch in amd64 arm64; do
-        for release in stretch buster; do
-            build_containers "${arch}" \
-                             "${src_root}" \
-                             "${results_dir}" \
-                             "${apt_dir}" \
-                             "${release}" \
-                             "${job_name}"
-        done
-    done
+    build_containers "${arch}" \
+                     "${src_root}" \
+                     "${results_dir}" \
+                     "${apt_dir}" \
+                     "${release}"
 }
 
 main "$@"

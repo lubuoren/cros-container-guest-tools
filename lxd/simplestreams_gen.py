@@ -44,7 +44,7 @@ def sha256sum(paths):
 def image_path(distro, release, arch, image_type, version):
     return 'images/{0}/{1}/{2}/{3}/{4}'.format(distro, release, arch, image_type, version)
 
-def create_product(distro, arch, os_desc, release, image_type, version, rootfs_tarball, rootfs_squash, lxd_tarball):
+def create_product(distro, arch, os_desc, release, image_type, version, rootfs_tarball, lxd_tarball):
     img_path = image_path(distro, release, arch, image_type, version)
 
     rootfs_stat = os.stat(rootfs_tarball)
@@ -56,25 +56,14 @@ def create_product(distro, arch, os_desc, release, image_type, version, rootfs_t
         'ftype': 'root.tar.xz'
     }
 
-    rootfs_squash_stat = os.stat(rootfs_squash)
-    rootfs_squash_sha256 = sha256sum([rootfs_squash])
-    rootfs_squash_item = {
-        'size': rootfs_squash_stat.st_size,
-        'path': '{}/rootfs.squashfs'.format(img_path),
-        'sha256': rootfs_squash_sha256,
-        'ftype': 'squashfs'
-    }
-
     lxd_stat = os.stat(lxd_tarball)
     lxd_sha256 = sha256sum([lxd_tarball])
     combined_rootfs_sha256 = sha256sum([lxd_tarball, rootfs_tarball])
-    combined_squash_sha256 = sha256sum([lxd_tarball, rootfs_squash])
     lxd_item = {
        'size': lxd_stat.st_size,
        'path': '{}/lxd.tar.xz'.format(img_path),
        'combined_sha256': combined_rootfs_sha256,
        'combined_rootxz_sha256': combined_rootfs_sha256,
-       'combined_squashfs_sha256': combined_squash_sha256,
        'sha256': lxd_sha256,
        'ftype': 'lxd.tar.xz'
     }
@@ -92,7 +81,6 @@ def create_product(distro, arch, os_desc, release, image_type, version, rootfs_t
 
     product['versions'][version] = {
         'items': {
-           'rootfs.squashfs': rootfs_squash_item,
            'rootfs.tar.xz': rootfs_item,
            'lxd.tar.xz': lxd_item
         }
@@ -118,7 +106,7 @@ def main():
     index = index_template.copy()
     images = images_template.copy()
 
-    expected_files = {'lxd.tar.xz', 'rootfs.tar.xz', 'rootfs.squashfs'}
+    expected_files = {'lxd.tar.xz', 'rootfs.tar.xz'}
     for root, dirs, files in os.walk(args.in_dir):
         files_set = set(files)
         if len(expected_files.intersection(files_set)) != len(expected_files):
@@ -133,7 +121,6 @@ def main():
         arch = split_dirs[-2]
         image_type = split_dirs[-1]
         rootfs_source_path = os.path.join(root, 'rootfs.tar.xz')
-        rootfs_squash_source_path = os.path.join(root, 'rootfs.squashfs')
         lxd_source_path = os.path.join(root, 'lxd.tar.xz')
 
         product_name = '{}:{}:{}:{}'.format(distro, release, arch, image_type)
@@ -146,7 +133,6 @@ def main():
                                  image_type,
                                  date,
                                  rootfs_source_path,
-                                 rootfs_squash_source_path,
                                  lxd_source_path)
         images['products'][product_name] = product
 
@@ -154,7 +140,6 @@ def main():
                                        image_path(distro, release, arch, image_type, date))
         lxd_path = os.path.join(out_images_path, "lxd.tar.xz")
         rootfs_path = os.path.join(out_images_path, "rootfs.tar.xz")
-        rootfs_squash_path = os.path.join(out_images_path, "rootfs.squashfs")
         try:
             print(out_images_path)
             os.makedirs(out_images_path)
@@ -164,7 +149,6 @@ def main():
 
         shutil.copy(lxd_source_path, lxd_path)
         shutil.copy(rootfs_source_path, rootfs_path)
-        shutil.copy(rootfs_squash_source_path, rootfs_squash_path)
 
     stream_path = os.path.join(args.out_dir, 'streams/v1')
     try:

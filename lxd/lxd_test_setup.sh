@@ -10,7 +10,6 @@ set -eux
 
 main() {
     local release=$1
-    local job_name=$2
     # Add non-free repository to apt sources.list.
     sed -E -i 's|^(deb.*main)$|\1 non-free|g' /etc/apt/sources.list
 
@@ -76,13 +75,12 @@ EOD
       | debconf-set-selections
     apt-get -q -y install samba
 
+    # For crostini.Notify
+    apt-get -q -y install libnotify-bin
+
     # For graphics.GLBench
     if [ "${release}" = "buster" ]; then
-        # presubmit isn't pulling debs built by mesa. Skip the installation for presubmit only.
-        # TODO(crbug.com/1021304): remove it once we are pulling debs in presubmit.
-        if [[ "${job_name}" != *"presubmit"* ]]; then
-            apt-get -q -y install glbench
-        fi
+        apt-get -q -y install glbench
         apt-get clean
         rm /etc/apt/sources.list.d/cros-mesa.list
         apt-get update

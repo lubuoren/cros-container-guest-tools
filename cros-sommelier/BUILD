@@ -2,7 +2,7 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_deb", "pkg_tar")
+load("@rules_pkg//:pkg.bzl", "pkg_deb", "pkg_tar")
 
 pkg_tar(
     name = "cros-sommelier-elf",
@@ -88,6 +88,6 @@ pkg_deb(
         "xkb-data",
     ],
     section = "misc",
-    version = "0.26",
+    version = "0.27",
     visibility = ["//cros-debs:__pkg__"],
 )

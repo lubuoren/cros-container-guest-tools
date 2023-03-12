@@ -20,44 +20,46 @@ from pathlib import Path
 from termina_build_image import repack_rootfs
 from termina_util import mount_disk, get_release_version
 
-def get_build_path(board, build, branch):
-  image_archive_url = 'https://storage.googleapis.com/chromeos-image-archive'
-  build_config_format = '{}-full'
-  if branch:
-    build_config_format = '{}-full-tryjob'
-  build_config = build_config_format.format(board)
+def get_build_path(board, branch):
+  query = {
+      'builder': {
+          'project': 'chromeos',
+          'bucket': 'general',
+          'builder': 'LegacyRelease',
+      },
 
-  # Manually specified builds override branches.
-  build_version = 'master'
-  if branch:
-    build_version = branch
-  if build:
-    build_version = build
+      'tags': [{
+          'key': 'cbb_branch',
+          'value': f'{branch}',
+      }, {
+          'key': 'cbb_config',
+          'value': f'{board}-release',
+      }],
 
-  base_url = '{}/{}'.format(image_archive_url, build_config)
-  symlink_url = '{}/LATEST-{}'.format(base_url, build_version)
+      'status': 'SUCCESS',
+  }
 
-  print("Checking symlink URL", symlink_url)
-  response = urllib.request.urlopen(symlink_url)
-  build_number = response.read().decode('utf-8')
+  query_str = json.dumps(query)
 
-  return '{}/{}'.format(base_url, build_number)
+  result_str = subprocess.run(
+      ['bb', 'ls', '-n', '1', '-json', '-fields', 'output', '-predicate', query_str],
+      stdout=subprocess.PIPE,
+      check=True).stdout.decode()
+
+  result = json.loads(result_str)
+
+  return result['output']['properties']['artifact_link']
 
 def download_image(board, gs_path, output_dir):
-  image_url = '{}/chromiumos_base_image.tar.xz'.format(gs_path)
-  print('Downloading image from', image_url)
   target_path = output_dir / '{}_base_image.tar.xz'.format(board)
-  filename, headers = urllib.request.urlretrieve(image_url, str(target_path))
-  print('Image downloaded to', filename)
 
-  return filename
+  subprocess.run(
+      ['gsutil', 'cp',
+       f'{gs_path}/chromiumos_base_image.tar.xz',
+       target_path],
+      check=True)
 
-def download_debug_symbols(board, gs_path, output_dir):
-  debug_url = '{}/debug_breakpad.tar.xz'.format(gs_path)
-  print('Downloading debug symbols from', debug_url)
-  target_path = output_dir / board / 'debug_breakpad.tar.xz'
-  filename, headers = urllib.request.urlretrieve(debug_url, str(target_path))
-  print('Debug symbols downloaded to', filename)
+  return target_path
 
 def unpack_component(board, image_path, output_dir):
   component_dir = output_dir / board
@@ -125,8 +127,7 @@ def build_component(board, image_path, output_dir, component_version):
 
 def main():
   parser = argparse.ArgumentParser(description='Uprev Termina images')
-  parser.add_argument('--build', help='build number, e.g. 11396.0.0 (default: master)')
-  parser.add_argument('--branch', help='optional branch name, e.g. release-R72-11316.B (default: master)')
+  parser.add_argument('--branch', help='optional branch name, e.g. release-R72-11316.B (default: main)', default='main')
   parser.add_argument('--output_dir', help='local dir to save results')
   parser.add_argument('component_version', help='version of the component')
 
@@ -135,11 +136,10 @@ def main():
   with tempfile.TemporaryDirectory() as tempdir_path:
     tempdir = Path(tempdir_path)
     for board in ['tatl', 'tael']:
-      gs_path = get_build_path(board, args.build, args.branch)
+      gs_path = get_build_path(board, args.branch)
       download_path = download_image(board, gs_path, tempdir)
       image_path = unpack_component(board, download_path, tempdir)
       build_component(board, image_path, tempdir, args.component_version)
-      download_debug_symbols(board, gs_path, tempdir)
       if args.output_dir:
         target_dir = Path(args.output_dir) / board
         shutil.copytree(str(tempdir / board), str(target_dir))

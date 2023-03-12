@@ -110,7 +110,7 @@ To test new mesa changes, prepare a local branch based off of
 git remote add upstream git://anongit.freedesktop.org/mesa/mesa
 git remote update upstream
 git checkout -b debian cros/debian
-git merge upstream/master
+git merge upstream/main
 debchange -i
 git add debian/changelog
 git commit
@@ -147,7 +147,7 @@ Send merge commit to gerrit:
 debchange -r
 git add debian/changelog
 git commit
-git push cros upstream/master:refs/heads/temporary_upstream
+git push cros upstream/main:refs/heads/temporary_upstream
 repo upload . --cbr
 ```
 

@@ -7,6 +7,16 @@ set -ex
 
 . "$(dirname "$0")/common.sh" || exit 1
 
+get_arch() {
+    basename "${KOKORO_JOB_NAME}" |
+        sed 's/^lxd_container_//; s/_[[:alnum:]]\+$//'
+}
+
+get_release() {
+    basename "${KOKORO_JOB_NAME}" |
+        sed 's/^lxd_container_//; s/^[[:alnum:]]\+_//'
+}
+
 install_deps() {
     # Remove CUDA sources before updating (b/139349554).
     sudo rm -f /etc/apt/sources.list.d/cuda.list*
@@ -20,14 +30,11 @@ install_deps() {
     sudo /snap/bin/lxd waitready
 
     # qemu setup.
-    sudo apt-get install -q -y qemu-user-static
-    sudo cp "${KOKORO_GFILE_DIR}"/qemu-aarch64-static /usr/bin/qemu-aarch64-static
-    sudo chmod 0755 /usr/bin/qemu-aarch64-static
-
-    # gnome-icon-theme_3.12.0-2 sometimes gets checksum failures when installing
-    # from deb.debian.org, use our own known-good copy.
-    mkdir -p /tmp/extra-debs
-    cp "${KOKORO_GFILE_DIR}/gnome-icon-theme_3.12.0-2_all.deb" /tmp/extra-debs
+    if [[ $(get_arch) == "arm64" ]]; then
+        sudo apt-get install -q -y libpipeline1 lsb-base
+        sudo dpkg --install "${KOKORO_GFILE_DIR}"/binfmt-support.deb
+        sudo dpkg --install "${KOKORO_GFILE_DIR}"/qemu-user-static.deb
+    fi
 
     # pixz improves compression time for the rootfs significantly.
     sudo apt-get install -q -y pixz
@@ -101,10 +108,14 @@ main() {
         apt_dir="${KOKORO_GFILE_DIR}/apt_unsigned"
     fi
 
+    arch="$(get_arch)"
+    release="$(get_release)"
+
     sudo "${src_root}/lxd/build_debian_container.sh" "${src_root}" \
                                                      "${result_dir}" \
                                                      "${apt_dir}" \
-                                                     "${KOKORO_JOB_NAME}"
+                                                     "${arch}" \
+                                                     "${release}"
 }
 
 main "$@"

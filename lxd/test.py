@@ -52,7 +52,7 @@ class LxdTestCase(unittest.TestCase):
         cls.TEST_PROFILE,
         config={
             'boot.autostart': 'false',
-            'security.syscalls.blacklist': 'keyctl errno 38'
+            'security.syscalls.blacklist': 'keyctl errno 38'   # nocheck
         },
         devices={
             'root': {

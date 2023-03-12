@@ -79,7 +79,7 @@ def dedupe_hardlinks(target_dir):
     os.link(str(src_path), str(target_path))
 
 
-def create_fs_image(img_path, src_path):
+def create_fs_image(img_path, src_path, label=None):
   # Create image at 200% of source size.
   # resize2fs will shrink it to the minimum size later.
   du_output = subprocess.check_output(['du', '-bsx', src_path]).decode('utf-8')
@@ -97,24 +97,21 @@ def create_fs_image(img_path, src_path):
           '-i', '16384',
           '-b', '4096',
           '-O', '^has_journal',
+          '-d', str(src_path),
           str(img_path)
       ],
       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 
-  with tempfile.TemporaryDirectory() as tempdir_path:
-    mnt_dir = Path(tempdir_path)
-
-    with mount_disk(str(img_path), str(mnt_dir)) as mntpoint:
-      subprocess.run(
-          ['sudo', 'rsync', '-aH', str(src_path) + '/', str(mnt_dir)],
-          stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-
+  if label:
     subprocess.run(
-        ['/sbin/e2fsck', '-y', '-f', str(img_path)],
+        ['/sbin/e2label', str(img_path), label],
         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-    subprocess.run(
-        ['/sbin/resize2fs', '-M', str(img_path)],
-        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+  subprocess.run(
+      ['/sbin/e2fsck', '-y', '-f', str(img_path)],
+      stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+  subprocess.run(
+      ['/sbin/resize2fs', '-M', str(img_path)],
+      stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 
 
 def repack_rootfs(output_dir, disk_path):
@@ -127,9 +124,9 @@ def repack_rootfs(output_dir, disk_path):
 
     # Unsquash the rootfs and stateful partitions.
     rootfs_dir = tempdir / 'rootfs'
-    subprocess.run(['unsquashfs', '-d', str(rootfs_dir), str(rootfs_img_path)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+    subprocess.run(['unsquashfs', '-no-xattrs', '-d', str(rootfs_dir), str(rootfs_img_path)], stdout=subprocess.DEVNULL, check=True)
     stateful_dir = tempdir / 'stateful'
-    subprocess.run(['unsquashfs', '-d', str(stateful_dir), str(stateful_img_path)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+    subprocess.run(['unsquashfs', '-no-xattrs', '-d', str(stateful_dir), str(stateful_img_path)], stdout=subprocess.DEVNULL, check=True)
 
     # Extract the kernel. For ARM we just grab the Image-* file. For x86, we
     # grab the vmlinuz (bzImage).
@@ -166,7 +163,7 @@ def repack_rootfs(output_dir, disk_path):
     # Create vm_tools.img if /opt/google/cros-containers exists.
     tools_dir = rootfs_dir / 'opt' / 'google' / 'cros-containers'
     if tools_dir.exists():
-      create_fs_image(output_dir / 'vm_tools.img', tools_dir)
+      create_fs_image(output_dir / 'vm_tools.img', tools_dir, label='cros-vm-tools')
 
       # Remove contents of tools_dir so they are not included in vm_rootfs.img.
       # Leave the top-level /opt/google/cros-containers directory in place

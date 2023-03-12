@@ -10,11 +10,16 @@ set -ex
 main() {
     require_kokoro_artifacts
 
+    sudo apt-get -q update
+    sudo apt-get -q -y install reprepro
+
     local src_root="${KOKORO_ARTIFACTS_DIR}/git/cros-container-guest-tools"
     local repo_dir="${src_root}"/apt_unsigned
     mkdir -p "${repo_dir}"/{,conf}
 
-    for release in stretch buster; do
+    # We keep deprecated versions here indefinitely so "apt update" will pull
+    # down an empty repo instead of getting a hard 404 error.
+    for release in stretch buster bullseye; do
         local distributions="
 Origin: Google
 Label: cros-containers
@@ -40,6 +45,10 @@ Description: CrOS containers guest tools
             fi
         done
     done
+
+    # Ensure Release files for all versions are generated, even if we ship no
+    # packages for them.
+    reprepro -b "${repo_dir}" export
 }
 
 main "$@"

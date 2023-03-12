@@ -16,6 +16,9 @@ build_guest_tools() {
 
     cd "${src_root}"
 
+    # Default is 0.23, we need at least 0.27. But go all the way to 4.2.1 since
+    # (as of 2021-09-09) it's what's on our desktops.
+    use_bazel.sh 4.2.1
     # Build all targets.
     bazel build //cros-debs:debs
 
@@ -41,57 +44,13 @@ build_mesa_shard() {
         docker load -i "${base_image_tarball}"
     fi
 
-    # Post-stretch the Docker image build scripts use the mesa checkout
-    # from Kokoro.
-    if [[ "${dist}" == "stretch" ]]; then
-        docker run \
-            --rm \
-            --privileged \
-            --volume "${KOKORO_ARTIFACTS_DIR}/${dist}_mesa_debs":/artifacts \
-            --env ARCHES="${arch}" \
-            "${base_image}" \
-            ./sync-and-build.sh
-    else
-        docker run \
-            --rm \
-            --privileged \
-            --volume "${KOKORO_ARTIFACTS_DIR}/${dist}_mesa_debs":/artifacts \
-            --volume "${KOKORO_ARTIFACTS_DIR}/git/mesa":/scratch/mesa \
-            --env ARCHES="${arch}" \
-            --env PACKAGES="${pkg}" \
-            "${base_image}" \
-            ./sync-and-build.sh
-    fi
-}
-
-# TODO(hollingum): delete this once we no longer support non-sharded builds
-build_mesa() {
-    local dist
-    for dist in stretch buster; do
-        local base_image="buildmesa_${dist}"
-        local base_image_tarball="${KOKORO_GFILE_DIR}"/"${base_image}".tar.xz
-
-        if [[ -z $(docker images -q "${base_image}" 2> /dev/null) ]]; then
-            docker load -i "${base_image_tarball}"
-        fi
-
-        # Post-stretch the Docker image build scripts use the mesa checkout
-        # from Kokoro.
-        if [[ "${dist}" == "stretch" ]]; then
-            docker run \
-                --rm \
-                --privileged \
-                -v "${KOKORO_ARTIFACTS_DIR}/${dist}_mesa_debs":/artifacts \
-                "${base_image}" \
-                ./sync-and-build.sh
-        else
-            docker run \
-                --rm \
-                --privileged \
-                -v "${KOKORO_ARTIFACTS_DIR}/${dist}_mesa_debs":/artifacts \
-                -v "${KOKORO_ARTIFACTS_DIR}/git/mesa":/scratch/mesa \
-                "${base_image}" \
-                ./sync-and-build.sh
-        fi
-    done
+    docker run \
+      --rm \
+      --privileged \
+      --volume "${KOKORO_ARTIFACTS_DIR}/${dist}_mesa_debs":/artifacts \
+      --volume "${KOKORO_ARTIFACTS_DIR}/git/mesa":/scratch/mesa \
+      --env ARCHES="${arch}" \
+      --env PACKAGES="${pkg}" \
+      "${base_image}" \
+      ./sync-and-build.sh
 }

@@ -2,7 +2,7 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_deb", "pkg_tar")
+load("@rules_pkg//:pkg.bzl", "pkg_deb", "pkg_tar")
 
 genrule(
     name = "skel-config",
@@ -120,6 +120,7 @@ pkg_deb(
     postinst = "postinst",
     prerm = "prerm",
     section = "misc",
-    version = "0.24",
+    version = "0.25",
     visibility = ["//cros-debs:__pkg__"],
+    provides = ["x-terminal-emulator"]
 )
